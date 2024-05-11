@@ -1,21 +1,21 @@
-﻿using QuanLyDaiLy.Commands;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using QuanLyDaiLy.Services;
+using System;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
-using QuanLyDaiLy.Views.BaoCaoViews;
-using QuanLyDaiLy.Services;
-using System.Collections.ObjectModel;
-using Microsoft.Win32;
-using System.IO;
-using OfficeOpenXml;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
+using System.IO;
+using QuanLyDaiLy.Views.BaoCaoViews;
 
 namespace QuanLyDaiLy.ViewModels.BaoCaoViewModels
 {
-    public class BaoCaoCongNo
+    public partial class BaoCaoCongNo : ObservableObject
     {
         public int STT { get; set; }
         public string TenDaiLy { get; set; }
@@ -23,18 +23,19 @@ namespace QuanLyDaiLy.ViewModels.BaoCaoViewModels
         public decimal NoCuoiThang { get; set; }
         public decimal GiaTriGiaoDich { get; set; }
     }
-    public class BaoCaoCongNoViewModel : INotifyPropertyChanged
+
+    public partial class BaoCaoCongNoViewModel : ObservableObject
     {
         private readonly IDaiLyService _daiLyService;
         private readonly IPhieuXuatService _phieuXuatService;
         private readonly IPhieuThuService _phieuThuService;
+
         public BaoCaoCongNoViewModel(
             string selectedMonth,
             int selectedYear,
             IDaiLyService daiLyService,
             IPhieuXuatService phieuXuatService,
-            IPhieuThuService phieuThuService
-        )
+            IPhieuThuService phieuThuService)
         {
             _daiLyService = daiLyService;
             _phieuXuatService = phieuXuatService;
@@ -61,9 +62,9 @@ namespace QuanLyDaiLy.ViewModels.BaoCaoViewModels
             LapBaoCaoCommand = new RelayCommand(ExportToPDF);
             CloseCommand = new RelayCommand(CloseWindow);
         }
-        public event EventHandler? DataChanged;
-        public ObservableCollection<string> MonthOptions { get; set; }
-        public ObservableCollection<int> YearOptions { get; set; }
+
+        public ObservableCollection<string> MonthOptions { get; }
+        public ObservableCollection<int> YearOptions { get; }
 
         private string _selectedMonth = "Tháng 1";
         public string SelectedMonth
@@ -73,9 +74,8 @@ namespace QuanLyDaiLy.ViewModels.BaoCaoViewModels
             {
                 if (_selectedMonth != value)
                 {
-                    _selectedMonth = value;
+                    SetProperty(ref _selectedMonth, value);
                     _ = LoadData();
-                    OnPropertyChanged();
                 }
             }
         }
@@ -88,83 +88,51 @@ namespace QuanLyDaiLy.ViewModels.BaoCaoViewModels
             {
                 if (_selectedYear != value)
                 {
-                    _selectedYear = value;
+                    SetProperty(ref _selectedYear, value);
                     _ = LoadData();
-                    OnPropertyChanged();
                 }
             }
         }
 
-        private ObservableCollection<BaoCaoCongNo> _baoCaoCongNoList = new();
-        public ObservableCollection<BaoCaoCongNo> BaoCaoCongNoList
-        {
-            get => _baoCaoCongNoList;
-            set
-            {
-                _baoCaoCongNoList = value;
-                OnPropertyChanged();
-            }
-        }
+        [ObservableProperty]
+        private ObservableCollection<BaoCaoCongNo> baoCaoCongNoList = new();
+        public event EventHandler? DataChanged;
 
         public ICommand CloseCommand { get; }
         public ICommand LapBaoCaoCommand { get; }
+
         private async Task LoadData()
         {
             BaoCaoCongNoList.Clear();
-
             var allDaiLy = await _daiLyService.GetAllDaiLy();
 
             int month = int.Parse(SelectedMonth.Replace("Tháng ", ""));
             int year = SelectedYear;
 
             DateTime dauThang = new DateTime(year, month, 1);
-            DateTime cuoiThang = dauThang.AddMonths(1).AddDays(-1); // cuối tháng đang xét
-
             foreach (var daiLy in allDaiLy)
             {
                 int maDaiLy = daiLy.MaDaiLy;
-
-                // Lấy phiếu xuất và phiếu thu của đại lý
                 var phieuXuat = await _phieuXuatService.GetPhieuXuatByDaiLyId(maDaiLy);
                 var phieuThu = await _phieuThuService.GetPhieuThuByDaiLyId(maDaiLy);
 
-                // Tổng giá trị phiếu xuất trước tháng hiện tại (nợ đầu)
-                decimal tongPhieuXuatTruoc = phieuXuat
-                    .Where(p => p.NgayLapPhieu < dauThang)
-                    .Sum(p => p.TongTriGia);
+                decimal noDauThang = phieuXuat.Where(p => p.NgayLapPhieu < dauThang).Sum(p => p.TongTriGia) -
+                                     phieuThu.Where(p => p.NgayThuTien < dauThang).Sum(p => p.SoTienThu);
 
-                // Tổng giá trị phiếu thu trước tháng hiện tại (nợ đầu)
-                decimal tongPhieuThuTruoc = phieuThu
-                    .Where(p => p.NgayThuTien < dauThang)
-                    .Sum(p => p.SoTienThu);
+                decimal giaTriGiaoDich = phieuXuat.Where(p => p.NgayLapPhieu.Month == month && p.NgayLapPhieu.Year == year).Sum(p => p.TongTriGia);
+                decimal noCuoiThang = noDauThang + giaTriGiaoDich - phieuThu.Where(p => p.NgayThuTien.Month == month && p.NgayThuTien.Year == year).Sum(p => p.SoTienThu);
 
-                // Nợ đầu tháng
-                decimal noDauThang = tongPhieuXuatTruoc - tongPhieuThuTruoc;
-
-                // Giá trị giao dịch = tổng phiếu xuất trong tháng
-                decimal tongPhieuXuatTrongThang = phieuXuat
-                    .Where(p => p.NgayLapPhieu.Month == month && p.NgayLapPhieu.Year == year)
-                    .Sum(p => p.TongTriGia);
-
-                // Tổng thu trong tháng
-                decimal tongPhieuThuTrongThang = phieuThu
-                    .Where(p => p.NgayThuTien.Month == month && p.NgayThuTien.Year == year)
-                    .Sum(p => p.SoTienThu);
-
-                // Nợ cuối tháng = Nợ đầu - tổng phiếu thu trong tháng
-                decimal noCuoiThang = noDauThang + tongPhieuXuatTrongThang - tongPhieuThuTrongThang;
-
-                // Thêm vào danh sách báo cáo
                 BaoCaoCongNoList.Add(new BaoCaoCongNo
                 {
                     STT = BaoCaoCongNoList.Count + 1,
                     TenDaiLy = daiLy.TenDaiLy,
                     NoDauThang = noDauThang,
-                    GiaTriGiaoDich = tongPhieuXuatTrongThang,
+                    GiaTriGiaoDich = giaTriGiaoDich,
                     NoCuoiThang = noCuoiThang
                 });
             }
         }
+
         private void ExportToPDF()
         {
             if (BaoCaoCongNoList == null || BaoCaoCongNoList.Count == 0)
@@ -297,13 +265,6 @@ namespace QuanLyDaiLy.ViewModels.BaoCaoViewModels
         private void CloseWindow()
         {
             Application.Current.Windows.OfType<BaoCaoCongNoWindow>().FirstOrDefault()?.Close();
-        }
-
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }
