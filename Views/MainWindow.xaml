@@ -25,47 +25,127 @@
             HorizontalAlignment="Center" 
             Foreground="#333333"/>
 
-        <Border Grid.Row="1" 
-                Width="200" Height="50" 
-                Background="#00AAFF" 
-                CornerRadius="8" 
-                HorizontalAlignment="Right" 
-                VerticalAlignment="Center" 
-                Padding="0" 
-                Margin="0,0,100,0">
-            <Border.Effect>
-                <DropShadowEffect 
-                    ShadowDepth="4" 
-                    BlurRadius="8" 
-                    Opacity="0.15" 
-                    Color="Black"/>
-            </Border.Effect>
-            <Button Content="Hồ sơ đại lý" Command="{Binding OpenHoSoDaiLyCommand}" 
-                    Background="Transparent" 
-                    Foreground="#FFFFFF" 
-                    FontFamily="Roboto" 
-                    FontStyle="Normal" 
-                    FontWeight="Medium" 
-                    FontSize="30" 
-                    HorizontalAlignment="Center" 
-                    VerticalAlignment="Center" 
-                    Padding="16,10,16,8" 
-                    BorderThickness="0" Width="200" Height="60">
-                <Button.Style>
-                    <Style TargetType="Button">
-                        <Setter Property="Background" Value="Transparent"/>
-                        <Setter Property="Foreground" Value="#FFFFFF"/>
-                        <Style.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter Property="Background" Value="#0088CC"/>
-                                <Setter Property="Foreground" Value="#FFFFFF"/>
-                            </Trigger>
-                        </Style.Triggers>
-                    </Style>
-                </Button.Style>
-            </Button>
-        </Border>
+        <StackPanel Grid.Row="1" 
+            Orientation="Horizontal" 
+            HorizontalAlignment="Right" 
+            VerticalAlignment="Center"
+            Margin="0,0,20,0">
 
+            <!-- Thêm Button -->
+            <Border Width="150" Height="50" 
+            Background="#00AAFF" 
+            Margin="10, 0, 0, 0"
+            CornerRadius="8">
+                <Border.Effect>
+                    <DropShadowEffect 
+                ShadowDepth="4" 
+                BlurRadius="8" 
+                Opacity="0.15" 
+                Color="Black"/>
+                </Border.Effect>
+                <Button Content="Thêm" Command="{Binding OpenHoSoDaiLyCommand}" 
+                Background="Transparent" 
+                Foreground="#FFFFFF" 
+                FontFamily="Roboto" 
+                FontStyle="Normal" 
+                FontWeight="Medium" 
+                FontSize="30" 
+                HorizontalAlignment="Center" 
+                VerticalAlignment="Center" 
+                Padding="16,10,16,8" 
+                BorderThickness="0" Width="150" Height="60">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Background" Value="Transparent"/>
+                            <Setter Property="Foreground" Value="#FFFFFF"/>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#0088CC"/>
+                                    <Setter Property="Foreground" Value="#FFFFFF"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+            </Border>
+
+            <!-- Sửa Button -->
+            <Border Width="150" Height="50" 
+            Background="#00AAFF" 
+            Margin="20, 0, 0, 0"
+            CornerRadius="8">
+                <Border.Effect>
+                    <DropShadowEffect 
+                ShadowDepth="4" 
+                BlurRadius="8" 
+                Opacity="0.15" 
+                Color="Black"/>
+                </Border.Effect>
+                <Button Content="Sửa" Command="{Binding EditDaiLyCommand}" 
+                Background="Transparent" 
+                Foreground="#FFFFFF" 
+                FontFamily="Roboto" 
+                FontStyle="Normal" 
+                FontWeight="Medium" 
+                FontSize="30" 
+                HorizontalAlignment="Center" 
+                VerticalAlignment="Center" 
+                Padding="16,10,16,8" 
+                BorderThickness="0" Width="150" Height="60">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Background" Value="Transparent"/>
+                            <Setter Property="Foreground" Value="#FFFFFF"/>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#3E8E41"/>
+                                    <Setter Property="Foreground" Value="#FFFFFF"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+            </Border>
+
+            <!-- Xóa Button -->
+            <Border Width="150" Height="50" 
+            Background="#00AAFF" 
+            Margin="20, 0, 0, 0"
+            CornerRadius="8">
+                <Border.Effect>
+                    <DropShadowEffect 
+                ShadowDepth="4" 
+                BlurRadius="8" 
+                Opacity="0.15" 
+                Color="Black"/>
+                </Border.Effect>
+                <Button Content="Xóa" Command="{Binding DeleteDaiLyCommand}" 
+                Background="Transparent" 
+                Foreground="#FFFFFF" 
+                FontFamily="Roboto" 
+                FontStyle="Normal" 
+                FontWeight="Medium" 
+                FontSize="30" 
+                HorizontalAlignment="Center" 
+                VerticalAlignment="Center" 
+                Padding="16,10,16,8" 
+                BorderThickness="0" Width="150" Height="60">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Setter Property="Background" Value="Transparent"/>
+                            <Setter Property="Foreground" Value="#FFFFFF"/>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Setter Property="Background" Value="#D32F2F"/>
+                                    <Setter Property="Foreground" Value="#FFFFFF"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+            </Border>
+        </StackPanel>
+        
         <Border Grid.Row="2" 
         Background="#F7F9FD" 
         CornerRadius="12" 
