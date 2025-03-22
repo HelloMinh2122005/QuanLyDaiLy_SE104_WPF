@@ -22,6 +22,7 @@ namespace QuanLyDaiLy.ViewModels
             OpenHoSoDaiLyCommand = new RelayCommand(OpenHoSoDaiLyWindow);
             EditDaiLyCommand = new RelayCommand(OpenEditDaiLyWindow);
             DeleteDaiLyCommand = new RelayCommand(OpenDeleteDaiLyWindow);
+            SearchDaiLyCommand = new RelayCommand(OpenSearchDaiLyWindow);
         }
 
         private ObservableCollection<DaiLy> _danhSachDaiLy = [];
@@ -44,6 +45,7 @@ namespace QuanLyDaiLy.ViewModels
         public ICommand OpenHoSoDaiLyCommand { get; }
         public ICommand EditDaiLyCommand { get; }
         public ICommand DeleteDaiLyCommand { get; }
+        public ICommand SearchDaiLyCommand { get; }
 
         private void OpenHoSoDaiLyWindow()
         {
@@ -64,6 +66,15 @@ namespace QuanLyDaiLy.ViewModels
         }
 
         private void OpenDeleteDaiLyWindow()
+        {
+            var hoSoDaiLyWindow = new HoSoDaiLyWinDow
+            {
+                Owner = Application.Current.MainWindow
+            };
+            hoSoDaiLyWindow.ShowDialog();
+        }
+
+        private void OpenSearchDaiLyWindow()
         {
             var hoSoDaiLyWindow = new HoSoDaiLyWinDow
             {
