@@ -21,8 +21,8 @@ namespace QuanLyDaiLy.ViewModels
             IDaiLyService daiLyService,
             IQuanService quanService,
             ILoaiDaiLyService loaiDaiLyService,
-            int dailyId)
-        {
+            int dailyId
+        ) {
             this.daiLyService = daiLyService;
             this.quanService = quanService;
             this.loaiDaiLyService = loaiDaiLyService;
