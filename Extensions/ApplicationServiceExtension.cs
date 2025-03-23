@@ -32,10 +32,19 @@ public static class ApplicationServiceExtensions
         // Register ViewModels
         services.AddTransient<MainWindowViewModel>();
         services.AddTransient<HoSoDaiLyViewModel>();
+        services.AddTransient<Func<int, ChinhSuaDaiLyViewModel>>(sp => dailyId =>
+            new ChinhSuaDaiLyViewModel(
+                sp.GetRequiredService<IDaiLyService>(),
+                sp.GetRequiredService<IQuanService>(),
+                sp.GetRequiredService<ILoaiDaiLyService>(),
+                dailyId
+            )
+        );
 
         // Register Views
         services.AddTransient<MainWindow>();
         services.AddTransient<HoSoDaiLyWinDow>();
+        services.AddTransient<ChinhSuaDaiLyWindow>();
 
         return services;
     }

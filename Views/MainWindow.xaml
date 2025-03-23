@@ -120,7 +120,7 @@
                 <Border Width="150" Height="50" 
                         Margin="20, 0, 0, 0"
                         CornerRadius="8">
-                    <Button Content="Sửa" Command="{Binding DeleteDaiLyCommand}" 
+                    <Button Content="Sửa" Command="{Binding EditDaiLyCommand}" 
                             Background="#00AAFF" 
                             Foreground="#FFFFFF" 
                             FontFamily="Roboto" 
@@ -204,7 +204,8 @@
                     Color="Black"/>
             </Border.Effect>
 
-            <DataGrid ItemsSource="{Binding DanhSachDaiLy}"
+            <DataGrid ItemsSource="{Binding DanhSachDaiLy}" 
+                      SelectedItem="{Binding SelectedDaiLy}" 
                       AutoGenerateColumns="False"
                       Background="Transparent"
                       BorderThickness="0"
