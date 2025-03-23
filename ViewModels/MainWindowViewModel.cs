@@ -68,10 +68,34 @@ namespace QuanLyDaiLy.ViewModels
             hoSoDaiLyWindow.Show();
         }
 
-        private void OpenDeleteDaiLyWindow()
+        private async void OpenDeleteDaiLyWindow()
         {
-            var hoSoDaiLyWindow = _serviceProvider.GetRequiredService<HoSoDaiLyWinDow>();
-            hoSoDaiLyWindow.Show();
+            if (SelectedDaiLy == null)
+            {
+                MessageBox.Show("Vui lòng chọn đại lý để xóa!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+
+            try
+            {
+                var result = MessageBox.Show(
+                    $"Bạn có chắc chắn muốn xóa đại lý '{SelectedDaiLy.TenDaiLy}'?",
+                    "Xác nhận xóa",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Question);
+
+                if (result == MessageBoxResult.Yes)
+                {
+                    await _dailyService.DeleteDaiLy(SelectedDaiLy.MaDaiLy);
+                    await LoadData();
+                    MessageBox.Show("Đã xóa đại lý thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+                    await LoadData();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Không thể xóa đại lý: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void OpenSearchDaiLyWindow()
