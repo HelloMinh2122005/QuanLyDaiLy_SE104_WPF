@@ -24,7 +24,7 @@
             <Setter Property="FontFamily" Value="Nunito"/>
             <Setter Property="FontStyle" Value="Normal"/>
             <Setter Property="FontWeight" Value="Normal"/>
-            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontSize" Value="18"/>
             <Setter Property="Foreground" Value="#000000"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="ItemTemplate">
@@ -88,19 +88,19 @@
                             </Border>
 
                             <Popup x:Name="PART_Popup"
-                        AllowsTransparency="True"
-                        IsOpen="{Binding IsChecked, ElementName=toggleButton}"
-                        Placement="Bottom"
-                        PopupAnimation="Slide"
-                        Focusable="False">
+                                    AllowsTransparency="True"
+                                    IsOpen="{Binding IsChecked, ElementName=toggleButton}"
+                                    Placement="Bottom"
+                                    PopupAnimation="Slide"
+                                    Focusable="False">
                                 <Border x:Name="dropDownBorder"
-                            Background="#FFFFFF"
-                            BorderBrush="#33000000"
-                            BorderThickness="1"
-                            CornerRadius="8"
-                            Margin="0,1,0,0"
-                            Effect="{StaticResource DropShadowEffect}"
-                            MinWidth="{TemplateBinding ActualWidth}">
+                                        Background="#FFFFFF"
+                                        BorderBrush="#33000000"
+                                        BorderThickness="1"
+                                        CornerRadius="8"
+                                        Margin="0,1,0,0"
+                                        Effect="{StaticResource DropShadowEffect}"
+                                        MinWidth="{TemplateBinding ActualWidth}">
                                     <ScrollViewer MaxHeight="200" SnapsToDevicePixels="True">
                                         <ItemsPresenter KeyboardNavigation.DirectionalNavigation="Contained" />
                                     </ScrollViewer>
@@ -254,7 +254,7 @@
                                        Margin="10,0,0,0"/>
                             <TextBox Grid.Row="1"
                                     Text="{Binding MaDaiLy}"
-                                    Background="Transparent" 
+                                    Background="Transparent"  
                                     BorderBrush="#33000000"
                                     HorizontalAlignment="Stretch"
                                     VerticalAlignment="Stretch"
@@ -262,9 +262,10 @@
                                     Margin="10"
                                     FontFamily="Nunito"
                                     FontStyle="Normal"
-                                    FontWeight="Normal"
-                                    FontSize="14"
-                                    Foreground="#9A000000"
+                                    FontWeight="SemiBold"
+                                    FontSize="18"
+                                    Foreground="Black"
+                                    Padding="10,0,0,0"
                                     TextAlignment="Left"
                                     BorderThickness="1">
                                 <TextBox.Resources>
@@ -293,6 +294,7 @@
                                        Foreground="#000000"
                                        Margin="10,0,0,0"/>
                             <TextBox Grid.Row="1"
+                                     Text="{Binding TenDaiLy}"
                                     Background="#FFFFFF" 
                                     BorderBrush="#33000000"
                                     HorizontalAlignment="Stretch"
@@ -300,10 +302,11 @@
                                     VerticalContentAlignment="Center"
                                     Margin="10"
                                     FontFamily="Nunito"
+                                    Padding="10,0,0,0"
                                     FontStyle="Normal"
                                     FontWeight="Normal"
-                                    FontSize="14"
-                                    Foreground="#9A000000"
+                                    FontSize="18"
+                                    Foreground="Black"
                                     TextAlignment="Left"
                                     BorderThickness="1">
                                 <TextBox.Resources>
@@ -405,14 +408,16 @@
                                     Background="#FFFFFF" 
                                     BorderBrush="#33000000"
                                     HorizontalAlignment="Stretch"
+                                     Text="{Binding SoDienThoai}"
                                     VerticalAlignment="Stretch"
                                     VerticalContentAlignment="Center"
                                     Margin="10"
                                     FontFamily="Nunito"
                                     FontStyle="Normal"
                                     FontWeight="Normal"
-                                    FontSize="14"
-                                    Foreground="#9A000000"
+                                    FontSize="18"
+                                    Foreground="Black"
+                                    Padding="10,0,0,0"
                                     TextAlignment="Left"
                                     BorderThickness="1">
                                 <TextBox.Resources>
@@ -443,6 +448,7 @@
                             <TextBox Grid.Row="1"
                                     Background="#FFFFFF" 
                                     BorderBrush="#33000000"
+                                     Text="{Binding Email}"
                                     HorizontalAlignment="Stretch"
                                     VerticalAlignment="Stretch"
                                     VerticalContentAlignment="Center"
@@ -450,8 +456,9 @@
                                     FontFamily="Nunito"
                                     FontStyle="Normal"
                                     FontWeight="Normal"
-                                    FontSize="14"
-                                    Foreground="#9A000000"
+                                    FontSize="18"
+                                    Foreground="Black"
+                                    Padding="10,0,0,0"
                                     TextAlignment="Left"
                                     BorderThickness="1">
                                 <TextBox.Resources>
@@ -480,6 +487,7 @@
                                        Foreground="#000000"
                                        Margin="10,0,0,0"/>
                             <DatePicker Grid.Row="1" 
+                                        SelectedDate="{Binding NgayTiepNhan}"
                                         Background="#FFFFFF" 
                                         BorderBrush="#33000000"
                                         HorizontalAlignment="Stretch"
@@ -491,8 +499,7 @@
                                         Foreground="#9A000000"
                                         BorderThickness="1"
                                         Margin="10,10,10,10"
-                                        Padding="10,0,0,0"
-                                        SelectedDate="{Binding NgayTiepNhan}">
+                                        Padding="10,0,0,0">
 
                                 <DatePicker.Resources>
                                     <Style TargetType="DatePickerTextBox">
@@ -616,6 +623,7 @@
                                        Margin="20,0,0,0"/>
                         <TextBox Grid.Row="1"
                                     Background="#FFFFFF" 
+                                    Text="{Binding DiaChi}"
                                     BorderBrush="#33000000"
                                     HorizontalAlignment="Stretch"
                                     VerticalAlignment="Stretch"
@@ -624,8 +632,9 @@
                                     FontFamily="Nunito"
                                     FontStyle="Normal"
                                     FontWeight="Normal"
-                                    FontSize="14"
-                                    Foreground="#9A000000"
+                                    FontSize="18"
+                                    Foreground="Black"
+                                    Padding="10,0,0,0"
                                     TextAlignment="Left"
                                     BorderThickness="1">
                             <TextBox.Resources>

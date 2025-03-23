@@ -25,7 +25,7 @@ namespace QuanLyDaiLy.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteDonViTinh(long id)
+        public async Task DeleteDonViTinh(int id)
         {
             var donViTinh = await _context.DsDonViTinh.FindAsync(id);
             if (donViTinh != null)
@@ -42,7 +42,7 @@ namespace QuanLyDaiLy.Repositories
                 .ToListAsync();
         }
 
-        public async Task<DonViTinh> GetDonViTinhById(long id)
+        public async Task<DonViTinh> GetDonViTinhById(int id)
         {
             DonViTinh? donViTinh = await _context.DsDonViTinh
                 .Include(d => d.DsMatHang)

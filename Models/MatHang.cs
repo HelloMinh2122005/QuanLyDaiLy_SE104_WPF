@@ -5,9 +5,9 @@ namespace QuanLyDaiLy.Models
     public class MatHang
     {
         [Key]
-        public long MaMatHang { get; set; } = 0;
+        public int MaMatHang { get; set; } = 0;
         public string TenMatHang { get; set; } = "";
-        public long MaDonViTinh { get; set; } = 0;
+        public int MaDonViTinh { get; set; } = 0;
         public int SoLuongTon { get; set; } = 0;
 
         // Navigation properties

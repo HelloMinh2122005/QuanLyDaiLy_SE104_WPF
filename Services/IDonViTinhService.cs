@@ -4,10 +4,10 @@ namespace QuanLyDaiLy.Services
 {
     public interface IDonViTinhService
     {
-        Task<DonViTinh> GetDonViTinhById(long id);
+        Task<DonViTinh> GetDonViTinhById(int id);
         Task<IEnumerable<DonViTinh>> GetAllDonViTinh();
         Task AddDonViTinh(DonViTinh donViTinh);
         Task UpdateDonViTinh(DonViTinh donViTinh);
-        Task DeleteDonViTinh(long id);
+        Task DeleteDonViTinh(int id);
     }
 }

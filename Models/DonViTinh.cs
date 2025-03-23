@@ -6,7 +6,7 @@ namespace QuanLyDaiLy.Models
     public class DonViTinh
     {
         [Key]
-        public long MaDonViTinh { get; set; } = 0;
+        public int MaDonViTinh { get; set; } = 0;
         public string TenDonViTinh { get; set; } = "";
 
         // Navigation property

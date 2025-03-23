@@ -25,7 +25,7 @@ namespace QuanLyDaiLy.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteMatHang(long id)
+        public async Task DeleteMatHang(int id)
         {
             var matHang = await _context.DsMatHang.FindAsync(id);
             if (matHang != null)
@@ -42,7 +42,7 @@ namespace QuanLyDaiLy.Repositories
                 .ToListAsync();
         }
 
-        public async Task<MatHang> GetMatHangById(long id)
+        public async Task<MatHang> GetMatHangById(int id)
         {
             MatHang? matHang = await _context.DsMatHang
                 .Include(m => m.DonViTinh)

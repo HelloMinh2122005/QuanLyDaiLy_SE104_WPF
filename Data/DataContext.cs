@@ -70,7 +70,7 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
 
         // Seed ThamSo
         modelBuilder.Entity<ThamSo>().HasData(
-            new ThamSo { Id = 1, SoLuongDaiLyToiDa = 14, QuyDinhTienThuTienNo = true }
+            new ThamSo { Id = 1, SoLuongDaiLyToiDa = 4, QuyDinhTienThuTienNo = true }
         );
 
         // Seed Don Vi Tinh
@@ -108,10 +108,8 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
 
         // Seed Loai Dai Ly
         modelBuilder.Entity<LoaiDaiLy>().HasData(
-            new LoaiDaiLy { MaLoaiDaiLy = 1, TenLoaiDaiLy = "Đại lý cấp 1", NoToiDa = 20000000 },
-            new LoaiDaiLy { MaLoaiDaiLy = 2, TenLoaiDaiLy = "Đại lý cấp 2", NoToiDa = 15000000 },
-            new LoaiDaiLy { MaLoaiDaiLy = 3, TenLoaiDaiLy = "Đại lý cấp 3", NoToiDa = 10000000 },
-            new LoaiDaiLy { MaLoaiDaiLy = 4, TenLoaiDaiLy = "Đại lý cấp 4", NoToiDa = 5000000 }
+            new LoaiDaiLy { MaLoaiDaiLy = 1, TenLoaiDaiLy = "Đại lý loại 1", NoToiDa = 20000 },
+            new LoaiDaiLy { MaLoaiDaiLy = 2, TenLoaiDaiLy = "Đại lý loại 2", NoToiDa = 50 }
         );
 
         // Seed Dai Ly - Only include FK properties, not navigation properties
@@ -120,156 +118,170 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
             // Original 4 dai ly
             new
             {
-                MaDaiLy = 1L,
+                MaDaiLy = 1,
                 TenDaiLy = "Đại lý Minh Phát",
-                MaLoaiDaiLy = 1L,
-                MaQuan = 1L,
+                MaLoaiDaiLy = 1,
+                MaQuan = 1,
                 DiaChi = "12 Nguyễn Huệ",
                 DienThoai = "0901234567",
+                Email = "MinhPhat@gmail.com",
                 NgayTiepNhan = seedDate.AddMonths(-3),
                 TienNo = 5000000L
             },
             new
             {
-                MaDaiLy = 2L,
+                MaDaiLy = 2,
                 TenDaiLy = "Đại lý Hoàng Gia",
-                MaLoaiDaiLy = 2L,
-                MaQuan = 2L,
+                MaLoaiDaiLy = 2,
+                MaQuan = 2,
                 DiaChi = "45 Lê Lợi",
                 DienThoai = "0912345678",
+                Email = "HoangGia@gmail.com",
                 NgayTiepNhan = seedDate.AddMonths(-2),
                 TienNo = 3000000L
             },
             new
             {
-                MaDaiLy = 3L,
+                MaDaiLy = 3,
                 TenDaiLy = "Đại lý Thịnh Vượng",
-                MaLoaiDaiLy = 1L,
-                MaQuan = 3L,
+                MaLoaiDaiLy = 1,
+                MaQuan = 3,
                 DiaChi = "78 Nguyễn Trãi",
                 DienThoai = "0923456789",
+                Email = "ThinhVuong@gmail.com",
                 NgayTiepNhan = seedDate.AddMonths(-4),
                 TienNo = 7000000L
             },
             new
             {
-                MaDaiLy = 4L,
+                MaDaiLy = 4,
                 TenDaiLy = "Đại lý Thành Công",
-                MaLoaiDaiLy = 3L,
-                MaQuan = 4L,
+                MaLoaiDaiLy = 2,
+                MaQuan = 4,
                 DiaChi = "32 Lý Tự Trọng",
                 DienThoai = "0934567890",
+                Email = "ThanhCong@gmail.com",
                 NgayTiepNhan = seedDate.AddMonths(-1),
                 TienNo = 2000000L
             },
             // 10 new dai ly
             new
             {
-                MaDaiLy = 5L,
+                MaDaiLy = 5,
                 TenDaiLy = "Đại lý Tân Tiến",
-                MaLoaiDaiLy = 1L,
-                MaQuan = 5L,
+                MaLoaiDaiLy = 1,
+                MaQuan = 5,
                 DiaChi = "56 Trần Hưng Đạo",
                 DienThoai = "0945678901",
+                Email = "TanTien@gmail.com",
                 NgayTiepNhan = seedDate.AddMonths(-5),
                 TienNo = 8500000L
             },
             new
             {
-                MaDaiLy = 6L,
+                MaDaiLy = 6,
                 TenDaiLy = "Đại lý Phát Đạt",
-                MaLoaiDaiLy = 2L,
-                MaQuan = 6L,
+                MaLoaiDaiLy = 2,
+                MaQuan = 6,
                 DiaChi = "123 Nguyễn Văn Cừ",
                 DienThoai = "0956789012",
+                Email = "PhatDat@gmail.com",
                 NgayTiepNhan = seedDate.AddMonths(-6),
                 TienNo = 4200000L
             },
             new
             {
-                MaDaiLy = 7L,
+                MaDaiLy = 7,
                 TenDaiLy = "Đại lý Kim Cương",
-                MaLoaiDaiLy = 1L,
-                MaQuan = 7L,
+                MaLoaiDaiLy = 1,
+                MaQuan = 7,
                 DiaChi = "87 Nguyễn Thị Minh Khai",
                 DienThoai = "0967890123",
+                Email = "KimCuong@gmail.com",
                 NgayTiepNhan = seedDate.AddMonths(-7),
                 TienNo = 12000000L
             },
             new
             {
-                MaDaiLy = 8L,
+                MaDaiLy = 8,
                 TenDaiLy = "Đại lý Hoàng Long",
-                MaLoaiDaiLy = 3L,
-                MaQuan = 8L,
+                MaLoaiDaiLy = 1,
+                MaQuan = 8,
                 DiaChi = "245 Hai Bà Trưng",
                 DienThoai = "0978901234",
+                Email = "HoangLong@gmail.com",
                 NgayTiepNhan = seedDate.AddMonths(-2),
                 TienNo = 3500000L
             },
             new
             {
-                MaDaiLy = 9L,
+                MaDaiLy = 9,
                 TenDaiLy = "Đại lý Bình Minh",
-                MaLoaiDaiLy = 4L,
-                MaQuan = 9L,
+                MaLoaiDaiLy = 2,
+                MaQuan = 9,
                 DiaChi = "67 Phan Đình Phùng",
                 DienThoai = "0989012345",
+                Email = "BinhMinh@gmail.com",
                 NgayTiepNhan = seedDate.AddMonths(-3),
                 TienNo = 1800000L
             },
             new
             {
-                MaDaiLy = 10L,
+                MaDaiLy = 10,
                 TenDaiLy = "Đại lý Trường Thịnh",
-                MaLoaiDaiLy = 2L,
-                MaQuan = 10L,
+                MaLoaiDaiLy = 2,
+                MaQuan = 10,
                 DiaChi = "34 Lê Thánh Tôn",
                 DienThoai = "0990123456",
+                Email = "TruongThinh@gmail.com",
                 NgayTiepNhan = seedDate.AddMonths(-8),
                 TienNo = 6700000L
             },
             new
             {
-                MaDaiLy = 11L,
+                MaDaiLy = 11,
                 TenDaiLy = "Đại lý Tấn Phát",
-                MaLoaiDaiLy = 1L,
-                MaQuan = 11L,
+                MaLoaiDaiLy = 1,
+                MaQuan = 11,
                 DiaChi = "189 Điện Biên Phủ",
                 DienThoai = "0901234567",
+                Email = "TanPhat@gmail.com",
                 NgayTiepNhan = seedDate.AddMonths(-4),
                 TienNo = 15000000L
             },
             new
             {
-                MaDaiLy = 12L,
+                MaDaiLy = 12,
                 TenDaiLy = "Đại lý Quang Minh",
-                MaLoaiDaiLy = 3L,
-                MaQuan = 12L,
+                MaLoaiDaiLy = 1,
+                MaQuan = 12,
                 DiaChi = "76 Võ Văn Tần",
                 DienThoai = "0912345678",
+                Email = "QuangMinh@gmail.com",
                 NgayTiepNhan = seedDate.AddMonths(-9),
                 TienNo = 4300000L
             },
             new
             {
-                MaDaiLy = 13L,
+                MaDaiLy = 13,
                 TenDaiLy = "Đại lý Hưng Thịnh",
-                MaLoaiDaiLy = 4L,
-                MaQuan = 13L,
+                MaLoaiDaiLy = 2,
+                MaQuan = 13,
                 DiaChi = "54 Cách Mạng Tháng 8",
                 DienThoai = "0923456789",
+                Email = "HungThinh@gmail.com",
                 NgayTiepNhan = seedDate.AddMonths(-5),
                 TienNo = 2100000L
             },
             new
             {
-                MaDaiLy = 14L,
+                MaDaiLy = 14,
                 TenDaiLy = "Đại lý Phú Quý",
-                MaLoaiDaiLy = 2L,
-                MaQuan = 14L,
+                MaLoaiDaiLy = 2,
+                MaQuan = 14,
                 DiaChi = "112 Nguyễn Du",
                 DienThoai = "0934567890",
+                Email = "PhuQuy@gmail.com",
                 NgayTiepNhan = seedDate.AddMonths(-10),
                 TienNo = 9800000L
             }

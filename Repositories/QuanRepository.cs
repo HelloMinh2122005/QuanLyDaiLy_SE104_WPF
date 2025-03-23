@@ -25,7 +25,7 @@ namespace QuanLyDaiLy.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteQuan(long id)
+        public async Task DeleteQuan(int id)
         {
             var quan = await _context.DsQuan.FindAsync(id);
             if (quan != null)
@@ -42,15 +42,17 @@ namespace QuanLyDaiLy.Repositories
                 .ToListAsync();
         }
 
-        public async Task<Quan> GetQuanById(long id)
+        public async Task<Quan> GetQuanById(int id)
         {
-            Quan? quan = await _context.DsQuan.FindAsync(id);
+            Quan? quan = await _context.DsQuan
+                            .Include(q => q.DsDaiLy)
+                            .FirstOrDefaultAsync(q => q.MaQuan == id);
             return quan ?? throw new Exception("Quan not found!");
         }
 
         public async Task<Quan> GetQuanByTenQuan(string tenQuan)
         {
-            Quan? quan = await _context.DsQuan.FirstOrDefaultAsync(q => q.TenQuan == tenQuan);
+            Quan? quan = await _context.DsQuan.Include(q => q.DsDaiLy).FirstOrDefaultAsync(q => q.TenQuan == tenQuan);
             return quan ?? throw new Exception("Quan not found!");
         }
 
@@ -58,6 +60,20 @@ namespace QuanLyDaiLy.Repositories
         {
             _context.Entry(quan).State = EntityState.Modified;
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<int> GetSoLuongDaiLyTrongQuan(int id)
+        {
+            var quan = await _context.DsQuan
+                .Include(q => q.DsDaiLy)
+                .FirstOrDefaultAsync(q => q.MaQuan == id);
+
+            if (quan == null)
+            {
+                throw new Exception("Quan not found!");
+            }
+
+            return quan.DsDaiLy.Count;
         }
     }
 }

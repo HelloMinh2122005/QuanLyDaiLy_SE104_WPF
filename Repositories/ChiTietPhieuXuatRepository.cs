@@ -25,7 +25,7 @@ namespace QuanLyDaiLy.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteChiTietPhieuXuat(long id)
+        public async Task DeleteChiTietPhieuXuat(int id)
         {
             var chiTietPhieuXuat = await _context.DsChiTietPhieuXuat.FindAsync(id);
             if (chiTietPhieuXuat != null)
@@ -44,7 +44,7 @@ namespace QuanLyDaiLy.Repositories
                 .ToListAsync();
         }
 
-        public async Task<ChiTietPhieuXuat> GetChiTietPhieuXuatById(long id)
+        public async Task<ChiTietPhieuXuat> GetChiTietPhieuXuatById(int id)
         {
             ChiTietPhieuXuat? chiTietPhieuXuat = await _context.DsChiTietPhieuXuat
                 .Include(c => c.PhieuXuat)
@@ -54,7 +54,7 @@ namespace QuanLyDaiLy.Repositories
             return chiTietPhieuXuat ?? throw new Exception("ChiTietPhieuXuat not found!");
         }
 
-        public async Task<IEnumerable<ChiTietPhieuXuat>> GetChiTietPhieuXuatByPhieuXuatId(long maPhieuXuat)
+        public async Task<IEnumerable<ChiTietPhieuXuat>> GetChiTietPhieuXuatByPhieuXuatId(int maPhieuXuat)
         {
             return await _context.DsChiTietPhieuXuat
                 .Include(c => c.PhieuXuat)

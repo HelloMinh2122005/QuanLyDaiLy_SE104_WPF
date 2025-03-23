@@ -25,7 +25,7 @@ namespace QuanLyDaiLy.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteLoaiDaiLy(long id)
+        public async Task DeleteLoaiDaiLy(int id)
         {
             var loaiDaiLy = await _context.DsLoaiDaiLy.FindAsync(id);
             if (loaiDaiLy != null)
@@ -35,7 +35,7 @@ namespace QuanLyDaiLy.Repositories
             }
         }
 
-        public async Task<LoaiDaiLy> GetLoaiDaiLyById(long id)
+        public async Task<LoaiDaiLy> GetLoaiDaiLyById(int id)
         {
             LoaiDaiLy? loaiDaiLy = await _context.DsLoaiDaiLy.FindAsync(id);
             return loaiDaiLy ?? throw new Exception("LoaiDaiLy not found!");

@@ -4,11 +4,11 @@ namespace QuanLyDaiLy.Services
 {
     public interface IChiTietPhieuXuatService
     {
-        Task<ChiTietPhieuXuat> GetChiTietPhieuXuatById(long id);
+        Task<ChiTietPhieuXuat> GetChiTietPhieuXuatById(int id);
         Task<IEnumerable<ChiTietPhieuXuat>> GetAllChiTietPhieuXuat();
         Task AddChiTietPhieuXuat(ChiTietPhieuXuat chiTietPhieuXuat);
         Task UpdateChiTietPhieuXuat(ChiTietPhieuXuat chiTietPhieuXuat);
-        Task DeleteChiTietPhieuXuat(long id);
-        Task<IEnumerable<ChiTietPhieuXuat>> GetChiTietPhieuXuatByPhieuXuatId(long maPhieuXuat);
+        Task DeleteChiTietPhieuXuat(int id);
+        Task<IEnumerable<ChiTietPhieuXuat>> GetChiTietPhieuXuatByPhieuXuatId(int maPhieuXuat);
     }
 }

@@ -7,7 +7,6 @@ using System.Runtime.CompilerServices;
 using QuanLyDaiLy.Models;
 using System.Collections.ObjectModel;
 using QuanLyDaiLy.Services;
-using System.Threading.Tasks;
 
 namespace QuanLyDaiLy.ViewModels
 {
@@ -15,10 +14,12 @@ namespace QuanLyDaiLy.ViewModels
     {
         public HoSoDaiLyViewModel(
             IQuanService quanService,
-            ILoaiDaiLyService loaiDaiLyService
+            ILoaiDaiLyService loaiDaiLyService,
+            IDaiLyService daiLyService,
+            IThamSoService thamSoService
         ) {
             CloseWindowCommand = new RelayCommand(CloseWindow);
-            TiepNhanDaiLyCommand = new RelayCommand(TiepNhanDaiLy);
+            TiepNhanDaiLyCommand = new RelayCommand(async () => await TiepNhanDaiLy());
             DaiLyMoiCommand = new RelayCommand(DaiLyMoi);
 
             _selectedLoaiDaiLy = new();
@@ -26,10 +27,11 @@ namespace QuanLyDaiLy.ViewModels
 
             this.quanService = quanService;
             this.loaiDaiLyService = loaiDaiLyService;
+            this.daiLyService = daiLyService;
+            this.thamSoService = thamSoService;
 
             _ = LoadDataAsync();
         }
-
 
         // Properties for binding
         private string _maDaiLy = string.Empty;
@@ -142,9 +144,14 @@ namespace QuanLyDaiLy.ViewModels
             }
         }
 
+        // Events
+        public event EventHandler? DataChanged;
+
         // Services 
         private readonly ILoaiDaiLyService loaiDaiLyService;
         private readonly IQuanService quanService;
+        private readonly IDaiLyService daiLyService;
+        private readonly IThamSoService thamSoService;
 
         // Commands
         public ICommand CloseWindowCommand { get; }
@@ -166,12 +173,59 @@ namespace QuanLyDaiLy.ViewModels
 
         private void CloseWindow()
         {
+            DataChanged?.Invoke(this, EventArgs.Empty);
             Application.Current.Windows.OfType<HoSoDaiLyWinDow>().FirstOrDefault()?.Close();
         }
 
-        private void TiepNhanDaiLy()
+        private async Task TiepNhanDaiLy()
         {
-            MessageBox.Show("Tiếp nhận đại lý thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+            // Validate data first
+            if (string.IsNullOrWhiteSpace(TenDaiLy))
+            {
+                MessageBox.Show("Tên đại lý không được để trống!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            if (SelectedLoaiDaiLy == null || SelectedQuan == null)
+            {
+                MessageBox.Show("Vui lòng chọn loại đại lý và quận!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            int soLuongDaiLyTrongQuan = await quanService.GetSoLuongDaiLyTrongQuan(SelectedQuan.MaQuan);
+            var thamSo = await thamSoService.GetThamSo();
+            int soLuongDaiLyToiDaTrongQuan = thamSo.SoLuongDaiLyToiDa;
+
+            if (soLuongDaiLyTrongQuan >= soLuongDaiLyToiDaTrongQuan)
+            {
+                MessageBox.Show("Quận đã đạt số lượng đại lý tối đa!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            MaDaiLy = (await daiLyService.GenerateAvailableId()).ToString();
+            DaiLy daiLy = new()
+            {
+                MaDaiLy = int.Parse(MaDaiLy),
+                TenDaiLy = TenDaiLy,
+                DienThoai = SoDienThoai,
+                Email = Email,
+                NgayTiepNhan = NgayTiepNhan,
+                DiaChi = DiaChi,
+                MaLoaiDaiLy = SelectedLoaiDaiLy.MaLoaiDaiLy,
+                MaQuan = SelectedQuan.MaQuan,
+                LoaiDaiLy = SelectedLoaiDaiLy,
+                Quan = SelectedQuan
+            };
+
+            try
+            {
+                await daiLyService.AddDaiLy(daiLy);
+                MessageBox.Show("Tiếp nhận đại lý thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Lưu đại lý không thành công", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void DaiLyMoi()
@@ -182,6 +236,8 @@ namespace QuanLyDaiLy.ViewModels
             Email = string.Empty;
             NgayTiepNhan = DateTime.Now;
             DiaChi = string.Empty;
+            SelectedLoaiDaiLy = null!;
+            SelectedQuan = null!;
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;

@@ -54,6 +54,12 @@ namespace QuanLyDaiLy.ViewModels
         private void OpenHoSoDaiLyWindow()
         {
             var hoSoDaiLyWindow = _serviceProvider.GetRequiredService<HoSoDaiLyWinDow>();
+
+            if (hoSoDaiLyWindow.DataContext is HoSoDaiLyViewModel viewModel)
+            {
+                viewModel.DataChanged += async (sender, e) => await LoadData();
+            }
+
             hoSoDaiLyWindow.Show();
         }
 

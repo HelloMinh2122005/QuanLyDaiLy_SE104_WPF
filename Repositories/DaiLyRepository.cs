@@ -25,7 +25,7 @@ namespace QuanLyDaiLy.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteDaiLy(long id)
+        public async Task DeleteDaiLy(int id)
         {
             var daiLy = await _context.DsDaiLy.FindAsync(id);
             if (daiLy != null)
@@ -43,9 +43,12 @@ namespace QuanLyDaiLy.Repositories
                 .ToListAsync();
         }
 
-        public async Task<DaiLy> GetDaiLyById(long id)
+        public async Task<DaiLy> GetDaiLyById(int id)
         {
-            DaiLy? existingDaiLy = await _context.DsDaiLy.FindAsync(id);
+            DaiLy? existingDaiLy = await _context.DsDaiLy
+                                            .Include(d => d.LoaiDaiLy)
+                                            .Include(d => d.Quan)
+                                            .FirstOrDefaultAsync(d => d.MaDaiLy == id);
             return existingDaiLy ?? throw new Exception("DaiLy not found!");
         }
 
@@ -59,6 +62,12 @@ namespace QuanLyDaiLy.Repositories
         {
             _context.Entry(daiLy).State = EntityState.Modified;
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<int> GenerateAvailableId()
+        {
+            int maxId = await _context.DsDaiLy.MaxAsync(d => d.MaDaiLy);
+            return maxId + 1;
         }
     }
 }

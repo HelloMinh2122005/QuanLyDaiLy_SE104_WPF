@@ -25,7 +25,7 @@ namespace QuanLyDaiLy.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task DeletePhieuXuat(long id)
+        public async Task DeletePhieuXuat(int id)
         {
             var phieuXuat = await _context.DsPhieuXuat.FindAsync(id);
             if (phieuXuat != null)
@@ -45,7 +45,7 @@ namespace QuanLyDaiLy.Repositories
                 .ToListAsync();
         }
 
-        public async Task<PhieuXuat> GetPhieuXuatById(long id)
+        public async Task<PhieuXuat> GetPhieuXuatById(int id)
         {
             PhieuXuat? phieuXuat = await _context.DsPhieuXuat
                 .Include(p => p.DaiLy)
@@ -62,7 +62,7 @@ namespace QuanLyDaiLy.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<PhieuXuat>> GetPhieuXuatByDaiLyId(long maDaiLy)
+        public async Task<IEnumerable<PhieuXuat>> GetPhieuXuatByDaiLyId(int maDaiLy)
         {
             return await _context.DsPhieuXuat
                 .Include(p => p.DaiLy)
