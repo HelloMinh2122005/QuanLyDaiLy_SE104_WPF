@@ -6,12 +6,19 @@
         xmlns:local="clr-namespace:QuanLyDaiLy.Views"
         mc:Ignorable="d"
         Title="HoSoDaiLyWinDow" Height="542" Width="960"
-        WindowStyle="None" AllowsTransparency="True" Background="#FFFFFF">
+        WindowStyle="None" AllowsTransparency="True" Background="Transparent">
+
+    <Window.Resources>
+        <DropShadowEffect x:Key="DropShadowEffect" Color="Black" BlurRadius="10" ShadowDepth="0" Opacity="0.5"/>
+    </Window.Resources>
+    
     <Border BorderBrush="#DDDDDD" BorderThickness="1" CornerRadius="20" Background="White">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="80"/>
-                <RowDefinition Height="382"/>
+                <RowDefinition Height="1"/>
+                <RowDefinition Height="381"/>
+                <RowDefinition Height="1"/>
                 <RowDefinition Height="80"/>
             </Grid.RowDefinitions>
 
@@ -43,13 +50,143 @@
                             BorderBrush="Transparent"
                             HorizontalContentAlignment="Center" 
                             VerticalContentAlignment="Center"
-                            Command="{Binding CloseWindowCommand}"/>
+                            Command="{Binding CloseWindowCommand}">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border x:Name="buttonBorder" 
+                                        Background="{TemplateBinding Background}" 
+                                        BorderBrush="{TemplateBinding BorderBrush}"
+                                        BorderThickness="{TemplateBinding BorderThickness}"
+                                        CornerRadius="8">
+                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter TargetName="buttonBorder" Property="Background" Value="#D32F2F"/>
+                                        <Setter TargetName="buttonBorder" Property="Effect">
+                                            <Setter.Value>
+                                                <DropShadowEffect BlurRadius="8" ShadowDepth="4" Opacity="0.3" Color="#555555"/>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Trigger>
+                                    <Trigger Property="IsPressed" Value="True">
+                                        <Setter TargetName="buttonBorder" Property="Background" Value="#B71C1C"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
                 </StackPanel>
+
             </Grid>
             <!-- Body -->
-            <Grid Grid.Row="1"/>
+            <Border Grid.Row="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="10,10,10,10" CornerRadius="11" Background="#F7F9FD" Padding="10" BorderBrush="Transparent"
+                    Effect="{StaticResource DropShadowEffect}">
+                
+            </Border>
             <!-- Footer -->
-            <Grid Grid.Row="2"/>
+            <StackPanel Grid.Row="4" Margin="20" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Stretch">
+                <Border CornerRadius="8">
+                    <Button Content="Tiếp nhận đại lý" Command="{Binding CloseWindowCommand}" 
+                            Background="#00AAFF" 
+                            Foreground="#FFFFFF" 
+                            FontFamily="Roboto" 
+                            FontStyle="Normal" 
+                            FontWeight="Medium" 
+                            FontSize="19"
+                            Width="180">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border x:Name="buttonBorder" Background="{TemplateBinding Background}" 
+                                        CornerRadius="8" Padding="16,10,16,8">
+                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter TargetName="buttonBorder" Property="Background" Value="#0088CC"/>
+                                        <Setter TargetName="buttonBorder" Property="Effect">
+                                            <Setter.Value>
+                                                <DropShadowEffect BlurRadius="8" ShadowDepth="4" Opacity="0.3" Color="#555555"/>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Trigger>
+                                    <Trigger Property="IsPressed" Value="True">
+                                        <Setter TargetName="buttonBorder" Property="Background" Value="#006699"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+                </Border>
+
+                <Border Margin="80, 0, 0, 0"
+                        CornerRadius="8">
+                    <Button Content="Đại lý mới" Command="{Binding CloseWindowCommand}" 
+                            Background="#00AAFF" 
+                            Foreground="#FFFFFF" 
+                            FontFamily="Roboto" 
+                            FontStyle="Normal" 
+                            FontWeight="Medium" 
+                            FontSize="19" 
+                            Width="180">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border x:Name="buttonBorder" Background="{TemplateBinding Background}" 
+                                        CornerRadius="8" Padding="16,10,16,8">
+                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter TargetName="buttonBorder" Property="Background" Value="#0088CC"/>
+                                        <Setter TargetName="buttonBorder" Property="Effect">
+                                            <Setter.Value>
+                                                <DropShadowEffect BlurRadius="8" ShadowDepth="4" Opacity="0.3" Color="#555555"/>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Trigger>
+                                    <Trigger Property="IsPressed" Value="True">
+                                        <Setter TargetName="buttonBorder" Property="Background" Value="#006699"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+                </Border>
+
+                <Border Margin="80, 0, 0, 0"
+                        CornerRadius="8">
+                    <Button Content="Thoát" Command="{Binding CloseWindowCommand}" 
+                            Background="#00AAFF" 
+                            Foreground="#FFFFFF" 
+                            FontFamily="Roboto" 
+                            FontStyle="Normal" 
+                            FontWeight="Medium" 
+                            FontSize="19" 
+                            Width="180">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border x:Name="buttonBorder" Background="{TemplateBinding Background}" 
+                        CornerRadius="8" Padding="16,10,16,8">
+                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter TargetName="buttonBorder" Property="Background" Value="#D32F2F"/>
+                                        <Setter TargetName="buttonBorder" Property="Effect">
+                                            <Setter.Value>
+                                                <DropShadowEffect BlurRadius="8" ShadowDepth="4" Opacity="0.3" Color="#555555"/>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Trigger>
+                                    <Trigger Property="IsPressed" Value="True">
+                                        <Setter TargetName="buttonBorder" Property="Background" Value="#B71C1C"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+                </Border>
+            </StackPanel>
         </Grid>
     </Border>
 </Window>

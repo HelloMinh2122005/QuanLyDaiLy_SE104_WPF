@@ -47,7 +47,7 @@
                             FontFamily="Roboto" 
                             FontStyle="Normal" 
                             FontWeight="Medium" 
-                            FontSize="30" 
+                            FontSize="28" 
                             Width="250" Height="50">
                         <Button.Template>
                             <ControlTemplate TargetType="Button">
@@ -90,7 +90,7 @@
                             FontFamily="Roboto" 
                             FontStyle="Normal" 
                             FontWeight="Medium" 
-                            FontSize="30" 
+                            FontSize="28" 
                             Width="150" Height="50">
                         <Button.Template>
                             <ControlTemplate TargetType="Button">
@@ -126,7 +126,7 @@
                             FontFamily="Roboto" 
                             FontStyle="Normal" 
                             FontWeight="Medium" 
-                            FontSize="30" 
+                            FontSize="28" 
                             Width="150" Height="50">
                         <Button.Template>
                             <ControlTemplate TargetType="Button">
@@ -162,7 +162,7 @@
                             FontFamily="Roboto" 
                             FontStyle="Normal" 
                             FontWeight="Medium" 
-                            FontSize="30" 
+                            FontSize="28" 
                             Width="150" Height="50">
                         <Button.Template>
                             <ControlTemplate TargetType="Button">
