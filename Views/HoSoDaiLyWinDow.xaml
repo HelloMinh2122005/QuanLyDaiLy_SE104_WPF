@@ -11,7 +11,7 @@
     <Window.Resources>
         <DropShadowEffect x:Key="DropShadowEffect" Color="Black" BlurRadius="10" ShadowDepth="0" Opacity="0.5"/>
     </Window.Resources>
-    
+
     <Border BorderBrush="#DDDDDD" BorderThickness="1" CornerRadius="20" Background="White">
         <Grid>
             <Grid.RowDefinitions>
@@ -29,7 +29,7 @@
                     <ColumnDefinition Width=".5*"/>
                 </Grid.ColumnDefinitions>
 
-                <StackPanel Grid.Column="0" VerticalAlignment="Center" Margin="20,0,0,0">
+                <StackPanel Grid.Column="0" VerticalAlignment="Center" Margin="20,15,0,0">
                     <TextBlock Text="Tiếp nhận đại lý" 
                                FontFamily="Nunito" 
                                FontStyle="Normal" 
@@ -80,9 +80,347 @@
 
             </Grid>
             <!-- Body -->
-            <Border Grid.Row="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="10,10,10,10" CornerRadius="11" Background="#F7F9FD" Padding="10" BorderBrush="Transparent"
+            <Border Grid.Row="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="15" CornerRadius="11" Background="#F7F9FD" Padding="10" BorderBrush="Transparent"
                     Effect="{StaticResource DropShadowEffect}">
-                
+                <Grid Margin="10">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="33*"/>
+                        <RowDefinition Height="33*"/>
+                        <RowDefinition Height="33*"/>
+                    </Grid.RowDefinitions>
+
+                    <!-- Line 1 -->
+                    <Grid Grid.Row="0" Margin="10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="25*"/>
+                            <ColumnDefinition Width="25*"/>
+                            <ColumnDefinition Width="25*"/>
+                            <ColumnDefinition Width="25*"/>
+                        </Grid.ColumnDefinitions>
+                        <!-- Mã đại lý -->
+                        <Grid Grid.Column="0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="3*"/>
+                                <RowDefinition Height="7*"/>
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Grid.Row="0" 
+                                       Text="Mã đại lý" 
+                                       VerticalAlignment="Center" 
+                                       HorizontalAlignment="Left"
+                                       FontFamily="Nunito"
+                                       FontStyle="Normal"
+                                       FontWeight="Medium"
+                                       FontSize="25"
+                                       Foreground="#000000"
+                                       Margin="10,0,0,0"/>
+                            <TextBox Grid.Row="1"
+                                    Background="#FFFFFF" 
+                                    BorderBrush="#33000000"
+                                    HorizontalAlignment="Stretch"
+                                    VerticalAlignment="Stretch"
+                                    VerticalContentAlignment="Center"
+                                    Margin="10"
+                                    FontFamily="Nunito"
+                                    FontStyle="Normal"
+                                    FontWeight="Normal"
+                                    FontSize="14"
+                                    Foreground="#9A000000"
+                                    TextAlignment="Left"
+                                    BorderThickness="1">
+                                <TextBox.Resources>
+                                    <Style TargetType="{x:Type Border}">
+                                        <Setter Property="CornerRadius" Value="10"/>
+                                    </Style>
+                                </TextBox.Resources>
+                            </TextBox>
+                        </Grid>
+
+                        <!-- Tên đại lý -->
+                        <Grid Grid.Column="1">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="3*"/>
+                                <RowDefinition Height="7*"/>
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Grid.Row="0" 
+                                       Text="Tên đại lý" 
+                                       VerticalAlignment="Center" 
+                                       HorizontalAlignment="Left"
+                                       FontFamily="Nunito"
+                                       FontStyle="Normal"
+                                       FontWeight="Medium"
+                                       FontSize="25"
+                                       Foreground="#000000"
+                                       Margin="10,0,0,0"/>
+                            <TextBox Grid.Row="1"
+                                    Background="#FFFFFF" 
+                                    BorderBrush="#33000000"
+                                    HorizontalAlignment="Stretch"
+                                    VerticalAlignment="Stretch"
+                                    VerticalContentAlignment="Center"
+                                    Margin="10"
+                                    FontFamily="Nunito"
+                                    FontStyle="Normal"
+                                    FontWeight="Normal"
+                                    FontSize="14"
+                                    Foreground="#9A000000"
+                                    TextAlignment="Left"
+                                    BorderThickness="1">
+                                <TextBox.Resources>
+                                    <Style TargetType="{x:Type Border}">
+                                        <Setter Property="CornerRadius" Value="10"/>
+                                    </Style>
+                                </TextBox.Resources>
+                            </TextBox>
+                        </Grid>
+
+                        <!-- Tên loại đại lý -->
+                        <Grid Grid.Column="2">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="3*"/>
+                                <RowDefinition Height="7*"/>
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Grid.Row="0" 
+                                       Text="Tên loại đại lý" 
+                                       VerticalAlignment="Center" 
+                                       HorizontalAlignment="Left"
+                                       FontFamily="Nunito"
+                                       FontStyle="Normal"
+                                       FontWeight="Medium"
+                                       FontSize="25"
+                                       Foreground="#000000"
+                                       Margin="10,0,0,0"/>
+                            <TextBox Grid.Row="1"
+                                    Background="#FFFFFF" 
+                                    BorderBrush="#33000000"
+                                    HorizontalAlignment="Stretch"
+                                    VerticalAlignment="Stretch"
+                                    VerticalContentAlignment="Center"
+                                    Margin="10"
+                                    FontFamily="Nunito"
+                                    FontStyle="Normal"
+                                    FontWeight="Normal"
+                                    FontSize="14"
+                                    Foreground="#9A000000"
+                                    TextAlignment="Left"
+                                    BorderThickness="1">
+                                <TextBox.Resources>
+                                    <Style TargetType="{x:Type Border}">
+                                        <Setter Property="CornerRadius" Value="10"/>
+                                    </Style>
+                                </TextBox.Resources>
+                            </TextBox>
+                        </Grid>
+
+                        <!-- Tên quận -->
+                        <Grid Grid.Column="3">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="3*"/>
+                                <RowDefinition Height="7*"/>
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Grid.Row="0" 
+                                       Text="Tên quận" 
+                                       VerticalAlignment="Center" 
+                                       HorizontalAlignment="Left"
+                                       FontFamily="Nunito"
+                                       FontStyle="Normal"
+                                       FontWeight="Medium"
+                                       FontSize="25"
+                                       Foreground="#000000"
+                                       Margin="10,0,0,0"/>
+                            <TextBox Grid.Row="1"
+                                    Background="#FFFFFF" 
+                                    BorderBrush="#33000000"
+                                    HorizontalAlignment="Stretch"
+                                    VerticalAlignment="Stretch"
+                                    VerticalContentAlignment="Center"
+                                    Margin="10"
+                                    FontFamily="Nunito"
+                                    FontStyle="Normal"
+                                    FontWeight="Normal"
+                                    FontSize="14"
+                                    Foreground="#9A000000"
+                                    TextAlignment="Left"
+                                    BorderThickness="1">
+                                <TextBox.Resources>
+                                    <Style TargetType="{x:Type Border}">
+                                        <Setter Property="CornerRadius" Value="10"/>
+                                    </Style>
+                                </TextBox.Resources>
+                            </TextBox>
+                        </Grid>
+
+                    </Grid>
+
+                    <!-- Line 2 -->
+                    <Grid Grid.Row="1" Margin="10" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="33*"/>
+                            <ColumnDefinition Width="33*"/>
+                            <ColumnDefinition Width="34*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- Số điện thoại -->
+                        <Grid Grid.Column="0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="3*"/>
+                                <RowDefinition Height="7*"/>
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Grid.Row="0" 
+                                       Text="Số điện thoại" 
+                                       VerticalAlignment="Center" 
+                                       HorizontalAlignment="Left"
+                                       FontFamily="Nunito"
+                                       FontStyle="Normal"
+                                       FontWeight="Medium"
+                                       FontSize="25"
+                                       Foreground="#000000"
+                                       Margin="10,0,0,0"/>
+                            <TextBox Grid.Row="1"
+                                    Background="#FFFFFF" 
+                                    BorderBrush="#33000000"
+                                    HorizontalAlignment="Stretch"
+                                    VerticalAlignment="Stretch"
+                                    VerticalContentAlignment="Center"
+                                    Margin="10"
+                                    FontFamily="Nunito"
+                                    FontStyle="Normal"
+                                    FontWeight="Normal"
+                                    FontSize="14"
+                                    Foreground="#9A000000"
+                                    TextAlignment="Left"
+                                    BorderThickness="1">
+                                <TextBox.Resources>
+                                    <Style TargetType="{x:Type Border}">
+                                        <Setter Property="CornerRadius" Value="10"/>
+                                    </Style>
+                                </TextBox.Resources>
+                            </TextBox>
+                        </Grid>
+
+                        <!-- Email -->
+                        <Grid Grid.Column="1">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="3*"/>
+                                <RowDefinition Height="7*"/>
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Grid.Row="0" 
+                                       Text="Email" 
+                                       VerticalAlignment="Center" 
+                                       HorizontalAlignment="Left"
+                                       FontFamily="Nunito"
+                                       FontStyle="Normal"
+                                       FontWeight="Medium"
+                                       FontSize="25"
+                                       Foreground="#000000"
+                                       Margin="10,0,0,0"/>
+                            <TextBox Grid.Row="1"
+                                    Background="#FFFFFF" 
+                                    BorderBrush="#33000000"
+                                    HorizontalAlignment="Stretch"
+                                    VerticalAlignment="Stretch"
+                                    VerticalContentAlignment="Center"
+                                    Margin="10"
+                                    FontFamily="Nunito"
+                                    FontStyle="Normal"
+                                    FontWeight="Normal"
+                                    FontSize="14"
+                                    Foreground="#9A000000"
+                                    TextAlignment="Left"
+                                    BorderThickness="1">
+                                <TextBox.Resources>
+                                    <Style TargetType="{x:Type Border}">
+                                        <Setter Property="CornerRadius" Value="10"/>
+                                    </Style>
+                                </TextBox.Resources>
+                            </TextBox>
+                        </Grid>
+
+                        <!-- Tên quận -->
+                        <Grid Grid.Column="2">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="3*"/>
+                                <RowDefinition Height="7*"/>
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Grid.Row="0" 
+                                       Text="Tên quận" 
+                                       VerticalAlignment="Center" 
+                                       HorizontalAlignment="Left"
+                                       FontFamily="Nunito"
+                                       FontStyle="Normal"
+                                       FontWeight="Medium"
+                                       FontSize="25"
+                                       Foreground="#000000"
+                                       Margin="10,0,0,0"/>
+                            <TextBox Grid.Row="1"
+                                    Background="#FFFFFF" 
+                                    BorderBrush="#33000000"
+                                    HorizontalAlignment="Stretch"
+                                    VerticalAlignment="Stretch"
+                                    VerticalContentAlignment="Center"
+                                    Margin="10"
+                                    FontFamily="Nunito"
+                                    FontStyle="Normal"
+                                    FontWeight="Normal"
+                                    FontSize="14"
+                                    Foreground="#9A000000"
+                                    TextAlignment="Left"
+                                    BorderThickness="1">
+                                <TextBox.Resources>
+                                    <Style TargetType="{x:Type Border}">
+                                        <Setter Property="CornerRadius" Value="10"/>
+                                    </Style>
+                                </TextBox.Resources>
+                            </TextBox>
+                        </Grid>
+                    </Grid>
+
+                    <!-- Line 3 -->
+                    <!-- Địa chỉ -->
+                    <Grid Grid.Row="2">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="46*"/>
+                            <RowDefinition Height="61*"/>
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Grid.Row="0"
+                                       Text="Địa chỉ" 
+                                       VerticalAlignment="Center" 
+                                       HorizontalAlignment="Left"
+                                       FontFamily="Nunito"
+                                       FontStyle="Normal"
+                                       FontWeight="Medium"
+                                       FontSize="25"
+                                       Foreground="#000000"
+                                       Margin="20,0,0,0"/>
+                        <TextBox Grid.Row="1"
+                                    Background="#FFFFFF" 
+                                    BorderBrush="#33000000"
+                                    HorizontalAlignment="Stretch"
+                                    VerticalAlignment="Stretch"
+                                    VerticalContentAlignment="Center"
+                                    Margin="20,0,20,10"
+                                    FontFamily="Nunito"
+                                    FontStyle="Normal"
+                                    FontWeight="Normal"
+                                    FontSize="14"
+                                    Foreground="#9A000000"
+                                    TextAlignment="Left"
+                                    BorderThickness="1">
+                            <TextBox.Resources>
+                                <Style TargetType="{x:Type Border}">
+                                    <Setter Property="CornerRadius" Value="10"/>
+                                </Style>
+                            </TextBox.Resources>
+                        </TextBox>
+                    </Grid>
+                </Grid>
             </Border>
             <!-- Footer -->
             <StackPanel Grid.Row="4" Margin="20" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Stretch">
