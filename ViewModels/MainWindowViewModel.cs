@@ -5,17 +5,20 @@ using QuanLyDaiLy.Models;
 using QuanLyDaiLy.Services;
 using QuanLyDaiLy.Commands;
 using QuanLyDaiLy.Views;
-using System.Windows;
 using System.Windows.Input;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace QuanLyDaiLy.ViewModels
 {
     public class MainWindowViewModel : INotifyPropertyChanged
     {
         private readonly IDaiLyService _dailyService;
+        private readonly IServiceProvider _serviceProvider;
 
-        public MainWindowViewModel(IDaiLyService dailyService)
-        {
+        public MainWindowViewModel(
+            IDaiLyService dailyService, 
+            IServiceProvider serviceProvider
+        ) {
             _dailyService = dailyService;
             _ = LoadData();
 
@@ -23,6 +26,7 @@ namespace QuanLyDaiLy.ViewModels
             EditDaiLyCommand = new RelayCommand(OpenEditDaiLyWindow);
             DeleteDaiLyCommand = new RelayCommand(OpenDeleteDaiLyWindow);
             SearchDaiLyCommand = new RelayCommand(OpenSearchDaiLyWindow);
+            _serviceProvider = serviceProvider;
         }
 
         private ObservableCollection<DaiLy> _danhSachDaiLy = [];
@@ -49,38 +53,26 @@ namespace QuanLyDaiLy.ViewModels
 
         private void OpenHoSoDaiLyWindow()
         {
-            var hoSoDaiLyWindow = new HoSoDaiLyWinDow
-            {
-                Owner = Application.Current.MainWindow
-            };
-            hoSoDaiLyWindow.ShowDialog();
+            var hoSoDaiLyWindow = _serviceProvider.GetRequiredService<HoSoDaiLyWinDow>();
+            hoSoDaiLyWindow.Show();
         }
 
         private void OpenEditDaiLyWindow()
         {
-            var hoSoDaiLyWindow = new HoSoDaiLyWinDow
-            {
-                Owner = Application.Current.MainWindow
-            };
-            hoSoDaiLyWindow.ShowDialog();
+            var hoSoDaiLyWindow = _serviceProvider.GetRequiredService<HoSoDaiLyWinDow>();
+            hoSoDaiLyWindow.Show();
         }
 
         private void OpenDeleteDaiLyWindow()
         {
-            var hoSoDaiLyWindow = new HoSoDaiLyWinDow
-            {
-                Owner = Application.Current.MainWindow
-            };
-            hoSoDaiLyWindow.ShowDialog();
+            var hoSoDaiLyWindow = _serviceProvider.GetRequiredService<HoSoDaiLyWinDow>();
+            hoSoDaiLyWindow.Show();
         }
 
         private void OpenSearchDaiLyWindow()
         {
-            var hoSoDaiLyWindow = new HoSoDaiLyWinDow
-            {
-                Owner = Application.Current.MainWindow
-            };
-            hoSoDaiLyWindow.ShowDialog();
+            var hoSoDaiLyWindow = _serviceProvider.GetRequiredService<HoSoDaiLyWinDow>();
+            hoSoDaiLyWindow.Show();
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;

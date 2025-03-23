@@ -5,8 +5,51 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:QuanLyDaiLy.Views"
         mc:Ignorable="d"
-        Title="HoSoDaiLyWinDow" Height="650" Width="1000">
-    <Grid>
-        
-    </Grid>
+        Title="HoSoDaiLyWinDow" Height="542" Width="960"
+        WindowStyle="None" AllowsTransparency="True" Background="#FFFFFF">
+    <Border BorderBrush="#DDDDDD" BorderThickness="1" CornerRadius="20" Background="White">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="80"/>
+                <RowDefinition Height="382"/>
+                <RowDefinition Height="80"/>
+            </Grid.RowDefinitions>
+
+            <!-- Header -->
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width=".5*"/>
+                    <ColumnDefinition Width=".5*"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0" VerticalAlignment="Center" Margin="20,0,0,0">
+                    <TextBlock Text="Tiếp nhận đại lý" 
+                               FontFamily="Nunito" 
+                               FontStyle="Normal" 
+                               FontWeight="SemiBold" 
+                               FontSize="40" 
+                               LineHeight="55" />
+                </StackPanel>
+
+                <StackPanel Grid.Column="1" VerticalAlignment="Center" Margin="0,0,20,0" HorizontalAlignment="Right">
+                    <Button Content="❌" 
+                            FontFamily="Nunito" 
+                            FontStyle="Normal" 
+                            FontWeight="SemiBold" 
+                            FontSize="35"
+                            Width="50" 
+                            Height="50" 
+                            Background="Transparent" 
+                            BorderBrush="Transparent"
+                            HorizontalContentAlignment="Center" 
+                            VerticalContentAlignment="Center"
+                            Command="{Binding CloseWindowCommand}"/>
+                </StackPanel>
+            </Grid>
+            <!-- Body -->
+            <Grid Grid.Row="1"/>
+            <!-- Footer -->
+            <Grid Grid.Row="2"/>
+        </Grid>
+    </Border>
 </Window>

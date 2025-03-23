@@ -25,17 +25,13 @@ public static class ApplicationServiceExtensions
         services.AddScoped<IThamSoService, ThamSoRepository>();
         services.AddScoped<IChiTietPhieuXuatService, ChiTietPhieuXuatRepository>();
 
-        //// Register ViewModels
-        //services.AddTransient<ThongTinSoTietKiemViewModel>();
-        //services.AddTransient<DashboardViewModel>();
+        // Register ViewModels
+        services.AddTransient<MainWindowViewModel>();
+        services.AddTransient<HoSoDaiLyViewModel>();
 
-        //// Register Views
-        //services.AddTransient<ThongTinSoTietKiem>();
-        //services.AddTransient<Dashboard>();
-
-        // Register the main window (if needed)
-        services.AddSingleton<MainWindow>();
-        services.AddSingleton<MainWindowViewModel>();
+        // Register Views
+        services.AddTransient<MainWindow>();
+        services.AddTransient<HoSoDaiLyWinDow>();
 
         return services;
     }

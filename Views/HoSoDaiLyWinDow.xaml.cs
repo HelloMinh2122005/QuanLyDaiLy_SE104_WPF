@@ -1,4 +1,5 @@
-﻿using System;
+﻿using QuanLyDaiLy.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,10 +20,10 @@ namespace QuanLyDaiLy.Views
     /// </summary>
     public partial class HoSoDaiLyWinDow : Window
     {
-        public HoSoDaiLyWinDow()
+        public HoSoDaiLyWinDow(HoSoDaiLyViewModel vm)
         {
             InitializeComponent();
-
+            DataContext = vm;
         }
     }
 }
