@@ -4,12 +4,150 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:QuanLyDaiLy.Views"
+        xmlns:helpers="clr-namespace:QuanLyDaiLy.Helpers"
         mc:Ignorable="d"
         Title="HoSoDaiLyWinDow" Height="542" Width="960"
         WindowStyle="None" AllowsTransparency="True" Background="Transparent">
 
     <Window.Resources>
         <DropShadowEffect x:Key="DropShadowEffect" Color="Black" BlurRadius="10" ShadowDepth="0" Opacity="0.5"/>
+        <helpers:ComboBoxItemConverter x:Key="ComboBoxItemConverter"/>
+
+        <!-- ComboBox Style -->
+        <Style x:Key="StyledComboBox" TargetType="{x:Type ComboBox}">
+            <Setter Property="Background" Value="#FFFFFF"/>
+            <Setter Property="BorderBrush" Value="#33000000"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="VerticalAlignment" Value="Stretch"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="10"/>
+            <Setter Property="FontFamily" Value="Nunito"/>
+            <Setter Property="FontStyle" Value="Normal"/>
+            <Setter Property="FontWeight" Value="Normal"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Foreground" Value="#000000"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="ItemTemplate">
+                <Setter.Value>
+                    <DataTemplate>
+                        <TextBlock Text="{Binding}"/>
+                    </DataTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ComboBox}">
+                        <Grid>
+                            <Border x:Name="mainBorder" 
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="{TemplateBinding BorderBrush}"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="10">
+                                <Grid>
+                                    <ToggleButton x:Name="toggleButton"
+                                    BorderBrush="Transparent"
+                                    Background="Transparent"
+                                    ClickMode="Press"
+                                    Focusable="false"
+                                    IsChecked="{Binding Path=IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}">
+                                        <ToggleButton.Template>
+                                            <ControlTemplate TargetType="ToggleButton">
+                                                <Grid Background="Transparent">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition />
+                                                        <ColumnDefinition Width="30" />
+                                                    </Grid.ColumnDefinitions>
+                                                    <Border Grid.ColumnSpan="2" Background="Transparent" />
+                                                    <Path x:Name="arrow"
+                                                Grid.Column="1"
+                                                Fill="#9A000000"
+                                                Data="M7 10l5 5 5-5z"
+                                                Width="12"
+                                                Height="12"
+                                                HorizontalAlignment="Center" 
+                                                VerticalAlignment="Center"
+                                                Stretch="Fill" />
+                                                </Grid>
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="true">
+                                                        <Setter TargetName="arrow" Property="Fill" Value="#0088CC" />
+                                                    </Trigger>
+                                                    <Trigger Property="IsChecked" Value="true">
+                                                        <Setter TargetName="arrow" Property="Fill" Value="#0088CC" />
+                                                    </Trigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </ToggleButton.Template>
+                                    </ToggleButton>
+
+                                    <TextBlock x:Name="contentText" 
+                                       Text="{TemplateBinding SelectionBoxItem, Converter={StaticResource ComboBoxItemConverter}}" 
+                                       Margin="10,0,30,0"
+                                       VerticalAlignment="Center" />
+                                </Grid>
+                            </Border>
+
+                            <Popup x:Name="PART_Popup"
+                        AllowsTransparency="True"
+                        IsOpen="{Binding IsChecked, ElementName=toggleButton}"
+                        Placement="Bottom"
+                        PopupAnimation="Slide"
+                        Focusable="False">
+                                <Border x:Name="dropDownBorder"
+                            Background="#FFFFFF"
+                            BorderBrush="#33000000"
+                            BorderThickness="1"
+                            CornerRadius="8"
+                            Margin="0,1,0,0"
+                            Effect="{StaticResource DropShadowEffect}"
+                            MinWidth="{TemplateBinding ActualWidth}">
+                                    <ScrollViewer MaxHeight="200" SnapsToDevicePixels="True">
+                                        <ItemsPresenter KeyboardNavigation.DirectionalNavigation="Contained" />
+                                    </ScrollViewer>
+                                </Border>
+                            </Popup>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="mainBorder" Property="BorderBrush" Value="#0088CC" />
+                            </Trigger>
+                            <Trigger Property="IsDropDownOpen" Value="True">
+                                <Setter TargetName="mainBorder" Property="BorderBrush" Value="#0088CC" />
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="mainBorder" Property="Opacity" Value="0.6" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- ComboBoxItem Style -->
+        <Style x:Key="StyledComboBoxItem" TargetType="{x:Type ComboBoxItem}">
+            <Setter Property="Padding" Value="8,6"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ComboBoxItem}">
+                        <Border x:Name="ItemBorder" 
+                            Background="Transparent" 
+                            CornerRadius="5" 
+                            Margin="2,1" 
+                            Padding="{TemplateBinding Padding}">
+                            <ContentPresenter />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="ItemBorder" Property="Background" Value="#E3F2FD"/>
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="ItemBorder" Property="Background" Value="#BBDEFB"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Window.Resources>
 
     <Border BorderBrush="#DDDDDD" BorderThickness="1" CornerRadius="20" Background="White">
@@ -115,7 +253,8 @@
                                        Foreground="#000000"
                                        Margin="10,0,0,0"/>
                             <TextBox Grid.Row="1"
-                                    Background="#FFFFFF" 
+                                    Text="{Binding MaDaiLy}"
+                                    Background="Transparent" 
                                     BorderBrush="#33000000"
                                     HorizontalAlignment="Stretch"
                                     VerticalAlignment="Stretch"
@@ -192,26 +331,17 @@
                                        FontSize="25"
                                        Foreground="#000000"
                                        Margin="10,0,0,0"/>
-                            <TextBox Grid.Row="1"
-                                    Background="#FFFFFF" 
-                                    BorderBrush="#33000000"
-                                    HorizontalAlignment="Stretch"
-                                    VerticalAlignment="Stretch"
-                                    VerticalContentAlignment="Center"
-                                    Margin="10"
-                                    FontFamily="Nunito"
-                                    FontStyle="Normal"
-                                    FontWeight="Normal"
-                                    FontSize="14"
-                                    Foreground="#9A000000"
-                                    TextAlignment="Left"
-                                    BorderThickness="1">
-                                <TextBox.Resources>
-                                    <Style TargetType="{x:Type Border}">
-                                        <Setter Property="CornerRadius" Value="10"/>
-                                    </Style>
-                                </TextBox.Resources>
-                            </TextBox>
+                            <!-- Tên loại đại lý ComboBox -->
+                            <ComboBox Grid.Row="1" 
+                                      Style="{StaticResource StyledComboBox}"
+                                      ItemsSource="{Binding LoaiDaiLies}"
+                                      SelectedItem="{Binding SelectedLoaiDaiLy}">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding TenLoaiDaiLy}"/>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
                         </Grid>
 
                         <!-- Tên quận -->
@@ -231,26 +361,17 @@
                                        FontSize="25"
                                        Foreground="#000000"
                                        Margin="10,0,0,0"/>
-                            <TextBox Grid.Row="1"
-                                    Background="#FFFFFF" 
-                                    BorderBrush="#33000000"
-                                    HorizontalAlignment="Stretch"
-                                    VerticalAlignment="Stretch"
-                                    VerticalContentAlignment="Center"
-                                    Margin="10"
-                                    FontFamily="Nunito"
-                                    FontStyle="Normal"
-                                    FontWeight="Normal"
-                                    FontSize="14"
-                                    Foreground="#9A000000"
-                                    TextAlignment="Left"
-                                    BorderThickness="1">
-                                <TextBox.Resources>
-                                    <Style TargetType="{x:Type Border}">
-                                        <Setter Property="CornerRadius" Value="10"/>
-                                    </Style>
-                                </TextBox.Resources>
-                            </TextBox>
+                            <!-- Tên quận ComboBox -->
+                            <ComboBox Grid.Row="1"
+                                      Style="{StaticResource StyledComboBox}"
+                                      ItemsSource="{Binding Quans}"
+                                      SelectedItem="{Binding SelectedQuan}">
+                                <ComboBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding TenQuan}"/>
+                                    </DataTemplate>
+                                </ComboBox.ItemTemplate>
+                            </ComboBox>
                         </Grid>
 
                     </Grid>
@@ -341,7 +462,7 @@
                             </TextBox>
                         </Grid>
 
-                        <!-- Tên quận -->
+                        <!-- Ngày tiếp nhận -->
                         <Grid Grid.Column="2">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="3*"/>
@@ -349,7 +470,7 @@
                             </Grid.RowDefinitions>
 
                             <TextBlock Grid.Row="0" 
-                                       Text="Tên quận" 
+                                       Text="Ngày tiếp nhận" 
                                        VerticalAlignment="Center" 
                                        HorizontalAlignment="Left"
                                        FontFamily="Nunito"
@@ -358,26 +479,120 @@
                                        FontSize="25"
                                        Foreground="#000000"
                                        Margin="10,0,0,0"/>
-                            <TextBox Grid.Row="1"
-                                    Background="#FFFFFF" 
-                                    BorderBrush="#33000000"
-                                    HorizontalAlignment="Stretch"
-                                    VerticalAlignment="Stretch"
-                                    VerticalContentAlignment="Center"
-                                    Margin="10"
-                                    FontFamily="Nunito"
-                                    FontStyle="Normal"
-                                    FontWeight="Normal"
-                                    FontSize="14"
-                                    Foreground="#9A000000"
-                                    TextAlignment="Left"
-                                    BorderThickness="1">
-                                <TextBox.Resources>
-                                    <Style TargetType="{x:Type Border}">
+                            <DatePicker Grid.Row="1" 
+                                        Background="#FFFFFF" 
+                                        BorderBrush="#33000000"
+                                        HorizontalAlignment="Stretch"
+                                        VerticalAlignment="Stretch"
+                                        FontFamily="Nunito"
+                                        FontStyle="Normal"
+                                        FontWeight="Normal"
+                                        FontSize="20"
+                                        Foreground="#9A000000"
+                                        BorderThickness="1"
+                                        Margin="10,10,10,10"
+                                        Padding="10,0,0,0"
+                                        SelectedDate="{Binding NgayTiepNhan}">
+
+                                <DatePicker.Resources>
+                                    <Style TargetType="DatePickerTextBox">
+                                        <Setter Property="VerticalContentAlignment" Value="Center"/>
+                                        <Setter Property="Background" Value="Transparent"/>
+                                    </Style>
+                                    <Style TargetType="Border">
                                         <Setter Property="CornerRadius" Value="10"/>
                                     </Style>
-                                </TextBox.Resources>
-                            </TextBox>
+                                    <!-- Style for the dropdown button -->
+                                    <Style x:Key="DatePickerDropDownButtonStyle" TargetType="{x:Type Button}">
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="{x:Type Button}">
+                                                    <Grid>
+                                                        <Border Background="Transparent" 
+                                                                Width="30" 
+                                                                Height="30" 
+                                                                HorizontalAlignment="Right" 
+                                                                Margin="0,0,5,0">
+                                                            <Path x:Name="Path" 
+                                                                  Fill="#9A000000" 
+                                                                  HorizontalAlignment="Center" 
+                                                                  VerticalAlignment="Center" 
+                                                                  Data="M19,4H17V3a1,1,0,0,0-2,0V4H9V3A1,1,0,0,0,7,3V4H5A3,3,0,0,0,2,7V19a3,3,0,0,0,3,3H19a3,3,0,0,0,3-3V7A3,3,0,0,0,19,4Zm1,15a1,1,0,0,1-1,1H5a1,1,0,0,1-1-1V10H20Zm0-11H4V7A1,1,0,0,1,5,6H7V7A1,1,0,0,0,9,7V6h6V7a1,1,0,0,0,2,0V6h2a1,1,0,0,1,1,1Z" 
+                                                                  Width="20" 
+                                                                  Height="20" 
+                                                                  Stretch="Uniform"/>
+                                                        </Border>
+                                                    </Grid>
+                                                    <ControlTemplate.Triggers>
+                                                        <Trigger Property="IsMouseOver" Value="True">
+                                                            <Setter TargetName="Path" Property="Fill" Value="#0088CC"/>
+                                                        </Trigger>
+                                                        <Trigger Property="IsPressed" Value="True">
+                                                            <Setter TargetName="Path" Property="Fill" Value="#006699"/>
+                                                        </Trigger>
+                                                    </ControlTemplate.Triggers>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+                                </DatePicker.Resources>
+
+                                <DatePicker.CalendarStyle>
+                                    <Style TargetType="Calendar">
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="Calendar">
+                                                    <Border BorderThickness="1" BorderBrush="#33000000" 
+                                                            CornerRadius="10" Background="White">
+                                                        <CalendarItem x:Name="PART_CalendarItem" 
+                                                                     BorderThickness="0" 
+                                                                     Margin="0" 
+                                                                     Padding="5,5,5,5"/>
+                                                    </Border>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+                                </DatePicker.CalendarStyle>
+
+                                <!-- Apply the custom button style to the DatePicker dropdown button -->
+                                <DatePicker.Style>
+                                    <Style TargetType="{x:Type DatePicker}" BasedOn="{StaticResource {x:Type DatePicker}}">
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="{x:Type DatePicker}">
+                                                    <Border CornerRadius="10" BorderThickness="{TemplateBinding BorderThickness}" 
+                                                            BorderBrush="{TemplateBinding BorderBrush}" 
+                                                            Background="{TemplateBinding Background}">
+                                                        <Grid x:Name="PART_Root">
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="*" />
+                                                                <ColumnDefinition Width="Auto" />
+                                                            </Grid.ColumnDefinitions>
+                                                            <Button x:Name="PART_Button" 
+                                                                    Grid.Column="1"
+                                                                    Style="{StaticResource DatePickerDropDownButtonStyle}"  
+                                                                    Focusable="False"
+                                                                    VerticalAlignment="Center" />
+                                                            <DatePickerTextBox x:Name="PART_TextBox" 
+                                                                               Grid.Column="0" 
+                                                                               VerticalContentAlignment="Center"
+                                                                               HorizontalContentAlignment="Stretch" 
+                                                                               FontSize="{TemplateBinding FontSize}"
+                                                                               FontFamily="{TemplateBinding FontFamily}"
+                                                                               Padding="{TemplateBinding Padding}"/>
+                                                            <Popup x:Name="PART_Popup" 
+                                                                   StaysOpen="False" 
+                                                                   AllowsTransparency="True"
+                                                                   PlacementTarget="{Binding ElementName=PART_Root}" />
+                                                        </Grid>
+                                                    </Border>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+                                </DatePicker.Style>
+                            </DatePicker>
                         </Grid>
                     </Grid>
 
@@ -425,7 +640,7 @@
             <!-- Footer -->
             <StackPanel Grid.Row="4" Margin="20" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Stretch">
                 <Border CornerRadius="8">
-                    <Button Content="Tiếp nhận đại lý" Command="{Binding CloseWindowCommand}" 
+                    <Button Content="Tiếp nhận đại lý" Command="{Binding TiepNhanDaiLyCommand}" 
                             Background="#00AAFF" 
                             Foreground="#FFFFFF" 
                             FontFamily="Roboto" 
@@ -459,7 +674,7 @@
 
                 <Border Margin="80, 0, 0, 0"
                         CornerRadius="8">
-                    <Button Content="Đại lý mới" Command="{Binding CloseWindowCommand}" 
+                    <Button Content="Đại lý mới" Command="{Binding DaiLyMoiCommand}"
                             Background="#00AAFF" 
                             Foreground="#FFFFFF" 
                             FontFamily="Roboto" 

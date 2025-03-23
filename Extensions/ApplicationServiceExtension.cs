@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using QuanLyDaiLy.Configs;
+using QuanLyDaiLy.Helpers;
 using QuanLyDaiLy.Repositories;
 using QuanLyDaiLy.Services;
 using QuanLyDaiLy.ViewModels;
@@ -24,6 +25,9 @@ public static class ApplicationServiceExtensions
         services.AddScoped<IDonViTinhService, DonViTinhRepository>();
         services.AddScoped<IThamSoService, ThamSoRepository>();
         services.AddScoped<IChiTietPhieuXuatService, ChiTietPhieuXuatRepository>();
+
+        // Register helpers
+        services.AddSingleton<ComboBoxItemConverter>();
 
         // Register ViewModels
         services.AddTransient<MainWindowViewModel>();
