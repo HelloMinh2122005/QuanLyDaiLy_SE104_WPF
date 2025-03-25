@@ -254,7 +254,7 @@
                                        Margin="10,0,0,0"/>
                             <TextBox Grid.Row="1"
                                     Text="{Binding MaDaiLy}"
-                                    Background="Transparent"  
+                                    Background="#A2A2A2"  
                                     BorderBrush="#33000000"
                                     HorizontalAlignment="Stretch"
                                     VerticalAlignment="Stretch"
@@ -265,7 +265,7 @@
                                     FontStyle="Normal"
                                     FontWeight="SemiBold"
                                     FontSize="18"
-                                    Foreground="Black"
+                                    Foreground="White"
                                     Padding="10,0,0,0"
                                     TextAlignment="Left"
                                     BorderThickness="1">
