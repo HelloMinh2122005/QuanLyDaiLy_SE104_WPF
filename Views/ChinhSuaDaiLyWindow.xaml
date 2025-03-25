@@ -650,14 +650,14 @@
             <!-- Footer -->
             <StackPanel Grid.Row="4" Margin="20" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Stretch">
                 <Border CornerRadius="8">
-                    <Button Content="Cập nhật đại lý" Command="{Binding CapNhatDaiLyCommand}" 
+                    <Button Content="✎ Cập nhật đại lý" Command="{Binding CapNhatDaiLyCommand}" 
                             Background="#00AAFF" 
                             Foreground="#FFFFFF" 
                             FontFamily="Roboto" 
                             FontStyle="Normal" 
                             FontWeight="Medium" 
                             FontSize="19"
-                            Width="180">
+                            Width="200">
                         <Button.Template>
                             <ControlTemplate TargetType="Button">
                                 <Border x:Name="buttonBorder" Background="{TemplateBinding Background}" 

@@ -29,6 +29,7 @@ namespace QuanLyDaiLy.ViewModels
             EditDaiLyCommand = new RelayCommand(OpenChinhSuaDaiLyWindow);
             DeleteDaiLyCommand = new RelayCommand(OpenDeleteDaiLyWindow);
             SearchDaiLyCommand = new RelayCommand(OpenSearchDaiLyWindow);
+            LoadDataCommand = new RelayCommand(async () => await LoadDataExecute());
             _serviceProvider = serviceProvider;
             _chinhSuaDaiLyFactory = chinhSuaDaiLyFactory;
             _selectedDaiLy = null!;        
@@ -55,6 +56,7 @@ namespace QuanLyDaiLy.ViewModels
         public ICommand EditDaiLyCommand { get; }
         public ICommand DeleteDaiLyCommand { get; }
         public ICommand SearchDaiLyCommand { get; }
+        public ICommand LoadDataCommand { get; }
 
         private void OpenHoSoDaiLyWindow()
         {
@@ -66,6 +68,12 @@ namespace QuanLyDaiLy.ViewModels
             }
 
             hoSoDaiLyWindow.Show();
+        }
+
+        private async Task LoadDataExecute()
+        {
+            await LoadData();
+            MessageBox.Show("Tải lại danh sách thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         private async void OpenDeleteDaiLyWindow()
@@ -100,8 +108,8 @@ namespace QuanLyDaiLy.ViewModels
 
         private void OpenSearchDaiLyWindow()
         {
-            var hoSoDaiLyWindow = _serviceProvider.GetRequiredService<HoSoDaiLyWinDow>();
-            hoSoDaiLyWindow.Show();
+            var traCuuDaiLyWindow = _serviceProvider.GetRequiredService<TraCuuDaiLyWindow>();
+            traCuuDaiLyWindow.Show();
         }
 
         private DaiLy _selectedDaiLy;

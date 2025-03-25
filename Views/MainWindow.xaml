@@ -41,7 +41,7 @@
                 <Border Width="250" Height="50" 
                         Margin="20, 0, 0, 0"
                         CornerRadius="8">
-                    <Button Content="Tra cứu đại lý" Command="{Binding OpenHoSoDaiLyCommand}" 
+                    <Button Content="🔍 Tra cứu đại lý" Command="{Binding SearchDaiLyCommand}" 
                             Background="#00AAFF" 
                             Foreground="#FFFFFF" 
                             FontFamily="Roboto" 
@@ -49,6 +49,41 @@
                             FontWeight="Medium" 
                             FontSize="28" 
                             Width="250" Height="50">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border x:Name="buttonBorder" Background="{TemplateBinding Background}" 
+                                        CornerRadius="8" Padding="16,10,16,8">
+                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter TargetName="buttonBorder" Property="Background" Value="#0088CC"/>
+                                        <Setter TargetName="buttonBorder" Property="Effect">
+                                            <Setter.Value>
+                                                <DropShadowEffect BlurRadius="8" ShadowDepth="4" Opacity="0.3" Color="#555555"/>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Trigger>
+                                    <Trigger Property="IsPressed" Value="True">
+                                        <Setter TargetName="buttonBorder" Property="Background" Value="#006699"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+                </Border>
+
+                <Border Width="70" Height="50" 
+                        Margin="20, 0, 0, 0"
+                        CornerRadius="8">
+                    <Button Content="🔃" Command="{Binding LoadDataCommand}" 
+                            Background="#00AAFF" 
+                            Foreground="#FFFFFF" 
+                            FontFamily="Roboto" 
+                            FontStyle="Normal" 
+                            FontWeight="Medium" 
+                            FontSize="28" 
+                            Width="70" Height="50">
                         <Button.Template>
                             <ControlTemplate TargetType="Button">
                                 <Border x:Name="buttonBorder" Background="{TemplateBinding Background}" 
@@ -84,7 +119,7 @@
                 <Border Width="150" Height="50" 
                         Margin="10, 0, 0, 0"
                         CornerRadius="8">
-                    <Button Content="Thêm" Command="{Binding OpenHoSoDaiLyCommand}" 
+                    <Button Content="➕ Thêm" Command="{Binding OpenHoSoDaiLyCommand}" 
                             Background="#00AAFF" 
                             Foreground="#FFFFFF" 
                             FontFamily="Roboto" 
@@ -120,7 +155,7 @@
                 <Border Width="150" Height="50" 
                         Margin="20, 0, 0, 0"
                         CornerRadius="8">
-                    <Button Content="Sửa" Command="{Binding EditDaiLyCommand}" 
+                    <Button Content="✎ Sửa" Command="{Binding EditDaiLyCommand}" 
                             Background="#00AAFF" 
                             Foreground="#FFFFFF" 
                             FontFamily="Roboto" 
@@ -156,7 +191,7 @@
                 <Border Width="150" Height="50" 
                         Margin="20, 0, 0, 0"
                         CornerRadius="8">
-                    <Button Content="Xóa" Command="{Binding DeleteDaiLyCommand}" 
+                    <Button Content="🗑 Xóa" Command="{Binding DeleteDaiLyCommand}" 
                             Background="#00AAFF" 
                             Foreground="#FFFFFF" 
                             FontFamily="Roboto" 

@@ -40,12 +40,14 @@ public static class ApplicationServiceExtensions
                 dailyId
             )
         );
+        services.AddTransient<TraCuuDaiLyViewModel>();
 
         // Register Views
         services.AddTransient<MainWindow>();
         services.AddTransient<HoSoDaiLyWinDow>();
         services.AddTransient<ChinhSuaDaiLyWindow>();
-
+        services.AddTransient<TraCuuDaiLyWindow>();
+                    
         return services;
-    }
+    }   
 }

@@ -650,7 +650,7 @@
             <!-- Footer -->
             <StackPanel Grid.Row="4" Margin="20" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Stretch">
                 <Border CornerRadius="8">
-                    <Button Content="Tiếp nhận đại lý" Command="{Binding TiepNhanDaiLyCommand}" 
+                    <Button Content="➕Tiếp nhận đại lý" Command="{Binding TiepNhanDaiLyCommand}" 
                             Background="#00AAFF" 
                             Foreground="#FFFFFF" 
                             FontFamily="Roboto" 
@@ -684,7 +684,7 @@
 
                 <Border Margin="80, 0, 0, 0"
                         CornerRadius="8">
-                    <Button Content="Đại lý mới" Command="{Binding DaiLyMoiCommand}"
+                    <Button Content="🔃 Đại lý mới" Command="{Binding DaiLyMoiCommand}"
                             Background="#00AAFF" 
                             Foreground="#FFFFFF" 
                             FontFamily="Roboto" 
