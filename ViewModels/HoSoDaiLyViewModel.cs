@@ -22,9 +22,6 @@ namespace QuanLyDaiLy.ViewModels
             TiepNhanDaiLyCommand = new RelayCommand(async () => await TiepNhanDaiLy());
             DaiLyMoiCommand = new RelayCommand(DaiLyMoi);
 
-            _selectedLoaiDaiLy = new();
-            _selectedQuan = new();
-
             this.quanService = quanService;
             this.loaiDaiLyService = loaiDaiLyService;
             this.daiLyService = daiLyService;
@@ -78,7 +75,7 @@ namespace QuanLyDaiLy.ViewModels
             }
         }
 
-        private DateTime _ngayTiepNhan;
+        private DateTime _ngayTiepNhan = DateTime.Now;
         public DateTime NgayTiepNhan
         {
             get => _ngayTiepNhan;
@@ -100,7 +97,7 @@ namespace QuanLyDaiLy.ViewModels
             }
         }
 
-        private LoaiDaiLy _selectedLoaiDaiLy;
+        private LoaiDaiLy _selectedLoaiDaiLy = new();
         public LoaiDaiLy SelectedLoaiDaiLy
         {
             get => _selectedLoaiDaiLy;
@@ -111,7 +108,7 @@ namespace QuanLyDaiLy.ViewModels
             }
         }
 
-        private Quan _selectedQuan;
+        private Quan _selectedQuan = new();
         public Quan SelectedQuan
         {
             get => _selectedQuan;
@@ -167,8 +164,6 @@ namespace QuanLyDaiLy.ViewModels
             Quans.Clear();
             LoaiDaiLies = [.. listLoaiDaiLy];
             Quans = [.. listQuan];
-
-            _ngayTiepNhan = DateTime.Now;
         }
 
         private void CloseWindow()

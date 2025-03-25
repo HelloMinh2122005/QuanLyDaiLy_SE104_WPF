@@ -31,8 +31,7 @@ namespace QuanLyDaiLy.ViewModels
             SearchDaiLyCommand = new RelayCommand(OpenSearchDaiLyWindow);
             LoadDataCommand = new RelayCommand(async () => await LoadDataExecute());
             _serviceProvider = serviceProvider;
-            _chinhSuaDaiLyFactory = chinhSuaDaiLyFactory;
-            _selectedDaiLy = null!;        
+            _chinhSuaDaiLyFactory = chinhSuaDaiLyFactory;  
         }
 
         private ObservableCollection<DaiLy> _danhSachDaiLy = [];
@@ -109,10 +108,22 @@ namespace QuanLyDaiLy.ViewModels
         private void OpenSearchDaiLyWindow()
         {
             var traCuuDaiLyWindow = _serviceProvider.GetRequiredService<TraCuuDaiLyWindow>();
+
+            if (traCuuDaiLyWindow.DataContext is TraCuuDaiLyViewModel viewModel)
+            {
+                viewModel.SearchCompleted += (sender, searchResults) =>
+                {
+                    if (searchResults != null && searchResults.Count > 0)
+                    {
+                        DanhSachDaiLy = searchResults;
+                    }
+                };
+            }
+
             traCuuDaiLyWindow.Show();
         }
 
-        private DaiLy _selectedDaiLy;
+        private DaiLy _selectedDaiLy = new();
         public DaiLy SelectedDaiLy
         {
             get => _selectedDaiLy;

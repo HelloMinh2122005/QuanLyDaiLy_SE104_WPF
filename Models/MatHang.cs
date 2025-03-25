@@ -11,7 +11,7 @@ namespace QuanLyDaiLy.Models
         public int SoLuongTon { get; set; } = 0;
 
         // Navigation properties
-        public DonViTinh DonViTinh { get; set; } = new();
+        public DonViTinh DonViTinh { get; set; } = null!;
         public ICollection<ChiTietPhieuXuat> DsChiTietPhieuXuat { get; set; } = [];
     }
 }

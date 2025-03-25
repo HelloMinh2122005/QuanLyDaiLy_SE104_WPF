@@ -31,9 +31,6 @@ namespace QuanLyDaiLy.ViewModels
             CloseWindowCommand = new RelayCommand(CloseWindow);
             CapNhatDaiLyCommand = new RelayCommand(async () => await CapNhatDaiLy());
 
-            _selectedLoaiDaiLy = new();
-            _selectedQuan = new();
-
             _ = LoadDataAsync();
         }
 
@@ -106,7 +103,7 @@ namespace QuanLyDaiLy.ViewModels
             }
         }
 
-        private LoaiDaiLy _selectedLoaiDaiLy;
+        private LoaiDaiLy _selectedLoaiDaiLy = new();
         public LoaiDaiLy SelectedLoaiDaiLy
         {
             get => _selectedLoaiDaiLy;
@@ -117,7 +114,7 @@ namespace QuanLyDaiLy.ViewModels
             }
         }
 
-        private Quan _selectedQuan;
+        private Quan _selectedQuan = new();
         public Quan SelectedQuan
         {
             get => _selectedQuan;

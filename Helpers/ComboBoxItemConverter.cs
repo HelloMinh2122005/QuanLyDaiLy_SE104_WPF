@@ -17,6 +17,15 @@ namespace QuanLyDaiLy.Helpers
             if (value is Quan quan)
                 return quan.TenQuan;
 
+            if (value is DaiLy daiLy)
+                return daiLy.TenDaiLy;
+
+            if (value is MatHang matHang)
+                return matHang.TenMatHang;
+
+            if (value is DonViTinh donViTinh)
+                return donViTinh.TenDonViTinh;
+
             return value?.ToString() ?? string.Empty;
         }
 
