@@ -108,7 +108,6 @@
                 <RadioButton
                     Content="📊  Bảng điều khiển"
                     GroupName="NavGroup"
-                    IsChecked="True"
                     Style="{StaticResource NavButtonStyle}">
                     <RadioButton.Tag>
                         <TextBlock Text="🏠" />
@@ -126,7 +125,6 @@
                 <RadioButton
                     Content=" 🕵️‍♂️  Loại đại lý"
                     GroupName="NavGroup"
-                    IsChecked="True"
                     Style="{StaticResource NavButtonStyle}">
                     <RadioButton.Tag>
                         <TextBlock Text="🕵️‍♂️" />
