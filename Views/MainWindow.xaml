@@ -997,11 +997,11 @@
 
         <Frame
             x:Name="MainContent"
-            Grid.Row="2"
             Grid.Column="1"
             Background="Transparent"
             ContentRendered="MainContent_ContentRendered"
-            NavigationUIVisibility="Hidden" />
+            NavigationUIVisibility="Hidden"
+            Visibility="Collapsed" />
 
     </Grid>
 </Window>

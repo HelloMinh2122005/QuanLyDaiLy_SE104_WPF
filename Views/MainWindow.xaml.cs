@@ -75,10 +75,15 @@ namespace QuanLyDaiLy.Views
                 //    MainContent.Navigate(new DashboardPage());
                 //    break;
                 case "DaiLy":
-                    // Instead of navigating to a new page, use the current view
+                    // Show main content, hide frame
+                    MainContent.Visibility = Visibility.Visible;
+                    MainContent.Visibility = Visibility.Collapsed;
                     MainContent.Content = null;
                     break;
                 case "LoaiDaiLy":
+                    // Hide main content, show frame
+                    MainContent.Visibility = Visibility.Collapsed;
+                    MainContent.Visibility = Visibility.Visible;
                     MainContent.Navigate(new LoaiDaiLyPage());
                     break;
                 //case "Quan":
