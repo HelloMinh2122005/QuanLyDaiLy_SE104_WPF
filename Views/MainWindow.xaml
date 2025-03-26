@@ -106,7 +106,7 @@
 
             <StackPanel Grid.Row="1" Margin="0,20,0,0">
                 <RadioButton
-                    Content="🏠  Trang chủ"
+                    Content="📊  Bảng điều khiển"
                     GroupName="NavGroup"
                     IsChecked="True"
                     Style="{StaticResource NavButtonStyle}">
@@ -115,23 +115,65 @@
                     </RadioButton.Tag>
                 </RadioButton>
                 <RadioButton
-                    Content="📊  Thống kê"
+                    Content=" 🏠  Đại lý"
                     GroupName="NavGroup"
+                    IsChecked="True"
                     Style="{StaticResource NavButtonStyle}">
                     <RadioButton.Tag>
-                        <TextBlock Text="📊" />
+                        <TextBlock Text="🏠" />
                     </RadioButton.Tag>
                 </RadioButton>
                 <RadioButton
-                    Content="💰  Tài chính"
+                    Content=" 🕵️‍♂️  Loại đại lý"
                     GroupName="NavGroup"
+                    IsChecked="True"
                     Style="{StaticResource NavButtonStyle}">
                     <RadioButton.Tag>
-                        <TextBlock Text="💰" />
+                        <TextBlock Text="🕵️‍♂️" />
                     </RadioButton.Tag>
                 </RadioButton>
                 <RadioButton
-                    Content="⚙️  Cài đặt"
+                    Content=" 📍  Quận"
+                    GroupName="NavGroup"
+                    Style="{StaticResource NavButtonStyle}">
+                    <RadioButton.Tag>
+                        <TextBlock Text="📍" />
+                    </RadioButton.Tag>
+                </RadioButton>
+                <RadioButton
+                    Content=" 📦  Mặt hàng"
+                    GroupName="NavGroup"
+                    Style="{StaticResource NavButtonStyle}">
+                    <RadioButton.Tag>
+                        <TextBlock Text="📦" />
+                    </RadioButton.Tag>
+                </RadioButton>
+                <RadioButton
+                    Content=" 🧾  Phiếu thu"
+                    GroupName="NavGroup"
+                    Style="{StaticResource NavButtonStyle}">
+                    <RadioButton.Tag>
+                        <TextBlock Text="🧾" />
+                    </RadioButton.Tag>
+                </RadioButton>
+                <RadioButton
+                    Content=" 📄  Phiếu xuất"
+                    GroupName="NavGroup"
+                    Style="{StaticResource NavButtonStyle}">
+                    <RadioButton.Tag>
+                        <TextBlock Text="📄" />
+                    </RadioButton.Tag>
+                </RadioButton>
+                <RadioButton
+                    Content=" 📏  Đơn vị tính"
+                    GroupName="NavGroup"
+                    Style="{StaticResource NavButtonStyle}">
+                    <RadioButton.Tag>
+                        <TextBlock Text="📏" />
+                    </RadioButton.Tag>
+                </RadioButton>
+                <RadioButton
+                    Content=" ⚙️  Tham số"
                     GroupName="NavGroup"
                     Style="{StaticResource NavButtonStyle}">
                     <RadioButton.Tag>
