@@ -106,78 +106,60 @@
 
             <StackPanel Grid.Row="1" Margin="0,20,0,0">
                 <RadioButton
+                    Checked="RadioButton_Checked"
                     Content="📊  Bảng điều khiển"
                     GroupName="NavGroup"
-                    Style="{StaticResource NavButtonStyle}">
-                    <RadioButton.Tag>
-                        <TextBlock Text="🏠" />
-                    </RadioButton.Tag>
-                </RadioButton>
+                    Style="{StaticResource NavButtonStyle}"
+                    Tag="Dashboard" />
                 <RadioButton
+                    Checked="RadioButton_Checked"
                     Content=" 🏠  Đại lý"
                     GroupName="NavGroup"
                     IsChecked="True"
-                    Style="{StaticResource NavButtonStyle}">
-                    <RadioButton.Tag>
-                        <TextBlock Text="🏠" />
-                    </RadioButton.Tag>
-                </RadioButton>
+                    Style="{StaticResource NavButtonStyle}"
+                    Tag="DaiLy" />
                 <RadioButton
+                    Checked="RadioButton_Checked"
                     Content=" 🕵️‍♂️  Loại đại lý"
                     GroupName="NavGroup"
-                    Style="{StaticResource NavButtonStyle}">
-                    <RadioButton.Tag>
-                        <TextBlock Text="🕵️‍♂️" />
-                    </RadioButton.Tag>
-                </RadioButton>
+                    Style="{StaticResource NavButtonStyle}"
+                    Tag="LoaiDaiLy" />
                 <RadioButton
+                    Checked="RadioButton_Checked"
                     Content=" 📍  Quận"
                     GroupName="NavGroup"
-                    Style="{StaticResource NavButtonStyle}">
-                    <RadioButton.Tag>
-                        <TextBlock Text="📍" />
-                    </RadioButton.Tag>
-                </RadioButton>
+                    Style="{StaticResource NavButtonStyle}"
+                    Tag="Quan" />
                 <RadioButton
+                    Checked="RadioButton_Checked"
                     Content=" 📦  Mặt hàng"
                     GroupName="NavGroup"
-                    Style="{StaticResource NavButtonStyle}">
-                    <RadioButton.Tag>
-                        <TextBlock Text="📦" />
-                    </RadioButton.Tag>
-                </RadioButton>
+                    Style="{StaticResource NavButtonStyle}"
+                    Tag="MatHang" />
                 <RadioButton
+                    Checked="RadioButton_Checked"
                     Content=" 🧾  Phiếu thu"
                     GroupName="NavGroup"
-                    Style="{StaticResource NavButtonStyle}">
-                    <RadioButton.Tag>
-                        <TextBlock Text="🧾" />
-                    </RadioButton.Tag>
-                </RadioButton>
+                    Style="{StaticResource NavButtonStyle}"
+                    Tag="PhieuThu" />
                 <RadioButton
+                    Checked="RadioButton_Checked"
                     Content=" 📄  Phiếu xuất"
                     GroupName="NavGroup"
-                    Style="{StaticResource NavButtonStyle}">
-                    <RadioButton.Tag>
-                        <TextBlock Text="📄" />
-                    </RadioButton.Tag>
-                </RadioButton>
+                    Style="{StaticResource NavButtonStyle}"
+                    Tag="PhieuXuat" />
                 <RadioButton
+                    Checked="RadioButton_Checked"
                     Content=" 📏  Đơn vị tính"
                     GroupName="NavGroup"
-                    Style="{StaticResource NavButtonStyle}">
-                    <RadioButton.Tag>
-                        <TextBlock Text="📏" />
-                    </RadioButton.Tag>
-                </RadioButton>
+                    Style="{StaticResource NavButtonStyle}"
+                    Tag="DonViTinh" />
                 <RadioButton
+                    Checked="RadioButton_Checked"
                     Content=" ⚙️  Tham số"
                     GroupName="NavGroup"
-                    Style="{StaticResource NavButtonStyle}">
-                    <RadioButton.Tag>
-                        <TextBlock Text="⚙️" />
-                    </RadioButton.Tag>
-                </RadioButton>
+                    Style="{StaticResource NavButtonStyle}"
+                    Tag="ThamSo" />
             </StackPanel>
 
             <Border Grid.Row="2" Padding="5,10">
@@ -1012,5 +994,14 @@
                 </DataGrid>
             </Border>
         </Grid>
+
+        <Frame
+            x:Name="MainContent"
+            Grid.Row="2"
+            Grid.Column="1"
+            Background="Transparent"
+            ContentRendered="MainContent_ContentRendered"
+            NavigationUIVisibility="Hidden" />
+
     </Grid>
 </Window>

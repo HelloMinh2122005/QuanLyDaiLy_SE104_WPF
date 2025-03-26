@@ -1,4 +1,5 @@
 ﻿using QuanLyDaiLy.ViewModels;
+using QuanLyDaiLy.Views.LoaiDaiLyViews;
 using System;
 using System.Windows;
 using System.Windows.Controls;
@@ -20,6 +21,7 @@ namespace QuanLyDaiLy.Views
 
             // Set initial width
             NavColumn.Width = new GridLength(collapsedWidth);
+            NavigateToPage("DaiLy");
         }
 
         private void NavigationRail_MouseEnter(object sender, MouseEventArgs e)
@@ -50,6 +52,67 @@ namespace QuanLyDaiLy.Views
 
             // Apply the animation to the grid column
             NavColumn.BeginAnimation(ColumnDefinition.WidthProperty, animation);
+        }
+
+        private void RadioButton_Checked(object sender, RoutedEventArgs e)
+        {
+            if (sender is RadioButton radioButton)
+            {
+                string? pageName = radioButton.Tag as string;
+                if (pageName != null)
+                {
+                    NavigateToPage(pageName);
+                }
+            }
+        }
+
+        private void NavigateToPage(string pageName)
+        {
+            // Update page title and content based on selected navigation item
+            switch (pageName)
+            {
+                //case "Dashboard":
+                //    MainContent.Navigate(new DashboardPage());
+                //    break;
+                case "DaiLy":
+                    // Instead of navigating to a new page, use the current view
+                    MainContent.Content = null;
+                    break;
+                case "LoaiDaiLy":
+                    MainContent.Navigate(new LoaiDaiLyPage());
+                    break;
+                //case "Quan":
+                //    PageTitle.Text = "Quận";
+                //    MainContent.Navigate(new QuanPage());
+                //    break;
+                //case "MatHang":
+                //    PageTitle.Text = "Mặt hàng";
+                //    MainContent.Navigate(new MatHangPage());
+                //    break;
+                //case "PhieuThu":
+                //    PageTitle.Text = "Phiếu thu";
+                //    MainContent.Navigate(new PhieuThuPage());
+                //    break;
+                //case "PhieuXuat":
+                //    PageTitle.Text = "Phiếu xuất";
+                //    MainContent.Navigate(new PhieuXuatPage());
+                //    break;
+                //case "DonViTinh":
+                //    PageTitle.Text = "Đơn vị tính";
+                //    MainContent.Navigate(new DonViTinhPage());
+                //    break;
+                //case "ThamSo":
+                //    PageTitle.Text = "Tham số";
+                //    MainContent.Navigate(new ThamSoPage());
+                //    break;
+                default:
+                    break;
+            }
+        }
+        private void MainContent_ContentRendered(object sender, EventArgs e)
+        {
+            // Make sure navigation buttons reflect current page
+            // This ensures sync if navigation happens programmatically
         }
     }
 
