@@ -55,6 +55,7 @@ public static class ApplicationServiceExtensions
         services.AddTransient<Views.DashboardViews.DashboardPage>();
         services.AddTransient<Views.LoaiDaiLyViews.LoaiDaiLyPage>();
         services.AddTransient<Views.QuanViews.QuanPage>();
+        services.AddTransient<Views.QuanViews.ThemQuanWindow>();
         services.AddTransient<Views.MatHangViews.MatHangPage>();
         services.AddTransient<Views.PhieuThuViews.PhieuThuPage>();
         services.AddTransient<Views.PhieuXuatViews.PhieuXuatPage>();
@@ -65,6 +66,7 @@ public static class ApplicationServiceExtensions
         services.AddTransient<ViewModels.DashboardViewModels.DashboardPageViewModel>();
         services.AddTransient<ViewModels.LoaiDaiLyViewModels.LoaiDaiLyPageViewModel>();
         services.AddTransient<ViewModels.QuanViewModels.QuanPageViewModel>();
+        services.AddTransient<ViewModels.QuanViewModels.ThemQuanViewModel>();
         services.AddTransient<ViewModels.MatHangViewModels.MatHangPageViewModel>();
         services.AddTransient<ViewModels.PhieuThuViewModels.PhieuThuPageViewModel>();
         services.AddTransient<ViewModels.PhieuXuatViewModels.PhieuXuatPageViewModel>();

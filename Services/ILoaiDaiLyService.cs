@@ -9,5 +9,6 @@ namespace QuanLyDaiLy.Services
         Task AddLoaiDaiLy(LoaiDaiLy loaiDaiLy);
         Task UpdateLoaiDaiLy(LoaiDaiLy loaiDaiLy);
         Task DeleteLoaiDaiLy(int id);
+        Task<int> GenerateAvailableId();
     }
 }

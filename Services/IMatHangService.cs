@@ -10,5 +10,6 @@ namespace QuanLyDaiLy.Services
         Task UpdateMatHang(MatHang matHang);
         Task DeleteMatHang(int id);
         Task<MatHang> GetMatHangByTenMatHang(string tenMatHang);
+        Task<int> GenerateAvailableId();
     }
 }

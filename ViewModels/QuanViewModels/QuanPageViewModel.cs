@@ -7,6 +7,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Input;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace QuanLyDaiLy.ViewModels.QuanViewModels
 {
@@ -82,15 +83,12 @@ namespace QuanLyDaiLy.ViewModels.QuanViewModels
         {
             try
             {
-                // Implementation depends on your UI flow
-                // var addQuanWindow = _serviceProvider.GetRequiredService<ThemQuanWindow>();
-                // if (addQuanWindow.DataContext is ThemQuanViewModel viewModel)
-                // {
-                //     viewModel.DataChanged += async (sender, e) => await LoadData();
-                // }
-                // addQuanWindow.Show();
-
-                MessageBox.Show("Tính năng thêm quận đang được phát triển.", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+                var addQuanWindow = _serviceProvider.GetRequiredService<ThemQuanWindow>();
+                if (addQuanWindow.DataContext is ThemQuanViewModel viewModel)
+                {
+                    viewModel.DataChanged += async (sender, e) => await LoadData();
+                }
+                addQuanWindow.Show();
             }
             catch (Exception ex)
             {
