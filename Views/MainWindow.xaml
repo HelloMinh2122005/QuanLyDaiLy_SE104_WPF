@@ -109,13 +109,13 @@
                     Checked="RadioButton_Checked"
                     Content="📊  Bảng điều khiển"
                     GroupName="NavGroup"
+                    IsChecked="True"
                     Style="{StaticResource NavButtonStyle}"
                     Tag="Dashboard" />
                 <RadioButton
                     Checked="RadioButton_Checked"
                     Content=" 🏠  Đại lý"
                     GroupName="NavGroup"
-                    IsChecked="True"
                     Style="{StaticResource NavButtonStyle}"
                     Tag="DaiLy" />
                 <RadioButton

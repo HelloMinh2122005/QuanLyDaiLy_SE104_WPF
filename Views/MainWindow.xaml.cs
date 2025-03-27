@@ -1,6 +1,5 @@
 ﻿using QuanLyDaiLy.ViewModels;
 using QuanLyDaiLy.Views.LoaiDaiLyViews;
-using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -21,7 +20,7 @@ namespace QuanLyDaiLy.Views
 
             // Set initial width
             NavColumn.Width = new GridLength(collapsedWidth);
-            NavigateToPage("DaiLy");
+            NavigateToPage("Dashboard");
         }
 
         private void NavigationRail_MouseEnter(object sender, MouseEventArgs e)
@@ -71,9 +70,11 @@ namespace QuanLyDaiLy.Views
             // Update page title and content based on selected navigation item
             switch (pageName)
             {
-                //case "Dashboard":
-                //    MainContent.Navigate(new DashboardPage());
-                //    break;
+                case "Dashboard":
+                    MainContent.Visibility = Visibility.Collapsed;
+                    MainContent.Visibility = Visibility.Visible;
+                    MainContent.Navigate(new DashboardViews.DashboardPage());
+                    break;
                 case "DaiLy":
                     // Show main content, hide frame
                     MainContent.Visibility = Visibility.Visible;
@@ -86,30 +87,24 @@ namespace QuanLyDaiLy.Views
                     MainContent.Visibility = Visibility.Visible;
                     MainContent.Navigate(new LoaiDaiLyPage());
                     break;
-                //case "Quan":
-                //    PageTitle.Text = "Quận";
-                //    MainContent.Navigate(new QuanPage());
-                //    break;
-                //case "MatHang":
-                //    PageTitle.Text = "Mặt hàng";
-                //    MainContent.Navigate(new MatHangPage());
-                //    break;
-                //case "PhieuThu":
-                //    PageTitle.Text = "Phiếu thu";
-                //    MainContent.Navigate(new PhieuThuPage());
-                //    break;
-                //case "PhieuXuat":
-                //    PageTitle.Text = "Phiếu xuất";
-                //    MainContent.Navigate(new PhieuXuatPage());
-                //    break;
-                //case "DonViTinh":
-                //    PageTitle.Text = "Đơn vị tính";
-                //    MainContent.Navigate(new DonViTinhPage());
-                //    break;
-                //case "ThamSo":
-                //    PageTitle.Text = "Tham số";
-                //    MainContent.Navigate(new ThamSoPage());
-                //    break;
+                case "Quan":
+                    MainContent.Navigate(new QuanViews.QuanPage());
+                    break;
+                case "MatHang":
+                    MainContent.Navigate(new MatHangViews.MatHangPage());
+                    break;
+                case "PhieuThu":
+                    MainContent.Navigate(new PhieuThuViews.PhieuThuPage());
+                    break;
+                case "PhieuXuat":
+                    MainContent.Navigate(new PhieuXuatViews.PhieuXuatPage());
+                    break;
+                case "DonViTinh":
+                    MainContent.Navigate(new DonViTinhViews.DonViTinhPage());
+                    break;
+                case "ThamSo":
+                    MainContent.Navigate(new ThamSoViews.ThamSoPage());
+                    break;
                 default:
                     break;
             }
