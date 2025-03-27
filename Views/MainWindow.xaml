@@ -107,7 +107,7 @@
             <StackPanel Grid.Row="1" Margin="0,20,0,0">
                 <RadioButton
                     Checked="RadioButton_Checked"
-                    Content="📊  Bảng điều khiển"
+                    Content=" 📊  Bảng điều khiển"
                     GroupName="NavGroup"
                     IsChecked="True"
                     Style="{StaticResource NavButtonStyle}"
@@ -998,10 +998,10 @@
         <Frame
             x:Name="MainContent"
             Grid.Column="1"
-            Background="Transparent"
+            Panel.ZIndex="1"
             ContentRendered="MainContent_ContentRendered"
-            NavigationUIVisibility="Hidden"
-            Visibility="Collapsed" />
+            IsHitTestVisible="True"
+            NavigationUIVisibility="Hidden" />
 
     </Grid>
 </Window>

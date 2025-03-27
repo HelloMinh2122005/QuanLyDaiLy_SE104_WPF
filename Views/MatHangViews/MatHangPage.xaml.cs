@@ -1,12 +1,14 @@
-﻿using System.Windows.Controls;
+﻿using QuanLyDaiLy.ViewModels.MatHangViewModels;
+using System.Windows.Controls;
 
 namespace QuanLyDaiLy.Views.MatHangViews
 {
     public partial class MatHangPage : Page
     {
-        public MatHangPage()
+        public MatHangPage(MatHangPageViewModel vm)
         {
             InitializeComponent();
+            DataContext = vm;
         }
     }
 }

@@ -29,6 +29,12 @@
             LineHeight="55"
             Text="Danh sách loại đại lý" />
 
+        <TextBlock
+            Grid.Row="1"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Stretch"
+            Text="{Binding Hello}" />
+
         <Button
             Grid.Row="2"
             Width="200"

@@ -28,6 +28,14 @@
             Foreground="#333333"
             LineHeight="55"
             Text="Danh sách phiếu thu" />
+
+        <TextBlock
+            Grid.Row="1"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Stretch"
+            Text="{Binding Hello}" />
+
+
         <Button
             Grid.Row="2"
             Width="200"

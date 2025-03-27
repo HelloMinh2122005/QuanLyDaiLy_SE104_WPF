@@ -28,6 +28,13 @@
             Foreground="#333333"
             LineHeight="55"
             Text="Bảng điều khiển" />
+
+        <TextBlock
+            Grid.Row="1"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Stretch"
+            Text="{Binding Hello}" />
+
         <Button
             Grid.Row="2"
             Width="200"

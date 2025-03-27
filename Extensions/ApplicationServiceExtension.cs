@@ -47,7 +47,30 @@ public static class ApplicationServiceExtensions
         services.AddTransient<HoSoDaiLyWinDow>();
         services.AddTransient<ChinhSuaDaiLyWindow>();
         services.AddTransient<TraCuuDaiLyWindow>();
-                    
+
+        // Register navigation service
+        services.AddSingleton<INavigationService, NavigationService>();
+
+        // Register Page Views
+        services.AddTransient<Views.DashboardViews.DashboardPage>();
+        services.AddTransient<Views.LoaiDaiLyViews.LoaiDaiLyPage>();
+        services.AddTransient<Views.QuanViews.QuanPage>();
+        services.AddTransient<Views.MatHangViews.MatHangPage>();
+        services.AddTransient<Views.PhieuThuViews.PhieuThuPage>();
+        services.AddTransient<Views.PhieuXuatViews.PhieuXuatPage>();
+        services.AddTransient<Views.DonViTinhViews.DonViTinhPage>();
+        services.AddTransient<Views.ThamSoViews.ThamSoPage>();
+
+        // Register Page ViewModels
+        services.AddTransient<ViewModels.DashboardViewModels.DashboardPageViewModel>();
+        services.AddTransient<ViewModels.LoaiDaiLyViewModels.LoaiDaiLyPageViewModel>();
+        services.AddTransient<ViewModels.QuanViewModels.QuanPageViewModel>();
+        services.AddTransient<ViewModels.MatHangViewModels.MatHangPageViewModel>();
+        services.AddTransient<ViewModels.PhieuThuViewModels.PhieuThuPageViewModel>();
+        services.AddTransient<ViewModels.PhieuXuatViewModels.PhieuXuatPageViewModel>();
+        services.AddTransient<ViewModels.DonViTinhViewModels.DonViTinhPageViewModel>();
+        services.AddTransient<ViewModels.ThamSoViewModels.ThamSoPageViewModel>();
+
         return services;
     }   
 }
