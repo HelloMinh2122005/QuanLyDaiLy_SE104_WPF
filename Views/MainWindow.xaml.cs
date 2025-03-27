@@ -3,7 +3,14 @@ using QuanLyDaiLy.Views.LoaiDaiLyViews;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Windows.Media.Animation;
+using QuanLyDaiLy.Views.CustomAnimation;
+using QuanLyDaiLy.Views.QuanViews;
+using QuanLyDaiLy.Views.DashboardViews;
+using QuanLyDaiLy.Views.PhieuThuViews;
+using QuanLyDaiLy.Views.PhieuXuatViews;
+using QuanLyDaiLy.Views.DonViTinhViews;
+using QuanLyDaiLy.Views.ThamSoViews;
+using QuanLyDaiLy.Views.MatHangViews;
 
 namespace QuanLyDaiLy.Views
 {
@@ -73,7 +80,7 @@ namespace QuanLyDaiLy.Views
                 case "Dashboard":
                     MainContent.Visibility = Visibility.Collapsed;
                     MainContent.Visibility = Visibility.Visible;
-                    MainContent.Navigate(new DashboardViews.DashboardPage());
+                    MainContent.Navigate(new DashboardPage());
                     break;
                 case "DaiLy":
                     // Show main content, hide frame
@@ -88,22 +95,34 @@ namespace QuanLyDaiLy.Views
                     MainContent.Navigate(new LoaiDaiLyPage());
                     break;
                 case "Quan":
-                    MainContent.Navigate(new QuanViews.QuanPage());
+                    MainContent.Visibility = Visibility.Collapsed;
+                    MainContent.Visibility = Visibility.Visible;
+                    MainContent.Navigate(new QuanPage());
                     break;
                 case "MatHang":
-                    MainContent.Navigate(new MatHangViews.MatHangPage());
+                    MainContent.Visibility = Visibility.Collapsed;
+                    MainContent.Visibility = Visibility.Visible;
+                    MainContent.Navigate(new MatHangPage());
                     break;
                 case "PhieuThu":
-                    MainContent.Navigate(new PhieuThuViews.PhieuThuPage());
+                    MainContent.Visibility = Visibility.Collapsed;
+                    MainContent.Visibility = Visibility.Visible;
+                    MainContent.Navigate(new PhieuThuPage());
                     break;
                 case "PhieuXuat":
-                    MainContent.Navigate(new PhieuXuatViews.PhieuXuatPage());
+                    MainContent.Visibility = Visibility.Collapsed;
+                    MainContent.Visibility = Visibility.Visible;
+                    MainContent.Navigate(new PhieuXuatPage());
                     break;
                 case "DonViTinh":
-                    MainContent.Navigate(new DonViTinhViews.DonViTinhPage());
+                    MainContent.Visibility = Visibility.Collapsed;
+                    MainContent.Visibility = Visibility.Visible;
+                    MainContent.Navigate(new DonViTinhPage());
                     break;
                 case "ThamSo":
-                    MainContent.Navigate(new ThamSoViews.ThamSoPage());
+                    MainContent.Visibility = Visibility.Collapsed;
+                    MainContent.Visibility = Visibility.Visible;
+                    MainContent.Navigate(new ThamSoPage());
                     break;
                 default:
                     break;
@@ -113,55 +132,6 @@ namespace QuanLyDaiLy.Views
         {
             // Make sure navigation buttons reflect current page
             // This ensures sync if navigation happens programmatically
-        }
-    }
-
-    // Custom animation class for GridLength
-    public class GridLengthAnimation : AnimationTimeline
-    {
-        public static readonly DependencyProperty FromProperty =
-            DependencyProperty.Register("From", typeof(GridLength), typeof(GridLengthAnimation));
-
-        public static readonly DependencyProperty ToProperty =
-            DependencyProperty.Register("To", typeof(GridLength), typeof(GridLengthAnimation));
-
-        public GridLength From
-        {
-            get { return (GridLength)GetValue(FromProperty); }
-            set { SetValue(FromProperty, value); }
-        }
-
-        public GridLength To
-        {
-            get { return (GridLength)GetValue(ToProperty); }
-            set { SetValue(ToProperty, value); }
-        }
-
-        protected override Freezable CreateInstanceCore()
-        {
-            return new GridLengthAnimation();
-        }
-
-        public override Type TargetPropertyType => typeof(GridLength);
-
-        public override object GetCurrentValue(object defaultOriginValue, object defaultDestinationValue, AnimationClock animationClock)
-        {
-            // Use From value directly when provided
-            double fromVal = From.Value;
-
-            // If From is not specified (or auto), use the default value
-            if (fromVal == 0 && From.GridUnitType == GridUnitType.Auto)
-                fromVal = ((GridLength)defaultOriginValue).Value;
-
-            double toVal = To.Value;
-            if (toVal == 0 && To.GridUnitType == GridUnitType.Auto)
-                toVal = ((GridLength)defaultDestinationValue).Value;
-
-            if (animationClock.CurrentProgress == null)
-                return new GridLength(fromVal);
-
-            double progress = animationClock.CurrentProgress.Value;
-            return new GridLength((1 - progress) * fromVal + progress * toVal, GridUnitType.Pixel);
         }
     }
 }
