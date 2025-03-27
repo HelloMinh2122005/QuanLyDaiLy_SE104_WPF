@@ -32,16 +32,12 @@ namespace QuanLyDaiLy.Views
 
         private void NavigationRail_MouseEnter(object sender, MouseEventArgs e)
         {
-            // Start the expand animation
-            var expandStoryboard = (System.Windows.Media.Animation.Storyboard)FindResource("ExpandNavRail");
-            expandStoryboard.Begin();
+            AnimateNavDrawerWidth(expandedWidth);
         }
 
         private void NavigationRail_MouseLeave(object sender, MouseEventArgs e)
         {
-            // Start the collapse animation
-            var collapseStoryboard = (System.Windows.Media.Animation.Storyboard)FindResource("CollapseNavRail");
-            collapseStoryboard.Begin();
+            AnimateNavDrawerWidth(collapsedWidth);
         }
 
         private void AnimateNavDrawerWidth(double targetWidth)
