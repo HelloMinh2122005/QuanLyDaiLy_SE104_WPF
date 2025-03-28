@@ -1,11 +1,11 @@
 ﻿using QuanLyDaiLy.ViewModels.QuanViewModels;
-using System.Windows.Controls;
+using System.Windows;
 
 namespace QuanLyDaiLy.Views.QuanViews
 {
-    public partial class QuanPage : Page
+    public partial class ThemQuanWindow : Window
     {
-        public QuanPage(QuanPageViewModel vm)
+        public ThemQuanWindow(ThemQuanViewModel vm)
         {
             InitializeComponent();
             DataContext = vm;

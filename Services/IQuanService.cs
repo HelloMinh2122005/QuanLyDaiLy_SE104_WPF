@@ -10,5 +10,6 @@ namespace QuanLyDaiLy.Services
         Task UpdateQuan(Quan quan);
         Task DeleteQuan(int id);
         Task<int> GetSoLuongDaiLyTrongQuan(int id);
+        Task<int> GenerateAvailableId();
     }
 }

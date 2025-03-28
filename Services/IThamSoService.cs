@@ -6,5 +6,6 @@ namespace QuanLyDaiLy.Services
     {
         Task<ThamSo> GetThamSo();
         Task UpdateThamSo(ThamSo thamSo);
+        Task<int> GenerateAvailableId();
     }
 }

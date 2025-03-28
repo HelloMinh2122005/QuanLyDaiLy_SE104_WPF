@@ -1,16 +1,9 @@
 ﻿using QuanLyDaiLy.ViewModels;
-using QuanLyDaiLy.Views.LoaiDaiLyViews;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using QuanLyDaiLy.Views.CustomAnimation;
-using QuanLyDaiLy.Views.QuanViews;
-using QuanLyDaiLy.Views.DashboardViews;
-using QuanLyDaiLy.Views.PhieuThuViews;
-using QuanLyDaiLy.Views.PhieuXuatViews;
-using QuanLyDaiLy.Views.DonViTinhViews;
-using QuanLyDaiLy.Views.ThamSoViews;
-using QuanLyDaiLy.Views.MatHangViews;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace QuanLyDaiLy.Views
 {
@@ -18,16 +11,23 @@ namespace QuanLyDaiLy.Views
     {
         private readonly double collapsedWidth = 60;
         private readonly double expandedWidth = 200;
+        private readonly IServiceProvider _serviceProvider;
 
-        public MainWindow(MainWindowViewModel viewModel)
+        public MainWindow(MainWindowViewModel viewModel, IServiceProvider serviceProvider)
         {
             InitializeComponent();
-            WindowState = WindowState.Maximized;
+            _serviceProvider = serviceProvider;
             DataContext = viewModel;
 
-            // Set initial width
+            // configure the window
+            WindowState = WindowState.Maximized;
+
             NavColumn.Width = new GridLength(collapsedWidth);
-            NavigateToPage("Dashboard");
+
+            Loaded += (s, e) =>
+            {
+                NavigateToPage("Dashboard");
+            };
         }
 
         private void NavigationRail_MouseEnter(object sender, MouseEventArgs e)
@@ -42,13 +42,10 @@ namespace QuanLyDaiLy.Views
 
         private void AnimateNavDrawerWidth(double targetWidth)
         {
-            // Create a duration
             var duration = new Duration(TimeSpan.FromMilliseconds(300));
 
-            // Get the current width value as the starting point
             double currentWidth = NavColumn.ActualWidth;
 
-            // Create animation for grid column width
             var animation = new GridLengthAnimation
             {
                 Duration = duration,
@@ -56,7 +53,6 @@ namespace QuanLyDaiLy.Views
                 To = new GridLength(targetWidth)
             };
 
-            // Apply the animation to the grid column
             NavColumn.BeginAnimation(ColumnDefinition.WidthProperty, animation);
         }
 
@@ -64,8 +60,7 @@ namespace QuanLyDaiLy.Views
         {
             if (sender is RadioButton radioButton)
             {
-                string? pageName = radioButton.Tag as string;
-                if (pageName != null)
+                if (radioButton.Tag is string pageName)
                 {
                     NavigateToPage(pageName);
                 }
@@ -74,60 +69,58 @@ namespace QuanLyDaiLy.Views
 
         private void NavigateToPage(string pageName)
         {
-            // Update page title and content based on selected navigation item
+            MainContent.Visibility = Visibility.Collapsed;
+
             switch (pageName)
             {
                 case "Dashboard":
-                    MainContent.Visibility = Visibility.Collapsed;
-                    MainContent.Visibility = Visibility.Visible;
-                    MainContent.Navigate(new DashboardPage());
+                    var dashboardPage = _serviceProvider.GetRequiredService<DashboardViews.DashboardPage>();
+                    MainContent.Navigate(dashboardPage);
                     break;
                 case "DaiLy":
-                    // Show main content, hide frame
-                    MainContent.Visibility = Visibility.Visible;
-                    MainContent.Visibility = Visibility.Collapsed;
                     MainContent.Content = null;
                     break;
                 case "LoaiDaiLy":
-                    // Hide main content, show frame
-                    MainContent.Visibility = Visibility.Collapsed;
-                    MainContent.Visibility = Visibility.Visible;
-                    MainContent.Navigate(new LoaiDaiLyPage());
+                    var loaiDaiLyPage = _serviceProvider.GetRequiredService<LoaiDaiLyViews.LoaiDaiLyPage>();
+                    MainContent.Navigate(loaiDaiLyPage);
                     break;
                 case "Quan":
-                    MainContent.Visibility = Visibility.Collapsed;
-                    MainContent.Visibility = Visibility.Visible;
-                    MainContent.Navigate(new QuanPage());
+                    var quanPage = _serviceProvider.GetRequiredService<QuanViews.QuanPage>();
+                    MainContent.Navigate(quanPage);
                     break;
                 case "MatHang":
-                    MainContent.Visibility = Visibility.Collapsed;
-                    MainContent.Visibility = Visibility.Visible;
-                    MainContent.Navigate(new MatHangPage());
+                    var matHangPage = _serviceProvider.GetRequiredService<MatHangViews.MatHangPage>();
+                    MainContent.Navigate(matHangPage);
                     break;
                 case "PhieuThu":
-                    MainContent.Visibility = Visibility.Collapsed;
-                    MainContent.Visibility = Visibility.Visible;
-                    MainContent.Navigate(new PhieuThuPage());
+                    var phieuThuPage = _serviceProvider.GetRequiredService<PhieuThuViews.PhieuThuPage>();
+                    MainContent.Navigate(phieuThuPage);
                     break;
                 case "PhieuXuat":
-                    MainContent.Visibility = Visibility.Collapsed;
-                    MainContent.Visibility = Visibility.Visible;
-                    MainContent.Navigate(new PhieuXuatPage());
+                    var phieuXuatPage = _serviceProvider.GetRequiredService<PhieuXuatViews.PhieuXuatPage>();
+                    MainContent.Navigate(phieuXuatPage);
                     break;
                 case "DonViTinh":
-                    MainContent.Visibility = Visibility.Collapsed;
-                    MainContent.Visibility = Visibility.Visible;
-                    MainContent.Navigate(new DonViTinhPage());
+                    var donViTinhPage = _serviceProvider.GetRequiredService<DonViTinhViews.DonViTinhPage>();
+                    MainContent.Navigate(donViTinhPage);
                     break;
                 case "ThamSo":
-                    MainContent.Visibility = Visibility.Collapsed;
-                    MainContent.Visibility = Visibility.Visible;
-                    MainContent.Navigate(new ThamSoPage());
+                    var thamSoPage = _serviceProvider.GetRequiredService<ThamSoViews.ThamSoPage>();
+                    MainContent.Navigate(thamSoPage);
                     break;
                 default:
                     break;
             }
+
+            // Now set it back to visible
+            MainContent.Visibility = Visibility.Visible;
+
+            // Re-apply Z-index fixes after navigation
+            Application.Current.Dispatcher.InvokeAsync(() =>
+            {
+            }, System.Windows.Threading.DispatcherPriority.Loaded);
         }
+
         private void MainContent_ContentRendered(object sender, EventArgs e)
         {
             // Make sure navigation buttons reflect current page

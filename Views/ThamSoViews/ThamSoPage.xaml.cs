@@ -1,12 +1,14 @@
-﻿using System.Windows.Controls;
+﻿using QuanLyDaiLy.ViewModels.ThamSoViewModels;
+using System.Windows.Controls;
 
 namespace QuanLyDaiLy.Views.ThamSoViews
 {
     public partial class ThamSoPage : Page
     {
-        public ThamSoPage()
+        public ThamSoPage(ThamSoPageViewModel vm)
         {
             InitializeComponent();
+            DataContext = vm;
         }
     }
 }

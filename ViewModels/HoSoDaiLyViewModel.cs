@@ -22,10 +22,10 @@ namespace QuanLyDaiLy.ViewModels
             TiepNhanDaiLyCommand = new RelayCommand(async () => await TiepNhanDaiLy());
             DaiLyMoiCommand = new RelayCommand(DaiLyMoi);
 
-            this.quanService = quanService;
-            this.loaiDaiLyService = loaiDaiLyService;
-            this.daiLyService = daiLyService;
-            this.thamSoService = thamSoService;
+            _quanService = quanService;
+            _loaiDaiLyService = loaiDaiLyService;
+            _daiLyService = daiLyService;
+            _thamSoService = thamSoService;
 
             _ = LoadDataAsync();
         }
@@ -119,24 +119,24 @@ namespace QuanLyDaiLy.ViewModels
             }
         }
 
-        private ObservableCollection<LoaiDaiLy> loaiDaiLies = [];
+        private ObservableCollection<LoaiDaiLy> _loaiDaiLies = [];
         public ObservableCollection<LoaiDaiLy> LoaiDaiLies
         {
-            get => loaiDaiLies;
+            get => _loaiDaiLies;
             set
             {
-                loaiDaiLies = value;
+                _loaiDaiLies = value;
                 OnPropertyChanged();
             }
         }
 
-        private ObservableCollection<Quan> quans = [];
+        private ObservableCollection<Quan> _quans = [];
         public ObservableCollection<Quan> Quans
         {
-            get => quans;
+            get => _quans;
             set
             {
-                quans = value;
+                _quans = value;
                 OnPropertyChanged();
             }
         }
@@ -145,10 +145,10 @@ namespace QuanLyDaiLy.ViewModels
         public event EventHandler? DataChanged;
 
         // Services 
-        private readonly ILoaiDaiLyService loaiDaiLyService;
-        private readonly IQuanService quanService;
-        private readonly IDaiLyService daiLyService;
-        private readonly IThamSoService thamSoService;
+        private readonly ILoaiDaiLyService _loaiDaiLyService;
+        private readonly IQuanService _quanService;
+        private readonly IDaiLyService _daiLyService;
+        private readonly IThamSoService _thamSoService;
 
         // Commands
         public ICommand CloseWindowCommand { get; }
@@ -157,8 +157,8 @@ namespace QuanLyDaiLy.ViewModels
 
         private async Task LoadDataAsync()
         {
-            var listLoaiDaiLy = await loaiDaiLyService.GetAllLoaiDaiLy();
-            var listQuan = await quanService.GetAllQuan();
+            var listLoaiDaiLy = await _loaiDaiLyService.GetAllLoaiDaiLy();
+            var listQuan = await _quanService.GetAllQuan();
 
             LoaiDaiLies.Clear();
             Quans.Clear();
@@ -180,15 +180,15 @@ namespace QuanLyDaiLy.ViewModels
                 return;
             }
 
-            if (SelectedLoaiDaiLy == null || SelectedQuan == null)
+            if (string.IsNullOrEmpty(SelectedLoaiDaiLy.TenLoaiDaiLy) || string.IsNullOrEmpty(SelectedQuan.TenQuan))
             {
                 MessageBox.Show("Vui lòng chọn loại đại lý và quận!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
-            int soLuongDaiLyTrongQuan = await quanService.GetSoLuongDaiLyTrongQuan(SelectedQuan.MaQuan);
-            var thamSo = await thamSoService.GetThamSo();
-            int soLuongDaiLyToiDaTrongQuan = thamSo.SoLuongDaiLyToiDa;
+            var soLuongDaiLyTrongQuan = await _quanService.GetSoLuongDaiLyTrongQuan(SelectedQuan.MaQuan);
+            var thamSo = await _thamSoService.GetThamSo();
+            var soLuongDaiLyToiDaTrongQuan = thamSo.SoLuongDaiLyToiDa;
 
             if (soLuongDaiLyTrongQuan >= soLuongDaiLyToiDaTrongQuan)
             {
@@ -196,7 +196,7 @@ namespace QuanLyDaiLy.ViewModels
                 return;
             }
 
-            MaDaiLy = (await daiLyService.GenerateAvailableId()).ToString();
+            MaDaiLy = (await _daiLyService.GenerateAvailableId()).ToString();
             DaiLy daiLy = new()
             {
                 MaDaiLy = int.Parse(MaDaiLy),
@@ -213,7 +213,7 @@ namespace QuanLyDaiLy.ViewModels
 
             try
             {
-                await daiLyService.AddDaiLy(daiLy);
+                await _daiLyService.AddDaiLy(daiLy);
                 MessageBox.Show("Tiếp nhận đại lý thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             catch (Exception ex)

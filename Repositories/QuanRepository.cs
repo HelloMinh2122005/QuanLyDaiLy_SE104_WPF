@@ -75,5 +75,11 @@ namespace QuanLyDaiLy.Repositories
 
             return quan.DsDaiLy.Count;
         }
+
+        public async Task<int> GenerateAvailableId()
+        {
+            var quan = await _context.DsQuan.OrderByDescending(q => q.MaQuan).FirstOrDefaultAsync();
+            return quan?.MaQuan + 1 ?? 1;
+        }
     }
 }

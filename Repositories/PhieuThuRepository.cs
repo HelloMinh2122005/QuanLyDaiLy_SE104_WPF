@@ -71,5 +71,11 @@ namespace QuanLyDaiLy.Repositories
                 .Where(p => p.NgayThuTien >= startDate && p.NgayThuTien <= endDate)
                 .ToListAsync();
         }
+
+        public async Task<int> GenerateAvailableId()
+        {
+            int maxId = await _context.DsPhieuThu.MaxAsync(d => d.MaPhieuThu);
+            return maxId + 1;
+        }
     }
 }

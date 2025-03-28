@@ -791,7 +791,7 @@
                 Orientation="Horizontal">
                 <Border CornerRadius="8">
                     <Button
-                        Width="180"
+                        Width="200"
                         Background="#00AAFF"
                         Command="{Binding TiepNhanDaiLyCommand}"
                         Content="➕Tiếp nhận đại lý"

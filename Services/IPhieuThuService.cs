@@ -11,5 +11,6 @@ namespace QuanLyDaiLy.Services
         Task DeletePhieuThu(int id);
         Task<IEnumerable<PhieuThu>> GetPhieuThuByDaiLyId(int maDaiLy);
         Task<IEnumerable<PhieuThu>> GetPhieuThuByDateRange(DateTime startDate, DateTime endDate);
+        Task<int> GenerateAvailableId();
     }
 }

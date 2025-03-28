@@ -9,5 +9,6 @@ namespace QuanLyDaiLy.Services
         Task AddDonViTinh(DonViTinh donViTinh);
         Task UpdateDonViTinh(DonViTinh donViTinh);
         Task DeleteDonViTinh(int id);
+        Task<int> GenerateAvailableId();
     }
 }
