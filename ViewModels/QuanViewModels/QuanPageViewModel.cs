@@ -122,7 +122,11 @@ namespace QuanLyDaiLy.ViewModels.QuanViewModels
         }
 
         // Delete the selected Quan
-        private async void ExecuteDeleteQuan()
+        private void ExecuteDeleteQuan()
+        {
+            _ = DeleteQuanAsync();
+        }
+        private async Task DeleteQuanAsync()
         {
             if (string.IsNullOrEmpty(SelectedQuan.TenQuan))
             {
