@@ -12,7 +12,7 @@ namespace QuanLyDaiLy.ViewModels
 {
     public class TraCuuDaiLyViewModel : INotifyPropertyChanged
     {
-        private readonly IDaiLyService daiLyService;
+        private readonly IDaiLyService _daiLyService;
 
         public TraCuuDaiLyViewModel(
             ILoaiDaiLyService loaiDaiLyService,
@@ -22,11 +22,11 @@ namespace QuanLyDaiLy.ViewModels
             IDaiLyService daiLyService
         )
         {
-            this.loaiDaiLyService = loaiDaiLyService;
-            this.quanService = quanService;
-            this.donViTinhService = donViTinhService;
-            this.matHangService = matHangService;
-            this.daiLyService = daiLyService;
+            _loaiDaiLyService = loaiDaiLyService;
+            _quanService = quanService;
+            _donViTinhService = donViTinhService;
+            _matHangService = matHangService;
+            _daiLyService = daiLyService;
 
             // Initialize commands
             TraCuuDaiLyCommand = new RelayCommand(async () => await SearchDaiLy());
@@ -459,10 +459,10 @@ namespace QuanLyDaiLy.ViewModels
         {
             try
             {
-                var listLoaiDaiLy = await loaiDaiLyService.GetAllLoaiDaiLy();
-                var listQuan = await quanService.GetAllQuan();
-                var listDonViTinh = await donViTinhService.GetAllDonViTinh();
-                var listMatHang = await matHangService.GetAllMatHang();
+                var listLoaiDaiLy = await _loaiDaiLyService.GetAllLoaiDaiLy();
+                var listQuan = await _quanService.GetAllQuan();
+                var listDonViTinh = await _donViTinhService.GetAllDonViTinh();
+                var listMatHang = await _matHangService.GetAllMatHang();
 
                 LoaiDaiLies.Clear();
                 Quans.Clear();
@@ -484,7 +484,7 @@ namespace QuanLyDaiLy.ViewModels
         {
             try
             {
-                var daiLies = await daiLyService.GetAllDaiLy();
+                var daiLies = await _daiLyService.GetAllDaiLy();
                 ObservableCollection<DaiLy> filteredResults = [.. daiLies];
 
                 if (!string.IsNullOrEmpty(MaDaiLy))
@@ -539,10 +539,10 @@ namespace QuanLyDaiLy.ViewModels
         }
 
         // services 
-        private readonly ILoaiDaiLyService loaiDaiLyService;
-        private readonly IQuanService quanService;
-        private readonly IDonViTinhService donViTinhService;
-        private readonly IMatHangService matHangService;
+        private readonly ILoaiDaiLyService _loaiDaiLyService;
+        private readonly IQuanService _quanService;
+        private readonly IDonViTinhService _donViTinhService;
+        private readonly IMatHangService _matHangService;
 
         public event PropertyChangedEventHandler? PropertyChanged;
         public event EventHandler<ObservableCollection<DaiLy>>? SearchCompleted;

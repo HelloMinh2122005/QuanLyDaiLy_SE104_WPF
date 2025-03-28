@@ -4,6 +4,7 @@ using QuanLyDaiLy.Helpers;
 using QuanLyDaiLy.Repositories;
 using QuanLyDaiLy.Services;
 using QuanLyDaiLy.ViewModels;
+using QuanLyDaiLy.ViewModels.QuanViewModels;
 using QuanLyDaiLy.Views;
 
 namespace QuanLyDaiLy.Extensions;
@@ -56,6 +57,8 @@ public static class ApplicationServiceExtensions
         services.AddTransient<Views.LoaiDaiLyViews.LoaiDaiLyPage>();
         services.AddTransient<Views.QuanViews.QuanPage>();
         services.AddTransient<Views.QuanViews.ThemQuanWindow>();
+        services.AddTransient<Views.QuanViews.CapNhatQuanWindow>();
+
         services.AddTransient<Views.MatHangViews.MatHangPage>();
         services.AddTransient<Views.PhieuThuViews.PhieuThuPage>();
         services.AddTransient<Views.PhieuXuatViews.PhieuXuatPage>();
@@ -65,8 +68,14 @@ public static class ApplicationServiceExtensions
         // Register Page ViewModels
         services.AddTransient<ViewModels.DashboardViewModels.DashboardPageViewModel>();
         services.AddTransient<ViewModels.LoaiDaiLyViewModels.LoaiDaiLyPageViewModel>();
-        services.AddTransient<ViewModels.QuanViewModels.QuanPageViewModel>();
-        services.AddTransient<ViewModels.QuanViewModels.ThemQuanViewModel>();
+        services.AddTransient<QuanPageViewModel>();
+        services.AddTransient<ThemQuanViewModel>();
+        services.AddTransient<Func<int, ChinhSuaQuanViewModel>>(sp => quanId =>
+            new ChinhSuaQuanViewModel(
+                sp.GetRequiredService<IQuanService>(),
+                quanId
+            )
+        );
         services.AddTransient<ViewModels.MatHangViewModels.MatHangPageViewModel>();
         services.AddTransient<ViewModels.PhieuThuViewModels.PhieuThuPageViewModel>();
         services.AddTransient<ViewModels.PhieuXuatViewModels.PhieuXuatPageViewModel>();

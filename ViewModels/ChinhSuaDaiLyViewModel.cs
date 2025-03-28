@@ -12,9 +12,9 @@ namespace QuanLyDaiLy.ViewModels
 {
     public class ChinhSuaDaiLyViewModel : INotifyPropertyChanged
     {
-        private readonly IDaiLyService daiLyService;
-        private readonly IQuanService quanService;
-        private readonly ILoaiDaiLyService loaiDaiLyService;
+        private readonly IDaiLyService _daiLyService;
+        private readonly IQuanService _quanService;
+        private readonly ILoaiDaiLyService _loaiDaiLyService;
         private readonly int _daiLyId;
 
         public ChinhSuaDaiLyViewModel(
@@ -23,9 +23,9 @@ namespace QuanLyDaiLy.ViewModels
             ILoaiDaiLyService loaiDaiLyService,
             int dailyId
         ) {
-            this.daiLyService = daiLyService;
-            this.quanService = quanService;
-            this.loaiDaiLyService = loaiDaiLyService;
+            _daiLyService = daiLyService;
+            _quanService = quanService;
+            _loaiDaiLyService = loaiDaiLyService;
             _daiLyId = dailyId;
 
             CloseWindowCommand = new RelayCommand(CloseWindow);
@@ -125,24 +125,24 @@ namespace QuanLyDaiLy.ViewModels
             }
         }
 
-        private ObservableCollection<LoaiDaiLy> loaiDaiLies = [];
+        private ObservableCollection<LoaiDaiLy> _loaiDaiLies = [];
         public ObservableCollection<LoaiDaiLy> LoaiDaiLies
         {
-            get => loaiDaiLies;
+            get => _loaiDaiLies;
             set
             {
-                loaiDaiLies = value;
+                _loaiDaiLies = value;
                 OnPropertyChanged();
             }
         }
 
-        private ObservableCollection<Quan> quans = [];
+        private ObservableCollection<Quan> _quans = [];
         public ObservableCollection<Quan> Quans
         {
-            get => quans;
+            get => _quans;
             set
             {
-                quans = value;
+                _quans = value;
                 OnPropertyChanged();
             }
         }
@@ -153,8 +153,8 @@ namespace QuanLyDaiLy.ViewModels
 
         private async Task LoadDataAsync()
         {
-            var listLoaiDaiLy = await loaiDaiLyService.GetAllLoaiDaiLy();
-            var listQuan = await quanService.GetAllQuan();
+            var listLoaiDaiLy = await _loaiDaiLyService.GetAllLoaiDaiLy();
+            var listQuan = await _quanService.GetAllQuan();
 
             LoaiDaiLies.Clear();
             Quans.Clear();
@@ -162,9 +162,9 @@ namespace QuanLyDaiLy.ViewModels
             Quans = [.. listQuan];
 
             // Load the DaiLy data
-            var daiLy = await daiLyService.GetDaiLyById(_daiLyId);
-            if (daiLy != null)
+            try
             {
+                var daiLy = await _daiLyService.GetDaiLyById(_daiLyId);
                 MaDaiLy = daiLy.MaDaiLy.ToString();
                 TenDaiLy = daiLy.TenDaiLy;
                 SoDienThoai = daiLy.DienThoai;
@@ -173,10 +173,18 @@ namespace QuanLyDaiLy.ViewModels
                 NgayTiepNhan = daiLy.NgayTiepNhan;
 
                 // Set selected values
-                SelectedLoaiDaiLy = LoaiDaiLies.FirstOrDefault(l => l.MaLoaiDaiLy == daiLy.MaLoaiDaiLy) ?? new LoaiDaiLy();
+                SelectedLoaiDaiLy = LoaiDaiLies.FirstOrDefault(l => l.MaLoaiDaiLy == daiLy.MaLoaiDaiLy) ??
+                                    new LoaiDaiLy();
                 SelectedQuan = Quans.FirstOrDefault(q => q.MaQuan == daiLy.MaQuan) ?? new Quan();
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi tải dữ liệu đại lý: {ex.Message}", "Lỗi", MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+            }
+
         }
+        
 
         private void CloseWindow()
         {
@@ -192,7 +200,7 @@ namespace QuanLyDaiLy.ViewModels
                 return;
             }
 
-            if (SelectedLoaiDaiLy == null || SelectedQuan == null)
+            if (string.IsNullOrEmpty(SelectedLoaiDaiLy.TenLoaiDaiLy) || string.IsNullOrEmpty(SelectedQuan.TenQuan))
             {
                 MessageBox.Show("Vui lòng chọn loại đại lý và quận!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
@@ -200,38 +208,22 @@ namespace QuanLyDaiLy.ViewModels
 
             try
             {
-                DaiLy existingDaiLy = await daiLyService.GetDaiLyById(_daiLyId);
-                if (existingDaiLy == null)
-                {
-                    MessageBox.Show("Dai Ly not found");
-                    return;
-                }
-                else
-                {
-                    try
-                    {
-                        existingDaiLy.TenDaiLy = TenDaiLy;
-                        existingDaiLy.DienThoai = SoDienThoai;
-                        existingDaiLy.Email = Email;
-                        existingDaiLy.DiaChi = DiaChi;
-                        existingDaiLy.NgayTiepNhan = NgayTiepNhan;
-                        existingDaiLy.MaLoaiDaiLy = SelectedLoaiDaiLy.MaLoaiDaiLy;
-                        existingDaiLy.MaQuan = SelectedQuan.MaQuan;
-                        existingDaiLy.LoaiDaiLy = SelectedLoaiDaiLy;
-                        existingDaiLy.Quan = SelectedQuan;
+                var existingDaiLy = await _daiLyService.GetDaiLyById(_daiLyId);
+                existingDaiLy.TenDaiLy = TenDaiLy;
+                existingDaiLy.DienThoai = SoDienThoai;
+                existingDaiLy.Email = Email;
+                existingDaiLy.DiaChi = DiaChi;
+                existingDaiLy.NgayTiepNhan = NgayTiepNhan;
+                existingDaiLy.MaLoaiDaiLy = SelectedLoaiDaiLy.MaLoaiDaiLy;
+                existingDaiLy.MaQuan = SelectedQuan.MaQuan;
+                existingDaiLy.LoaiDaiLy = SelectedLoaiDaiLy;
+                existingDaiLy.Quan = SelectedQuan;
 
-                        await daiLyService.UpdateDaiLy(existingDaiLy);
-                        MessageBox.Show("Cập nhật đại lý thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
-                    }
-                    catch (Exception ex)
-                    {
-                        MessageBox.Show(ex.Message, "Cập nhật đại lý không thành công", MessageBoxButton.OK, MessageBoxImage.Error);
-                    }
-                }
+                await _daiLyService.UpdateDaiLy(existingDaiLy);
+                MessageBox.Show("Cập nhật đại lý thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
             } catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "SHIT", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
             }
         }
 

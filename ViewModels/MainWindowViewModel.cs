@@ -77,7 +77,7 @@ namespace QuanLyDaiLy.ViewModels
 
         private async void OpenDeleteDaiLyWindow()
         {
-            if (SelectedDaiLy == null)
+            if (string.IsNullOrEmpty(SelectedDaiLy.TenDaiLy))
             {
                 MessageBox.Show("Vui lòng chọn đại lý để xóa!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
@@ -96,7 +96,6 @@ namespace QuanLyDaiLy.ViewModels
                     await _dailyService.DeleteDaiLy(SelectedDaiLy.MaDaiLy);
                     await LoadData();
                     MessageBox.Show("Đã xóa đại lý thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
-                    await LoadData();
                 }
             }
             catch (Exception ex)
@@ -113,7 +112,7 @@ namespace QuanLyDaiLy.ViewModels
             {
                 viewModel.SearchCompleted += (sender, searchResults) =>
                 {
-                    if (searchResults != null && searchResults.Count > 0)
+                    if (searchResults.Count > 0)
                     {
                         DanhSachDaiLy = searchResults;
                     }
@@ -136,7 +135,7 @@ namespace QuanLyDaiLy.ViewModels
 
         private void OpenChinhSuaDaiLyWindow()
         {
-            if (SelectedDaiLy == null)
+            if (string.IsNullOrEmpty(SelectedDaiLy.TenDaiLy))
             {
                 MessageBox.Show("Vui lòng chọn đại lý để chỉnh sửa!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
                 return;

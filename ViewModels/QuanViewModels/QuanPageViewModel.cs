@@ -15,13 +15,16 @@ namespace QuanLyDaiLy.ViewModels.QuanViewModels
     {
         private readonly IQuanService _quanService;
         private readonly IServiceProvider _serviceProvider;
+        private readonly Func<int, ChinhSuaQuanViewModel> _chinhSuaQuanFactory;
 
         public QuanPageViewModel(
             IQuanService quanService,
-            IServiceProvider serviceProvider
+            IServiceProvider serviceProvider,
+            Func<int, ChinhSuaQuanViewModel> chinhSuaQuanFactory
         ) {
             _quanService = quanService;
             _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
+            _chinhSuaQuanFactory = chinhSuaQuanFactory;
 
             SearchQuanCommand = new RelayCommand(OpenSearchQuanWindow);
             LoadDataCommand = new RelayCommand(async () => await LoadDataExecute());
@@ -73,7 +76,7 @@ namespace QuanLyDaiLy.ViewModels.QuanViewModels
             MessageBox.Show("Tải lại danh sách thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
-        private void OpenSearchQuanWindow()
+        private static void OpenSearchQuanWindow()
         {
             MessageBox.Show("Tính năng tra cứu quận đang được phát triển.", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
         }
@@ -98,7 +101,7 @@ namespace QuanLyDaiLy.ViewModels.QuanViewModels
 
         private void OpenEditQuanWindow()
         {
-            if (SelectedQuan == null || SelectedQuan.MaQuan == 0)
+            if (string.IsNullOrEmpty(SelectedQuan.TenQuan))
             {
                 MessageBox.Show("Vui lòng chọn quận để chỉnh sửa!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
@@ -106,16 +109,11 @@ namespace QuanLyDaiLy.ViewModels.QuanViewModels
 
             try
             {
-                // Implementation depends on your UI flow
-                // var editQuanWindow = _serviceProvider.GetRequiredService<ChinhSuaQuanWindow>();
-                // if (editQuanWindow.DataContext is ChinhSuaQuanViewModel viewModel)
-                // {
-                //     viewModel.QuanId = SelectedQuan.MaQuan;
-                //     viewModel.DataChanged += async (sender, e) => await LoadData();
-                // }
-                // editQuanWindow.Show();
+                var viewModel = _chinhSuaQuanFactory(SelectedQuan.MaQuan);
+                viewModel.DataChanged += async (sender, e) => await LoadData();
 
-                MessageBox.Show("Tính năng sửa quận đang được phát triển.", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+                var window = new CapNhatQuanWindow(viewModel);
+                window.Show();
             }
             catch (Exception ex)
             {
@@ -126,7 +124,7 @@ namespace QuanLyDaiLy.ViewModels.QuanViewModels
         // Delete the selected Quan
         private async void ExecuteDeleteQuan()
         {
-            if (SelectedQuan == null || SelectedQuan.MaQuan == 0)
+            if (string.IsNullOrEmpty(SelectedQuan.TenQuan))
             {
                 MessageBox.Show("Vui lòng chọn quận để xóa!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
@@ -134,7 +132,7 @@ namespace QuanLyDaiLy.ViewModels.QuanViewModels
 
             try
             {
-                int soLuongDaiLy = await _quanService.GetSoLuongDaiLyTrongQuan(SelectedQuan.MaQuan);
+                var soLuongDaiLy = await _quanService.GetSoLuongDaiLyTrongQuan(SelectedQuan.MaQuan);
                 if (soLuongDaiLy > 0)
                 {
                     var result = MessageBox.Show(
