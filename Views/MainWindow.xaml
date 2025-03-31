@@ -76,98 +76,115 @@
 
     <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
         <Grid.ColumnDefinitions>
-            <ColumnDefinition x:Name="NavColumn" Width="60" />
+            <ColumnDefinition x:Name="NavColumn" Width="65" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
 
         <!--  Navigation Rail/Drawer  -->
-        <Grid
-            x:Name="NavigationRail"
+        <Border
             Grid.Column="0"
+            Margin="0,0,5,20"
             Background="#F7F9FD"
-            MouseEnter="NavigationRail_MouseEnter"
-            MouseLeave="NavigationRail_MouseLeave">
+            BorderBrush="#E0E0E0"
+            BorderThickness="0,0,1,0"
+            CornerRadius="0,20,10,0">
+            <Border.Effect>
+                <DropShadowEffect
+                    BlurRadius="8"
+                    Direction="315"
+                    Opacity="0.15"
+                    ShadowDepth="3"
+                    Color="#333333" />
+            </Border.Effect>
+            <Grid
+                x:Name="NavigationRail"
+                Margin="0,0,0,10"
+                Background="#F7F9FD"
+                MouseEnter="NavigationRail_MouseEnter"
+                MouseLeave="NavigationRail_MouseLeave">
 
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto" />
-                <RowDefinition Height="*" />
-                <RowDefinition Height="Auto" />
-            </Grid.RowDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
 
-            <!--  Existing content  -->
-            <Border
-                Grid.Row="0"
-                Margin="0,30,0,0"
-                Background="White"
-                CornerRadius="90">
-                <Image Source="pack://application:,,,/QuanLyDaiLy;component/Resources/uittogether-removebg-preview.png" Stretch="Uniform" />
-            </Border>
+                <!--  Existing content  -->
+                <Border
+                    Grid.Row="0"
+                    Margin="0,30,0,0"
+                    Background="White"
+                    CornerRadius="90">
+                    <Image Source="pack://application:,,,/QuanLyDaiLy;component/Resources/uittogether-removebg-preview.png" Stretch="Uniform" />
+                </Border>
 
-            <StackPanel Grid.Row="1" Margin="0,20,0,0">
-                <RadioButton
-                    Checked="RadioButton_Checked"
-                    Content=" 📊  Bảng điều khiển"
-                    GroupName="NavGroup"
-                    IsChecked="True"
-                    Style="{StaticResource NavButtonStyle}"
-                    Tag="Dashboard" />
-                <RadioButton
-                    Checked="RadioButton_Checked"
-                    Content=" 🏠  Đại lý"
-                    GroupName="NavGroup"
-                    Style="{StaticResource NavButtonStyle}"
-                    Tag="DaiLy" />
-                <RadioButton
-                    Checked="RadioButton_Checked"
-                    Content=" 🕵️‍♂️  Loại đại lý"
-                    GroupName="NavGroup"
-                    Style="{StaticResource NavButtonStyle}"
-                    Tag="LoaiDaiLy" />
-                <RadioButton
-                    Checked="RadioButton_Checked"
-                    Content=" 📍  Quận"
-                    GroupName="NavGroup"
-                    Style="{StaticResource NavButtonStyle}"
-                    Tag="Quan" />
-                <RadioButton
-                    Checked="RadioButton_Checked"
-                    Content=" 📦  Mặt hàng"
-                    GroupName="NavGroup"
-                    Style="{StaticResource NavButtonStyle}"
-                    Tag="MatHang" />
-                <RadioButton
-                    Checked="RadioButton_Checked"
-                    Content=" 🧾  Phiếu thu"
-                    GroupName="NavGroup"
-                    Style="{StaticResource NavButtonStyle}"
-                    Tag="PhieuThu" />
-                <RadioButton
-                    Checked="RadioButton_Checked"
-                    Content=" 📄  Phiếu xuất"
-                    GroupName="NavGroup"
-                    Style="{StaticResource NavButtonStyle}"
-                    Tag="PhieuXuat" />
-                <RadioButton
-                    Checked="RadioButton_Checked"
-                    Content=" 📏  Đơn vị tính"
-                    GroupName="NavGroup"
-                    Style="{StaticResource NavButtonStyle}"
-                    Tag="DonViTinh" />
-                <RadioButton
-                    Checked="RadioButton_Checked"
-                    Content=" ⚙️  Tham số"
-                    GroupName="NavGroup"
-                    Style="{StaticResource NavButtonStyle}"
-                    Tag="ThamSo" />
-            </StackPanel>
 
-            <Border Grid.Row="2" Padding="5,10">
-                <Button
-                    HorizontalAlignment="Stretch"
-                    Content="👤  Phan Đình Minh"
-                    Style="{StaticResource ProfileButtonStyle}" />
-            </Border>
-        </Grid>
+                <StackPanel Grid.Row="1" Margin="0,20,0,0">
+                    <RadioButton
+                        Checked="RadioButton_Checked"
+                        Content="📊   Bảng điều khiển"
+                        GroupName="NavGroup"
+                        IsChecked="True"
+                        Style="{StaticResource NavButtonStyle}"
+                        Tag="Dashboard" />
+                    <RadioButton
+                        Checked="RadioButton_Checked"
+                        Content="🏠   Đại lý"
+                        GroupName="NavGroup"
+                        Style="{StaticResource NavButtonStyle}"
+                        Tag="DaiLy" />
+                    <RadioButton
+                        Checked="RadioButton_Checked"
+                        Content="🕵️‍♂️   Loại đại lý"
+                        GroupName="NavGroup"
+                        Style="{StaticResource NavButtonStyle}"
+                        Tag="LoaiDaiLy" />
+                    <RadioButton
+                        Checked="RadioButton_Checked"
+                        Content="📍   Quận"
+                        GroupName="NavGroup"
+                        Style="{StaticResource NavButtonStyle}"
+                        Tag="Quan" />
+                    <RadioButton
+                        Checked="RadioButton_Checked"
+                        Content="📦   Mặt hàng"
+                        GroupName="NavGroup"
+                        Style="{StaticResource NavButtonStyle}"
+                        Tag="MatHang" />
+                    <RadioButton
+                        Checked="RadioButton_Checked"
+                        Content="🧾   Phiếu thu"
+                        GroupName="NavGroup"
+                        Style="{StaticResource NavButtonStyle}"
+                        Tag="PhieuThu" />
+                    <RadioButton
+                        Checked="RadioButton_Checked"
+                        Content="📄   Phiếu xuất"
+                        GroupName="NavGroup"
+                        Style="{StaticResource NavButtonStyle}"
+                        Tag="PhieuXuat" />
+                    <RadioButton
+                        Checked="RadioButton_Checked"
+                        Content="📏   Đơn vị tính"
+                        GroupName="NavGroup"
+                        Style="{StaticResource NavButtonStyle}"
+                        Tag="DonViTinh" />
+                    <RadioButton
+                        Checked="RadioButton_Checked"
+                        Content="⚙️   Tham số"
+                        GroupName="NavGroup"
+                        Style="{StaticResource NavButtonStyle}"
+                        Tag="ThamSo" />
+                </StackPanel>
+
+                <Border Grid.Row="2">
+                    <Button
+                        HorizontalAlignment="Stretch"
+                        Content="👤  Phan Đình Minh"
+                        Style="{StaticResource ProfileButtonStyle}" />
+                </Border>
+            </Grid>
+        </Border>
 
         <Grid Grid.Column="1">
             <Grid.RowDefinitions>
