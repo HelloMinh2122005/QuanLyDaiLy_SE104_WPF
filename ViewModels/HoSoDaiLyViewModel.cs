@@ -164,7 +164,19 @@ namespace QuanLyDaiLy.ViewModels
             Quans.Clear();
             LoaiDaiLies = [.. listLoaiDaiLy];
             Quans = [.. listQuan];
+
+            // Auto-select the first items in both ComboBoxes if available
+            if (LoaiDaiLies.Count > 0)
+            {
+                SelectedLoaiDaiLy = LoaiDaiLies[0];
+            }
+
+            if (Quans.Count > 0)
+            {
+                SelectedQuan = Quans[0];
+            }
         }
+
 
         private void CloseWindow()
         {
