@@ -89,21 +89,21 @@ namespace QuanLyDaiLy.ViewModels.DonViTinhViewModels
 
         private void OpenAddDonViTinhWindow()
         {
-            //try
-            //{
-            //    var addDonViTinhWindow = _serviceProvider.GetRequiredService<ThemDonViTinhWindow>();
-            //    if (addDonViTinhWindow.DataContext is ThemDonViTinhViewModel viewModel)
-            //    {
-            //        viewModel.DataChanged += async (sender, e) => await LoadData();
-            //    }
-            //    addDonViTinhWindow.Show();
-            //}
-            //catch (Exception ex)
-            //{
-            //    MessageBox.Show($"Lỗi khi mở cửa sổ thêm đơn vị tính: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
-            //}
             SelectedDonViTinh = null!;
-            MessageBox.Show("Chưa cài đặt");
+            try
+            {
+                var addDonViTinhWindow = _serviceProvider.GetRequiredService<ThemDonViTinhWindow>();
+                if (addDonViTinhWindow.DataContext is ThemDonViTinhPageViewModel viewModel)
+                {
+                    viewModel.DataChanged += async (sender, e) => await LoadData();
+                }
+                addDonViTinhWindow.Show();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi mở cửa sổ thêm đơn vị tính: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+
         }
 
         private void OpenEditDonViTinhWindow()

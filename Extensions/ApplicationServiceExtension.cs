@@ -58,11 +58,12 @@ public static class ApplicationServiceExtensions
         services.AddTransient<Views.QuanViews.QuanPage>();
         services.AddTransient<Views.QuanViews.ThemQuanWindow>();
         services.AddTransient<Views.QuanViews.CapNhatQuanWindow>();
-
         services.AddTransient<Views.MatHangViews.MatHangPage>();
         services.AddTransient<Views.PhieuThuViews.PhieuThuPage>();
         services.AddTransient<Views.PhieuXuatViews.PhieuXuatPage>();
         services.AddTransient<Views.DonViTinhViews.DonViTinhPage>();
+        services.AddTransient<Views.DonViTinhViews.ThemDonViTinhWindow>();
+        services.AddTransient<Views.DonViTinhViews.CapNhatDonViTinhWindow>();
         services.AddTransient<Views.ThamSoViews.ThamSoPage>();
 
         // Register Page ViewModels
@@ -80,6 +81,8 @@ public static class ApplicationServiceExtensions
         services.AddTransient<ViewModels.PhieuThuViewModels.PhieuThuPageViewModel>();
         services.AddTransient<ViewModels.PhieuXuatViewModels.PhieuXuatPageViewModel>();
         services.AddTransient<ViewModels.DonViTinhViewModels.DonViTinhPageViewModel>();
+        services.AddTransient<ViewModels.DonViTinhViewModels.ThemDonViTinhPageViewModel>();
+        services.AddTransient<ViewModels.DonViTinhViewModels.CapNhatDonViTinhPageViewModel>();
         services.AddTransient<ViewModels.ThamSoViewModels.ThamSoPageViewModel>();
 
         return services;
