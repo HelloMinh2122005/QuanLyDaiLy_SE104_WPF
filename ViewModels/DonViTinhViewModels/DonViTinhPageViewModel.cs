@@ -15,17 +15,17 @@ namespace QuanLyDaiLy.ViewModels.DonViTinhViewModels
     {
         private readonly IDonViTinhService _iDonViTinhService;
         private readonly IServiceProvider _serviceProvider;
-        // private readonly Func<int, ChinhSuaDonViTinhViewModel> _chinhSuaDonViTinhFactory;
+        private readonly Func<int, CapNhatDonViTinhPageViewModel> _chinhSuaDonViTinhFactory;
 
         public DonViTinhPageViewModel(
             IDonViTinhService iDonViTinhService,
-            IServiceProvider serviceProvider
-            // Func<int, ChinhSuaDonViTinhViewModel> chinhSuaDonViTinhFactory
+            IServiceProvider serviceProvider,
+            Func<int, CapNhatDonViTinhPageViewModel> chinhSuaDonViTinhFactory
            )
         {
             _iDonViTinhService = iDonViTinhService;
             _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
-            //_chinhSuaDonViTinhFactory = chinhSuaDonViTinhFactory;
+            _chinhSuaDonViTinhFactory = chinhSuaDonViTinhFactory;
 
             // Initialize commands
             SearchDonViTinhCommand = new RelayCommand(OpenSearchDonViTinhWindow);
@@ -108,25 +108,24 @@ namespace QuanLyDaiLy.ViewModels.DonViTinhViewModels
 
         private void OpenEditDonViTinhWindow()
         {
-            //if (string.IsNullOrEmpty(SelectedDonViTinh.TenDonViTinh))
-            //{
-            //    MessageBox.Show("Vui lòng chọn đơn vị tính để chỉnh sửa!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
-            //    return;
-            //}
+            if (string.IsNullOrEmpty(SelectedDonViTinh.TenDonViTinh))
+            {
+                MessageBox.Show("Vui lòng chọn đơn vị tính để chỉnh sửa!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
 
-            //try
-            //{
-            //    var viewModel = _chinhSuaDonViTinhFactory(SelectedDonViTinh.MaDonViTinh);
-            //    viewModel.DataChanged += async (sender, e) => await LoadData();
+            try
+            {
+                var viewModel = _chinhSuaDonViTinhFactory(SelectedDonViTinh.MaDonViTinh);
+                viewModel.DataChanged += async (sender, e) => await LoadData();
 
-            //    var window = new CapNhatDonViTinhWindow(viewModel);
-            //    window.Show();
-            //}
-            //catch (Exception ex)
-            //{
-            //    MessageBox.Show($"Lỗi khi mở cửa sổ chỉnh sửa đơn vị tính: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
-            //}
-            MessageBox.Show("Chưa cài đặt");
+                var window = new CapNhatDonViTinhWindow(viewModel);
+                window.Show();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi mở cửa sổ chỉnh sửa đơn vị tính: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void ExecuteDeleteDonViTinh()

@@ -4,6 +4,7 @@ using QuanLyDaiLy.Helpers;
 using QuanLyDaiLy.Repositories;
 using QuanLyDaiLy.Services;
 using QuanLyDaiLy.ViewModels;
+using QuanLyDaiLy.ViewModels.DonViTinhViewModels;
 using QuanLyDaiLy.ViewModels.QuanViewModels;
 using QuanLyDaiLy.Views;
 
@@ -82,6 +83,12 @@ public static class ApplicationServiceExtensions
         services.AddTransient<ViewModels.PhieuXuatViewModels.PhieuXuatPageViewModel>();
         services.AddTransient<ViewModels.DonViTinhViewModels.DonViTinhPageViewModel>();
         services.AddTransient<ViewModels.DonViTinhViewModels.ThemDonViTinhPageViewModel>();
+        services.AddTransient<Func<int, CapNhatDonViTinhPageViewModel> >(dvt => dvtID =>
+            new CapNhatDonViTinhPageViewModel(
+                dvt.GetRequiredService<IDonViTinhService>(),
+                dvtID
+            )
+        );
         services.AddTransient<ViewModels.DonViTinhViewModels.CapNhatDonViTinhPageViewModel>();
         services.AddTransient<ViewModels.ThamSoViewModels.ThamSoPageViewModel>();
 
