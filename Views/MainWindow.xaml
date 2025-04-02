@@ -188,22 +188,32 @@
 
         <Grid Grid.Column="1">
             <Grid.RowDefinitions>
-                <RowDefinition Height=".2*" />
-                <RowDefinition Height=".1*" />
-                <RowDefinition Height="*" />
+                <RowDefinition Height="15*" />
+                <RowDefinition Height="5*" />
+                <RowDefinition Height="80*" />
             </Grid.RowDefinitions>
 
             <TextBlock
                 Grid.Row="0"
-                HorizontalAlignment="Center"
+                Margin="20,10,0,0"
+                HorizontalAlignment="Left"
                 VerticalAlignment="Center"
                 FontFamily="Nunito"
-                FontSize="90"
+                FontSize="60"
                 FontStyle="Normal"
                 FontWeight="Bold"
                 Foreground="#333333"
-                LineHeight="55"
-                Text="Danh sách đại lý" />
+                LineHeight="50"
+                Text="Danh sách đại lý">
+                <TextBlock.Effect>
+                    <DropShadowEffect
+                        BlurRadius="3"
+                        Direction="330"
+                        Opacity="0.3"
+                        ShadowDepth="1"
+                        Color="#CCCCCC" />
+                </TextBlock.Effect>
+            </TextBlock>
 
             <Grid Grid.Row="1">
                 <Grid.ColumnDefinitions>
@@ -213,25 +223,24 @@
 
                 <StackPanel
                     Grid.Column="0"
-                    Margin="0,10,0,0"
                     HorizontalAlignment="Left"
                     VerticalAlignment="Center"
                     Orientation="Horizontal">
 
                     <!--  Tra cứu đại lý Button  -->
                     <Border
-                        Width="250"
-                        Height="50"
+                        Width="150"
+                        Height="40"
                         Margin="20,0,0,0"
                         CornerRadius="8">
                         <Button
-                            Width="250"
-                            Height="50"
+                            Width="150"
+                            Height="40"
                             Background="#00AAFF"
                             Command="{Binding SearchDaiLyCommand}"
                             Content="🔍 Tra cứu đại lý"
                             FontFamily="Roboto"
-                            FontSize="28"
+                            FontSize="16"
                             FontStyle="Normal"
                             FontWeight="Medium"
                             Foreground="#FFFFFF">
@@ -242,7 +251,7 @@
                                             <ControlTemplate TargetType="Button">
                                                 <Border
                                                     x:Name="buttonBorder"
-                                                    Padding="16,10,16,8"
+                                                    Padding="8,5,8,4"
                                                     Background="{TemplateBinding Background}"
                                                     CornerRadius="8">
                                                     <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
@@ -323,18 +332,18 @@
                     </Border>
 
                     <Border
-                        Width="70"
-                        Height="50"
-                        Margin="20,0,0,0"
+                        Width="50"
+                        Height="40"
+                        Margin="10,0,0,0"
                         CornerRadius="8">
                         <Button
-                            Width="70"
-                            Height="50"
+                            Width="50"
+                            Height="40"
                             Background="#00AAFF"
                             Command="{Binding LoadDataCommand}"
                             Content="🔃"
                             FontFamily="Roboto"
-                            FontSize="28"
+                            FontSize="16"
                             FontStyle="Normal"
                             FontWeight="Medium"
                             Foreground="#FFFFFF">
@@ -345,7 +354,7 @@
                                             <ControlTemplate TargetType="Button">
                                                 <Border
                                                     x:Name="buttonBorder"
-                                                    Padding="16,10,16,8"
+                                                    Padding="8,5,8,4"
                                                     Background="{TemplateBinding Background}"
                                                     CornerRadius="8">
                                                     <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
@@ -433,20 +442,20 @@
                     HorizontalAlignment="Right"
                     VerticalAlignment="Center"
                     Orientation="Horizontal">
-                    <!--  Thêm Button  -->
+
                     <Border
-                        Width="150"
-                        Height="50"
+                        Width="170"
+                        Height="40"
                         Margin="10,0,0,0"
                         CornerRadius="8">
                         <Button
-                            Width="150"
-                            Height="50"
+                            Width="170"
+                            Height="40"
                             Background="#00AAFF"
                             Command="{Binding OpenHoSoDaiLyCommand}"
-                            Content="➕ Thêm"
+                            Content="➕ Tiếp nhận đại lý"
                             FontFamily="Roboto"
-                            FontSize="28"
+                            FontSize="16"
                             FontStyle="Normal"
                             FontWeight="Medium"
                             Foreground="#FFFFFF">
@@ -457,7 +466,7 @@
                                             <ControlTemplate TargetType="Button">
                                                 <Border
                                                     x:Name="buttonBorder"
-                                                    Padding="16,10,16,8"
+                                                    Padding="8,5,8,4"
                                                     Background="{TemplateBinding Background}"
                                                     CornerRadius="8">
                                                     <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
@@ -540,17 +549,17 @@
                     <!--  Sửa Button  -->
                     <Border
                         Width="150"
-                        Height="50"
-                        Margin="20,0,0,0"
+                        Height="40"
+                        Margin="10,0,0,0"
                         CornerRadius="8">
                         <Button
                             Width="150"
-                            Height="50"
+                            Height="40"
                             Background="#00AAFF"
                             Command="{Binding EditDaiLyCommand}"
-                            Content="✎ Sửa"
+                            Content="✎ Cập nhật đại lý"
                             FontFamily="Roboto"
-                            FontSize="28"
+                            FontSize="16"
                             FontStyle="Normal"
                             FontWeight="Medium"
                             Foreground="#FFFFFF">
@@ -561,7 +570,7 @@
                                             <ControlTemplate TargetType="Button">
                                                 <Border
                                                     x:Name="buttonBorder"
-                                                    Padding="16,10,16,8"
+                                                    Padding="8,5,8,4"
                                                     Background="{TemplateBinding Background}"
                                                     CornerRadius="8">
                                                     <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
@@ -643,18 +652,18 @@
 
                     <!--  Xóa Button  -->
                     <Border
-                        Width="150"
-                        Height="50"
-                        Margin="20,0,0,0"
+                        Width="130"
+                        Height="40"
+                        Margin="10,0,0,0"
                         CornerRadius="8">
                         <Button
-                            Width="150"
-                            Height="50"
+                            Width="130"
+                            Height="40"
                             Background="#00AAFF"
                             Command="{Binding DeleteDaiLyCommand}"
-                            Content="🗑 Xóa"
+                            Content="🗑 Xóa đại lý"
                             FontFamily="Roboto"
-                            FontSize="28"
+                            FontSize="16"
                             FontStyle="Normal"
                             FontWeight="Medium"
                             Foreground="#FFFFFF">
@@ -665,7 +674,7 @@
                                             <ControlTemplate TargetType="Button">
                                                 <Border
                                                     x:Name="buttonBorder"
-                                                    Padding="16,10,16,8"
+                                                    Padding="8,5,8,4"
                                                     Background="{TemplateBinding Background}"
                                                     CornerRadius="8">
                                                     <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
@@ -744,6 +753,7 @@
                             </Button.Style>
                         </Button>
                     </Border>
+
                 </StackPanel>
             </Grid>
 
