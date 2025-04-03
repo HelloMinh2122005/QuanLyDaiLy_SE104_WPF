@@ -3,7 +3,6 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Input;
-using Microsoft.Extensions.DependencyInjection;
 using QuanLyDaiLy.Commands;
 using QuanLyDaiLy.Models;
 using QuanLyDaiLy.Services;
@@ -57,7 +56,7 @@ namespace QuanLyDaiLy.ViewModels.MatHangViewModels
             }
         }
 
-        private int _soLuongTon = 0;
+        private int _soLuongTon;
         public int SoLuongTon
         {
             get => _soLuongTon;

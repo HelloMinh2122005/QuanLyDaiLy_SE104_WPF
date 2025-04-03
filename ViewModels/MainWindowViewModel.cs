@@ -140,7 +140,7 @@ namespace QuanLyDaiLy.ViewModels
 
         private void OpenChinhSuaDaiLyWindow()
         {
-            if (string.IsNullOrEmpty(SelectedDaiLy.TenDaiLy))
+            if (SelectedDaiLy == null || string.IsNullOrEmpty(SelectedDaiLy.TenDaiLy))
             {
                 MessageBox.Show("Vui lòng chọn đại lý để chỉnh sửa!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
                 return;

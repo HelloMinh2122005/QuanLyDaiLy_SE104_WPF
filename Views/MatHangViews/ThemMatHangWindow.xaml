@@ -181,6 +181,9 @@
                 <RowDefinition Height="80" />
             </Grid.RowDefinitions>
 
+            <Border Grid.Row="1" Background="LightGray" />
+            <Border Grid.Row="3" Background="LightGray" />
+
             <!--  Header  -->
             <Grid Grid.Row="0">
                 <Grid.ColumnDefinitions>
