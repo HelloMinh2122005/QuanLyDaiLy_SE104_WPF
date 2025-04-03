@@ -4,8 +4,6 @@ using QuanLyDaiLy.Helpers;
 using QuanLyDaiLy.Repositories;
 using QuanLyDaiLy.Services;
 using QuanLyDaiLy.ViewModels;
-using QuanLyDaiLy.ViewModels.DonViTinhViewModels;
-using QuanLyDaiLy.ViewModels.QuanViewModels;
 using QuanLyDaiLy.Views;
 
 namespace QuanLyDaiLy.Extensions;
@@ -60,6 +58,8 @@ public static class ApplicationServiceExtensions
         services.AddTransient<Views.QuanViews.ThemQuanWindow>();
         services.AddTransient<Views.QuanViews.CapNhatQuanWindow>();
         services.AddTransient<Views.MatHangViews.MatHangPage>();
+        services.AddTransient<Views.MatHangViews.ThemMatHangWindow>();
+        services.AddTransient<Views.MatHangViews.CapNhatMatHangWindow>();
         services.AddTransient<Views.PhieuThuViews.PhieuThuPage>();
         services.AddTransient<Views.PhieuXuatViews.PhieuXuatPage>();
         services.AddTransient<Views.DonViTinhViews.DonViTinhPage>();
@@ -70,21 +70,29 @@ public static class ApplicationServiceExtensions
         // Register Page ViewModels
         services.AddTransient<ViewModels.DashboardViewModels.DashboardPageViewModel>();
         services.AddTransient<ViewModels.LoaiDaiLyViewModels.LoaiDaiLyPageViewModel>();
-        services.AddTransient<QuanPageViewModel>();
-        services.AddTransient<ThemQuanViewModel>();
-        services.AddTransient<Func<int, ChinhSuaQuanViewModel>>(sp => quanId =>
-            new ChinhSuaQuanViewModel(
+        services.AddTransient<ViewModels.QuanViewModels.QuanPageViewModel>();
+        services.AddTransient<ViewModels.QuanViewModels.ThemQuanViewModel>();
+        services.AddTransient<Func<int, ViewModels.QuanViewModels.ChinhSuaQuanViewModel>>(sp => quanId =>
+            new ViewModels.QuanViewModels.ChinhSuaQuanViewModel(
                 sp.GetRequiredService<IQuanService>(),
                 quanId
             )
         );
         services.AddTransient<ViewModels.MatHangViewModels.MatHangPageViewModel>();
+        services.AddTransient<ViewModels.MatHangViewModels.ThemMatHangWindowViewModel>();
+        services.AddTransient<Func<int, ViewModels.MatHangViewModels.CapNhatMatHangWindowViewModel>>(sp => matHangId =>
+            new ViewModels.MatHangViewModels.CapNhatMatHangWindowViewModel(
+                sp.GetRequiredService<IMatHangService>(),
+                sp.GetRequiredService<IDonViTinhService>(),
+                matHangId
+            )
+        );
         services.AddTransient<ViewModels.PhieuThuViewModels.PhieuThuPageViewModel>();
         services.AddTransient<ViewModels.PhieuXuatViewModels.PhieuXuatPageViewModel>();
         services.AddTransient<ViewModels.DonViTinhViewModels.DonViTinhPageViewModel>();
         services.AddTransient<ViewModels.DonViTinhViewModels.ThemDonViTinhPageViewModel>();
-        services.AddTransient<Func<int, CapNhatDonViTinhPageViewModel> >(dvt => dvtID =>
-            new CapNhatDonViTinhPageViewModel(
+        services.AddTransient<Func<int, ViewModels.DonViTinhViewModels.CapNhatDonViTinhPageViewModel> >(dvt => dvtID =>
+            new ViewModels.DonViTinhViewModels.CapNhatDonViTinhPageViewModel(
                 dvt.GetRequiredService<IDonViTinhService>(),
                 dvtID
             )
