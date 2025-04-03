@@ -13,7 +13,7 @@ namespace QuanLyDaiLy.Models
         public long ThanhTien { get; set; } = 0;
 
         // Navigation properties
-        public PhieuXuat PhieuXuat { get; set; } = new();
-        public MatHang MatHang { get; set; } = new();
+        public PhieuXuat PhieuXuat { get; set; } = null!;
+        public MatHang MatHang { get; set; } = null!;
     }
 }

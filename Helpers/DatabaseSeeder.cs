@@ -13,6 +13,9 @@ namespace QuanLyDaiLy.Helpers
             SeedLoaiDaiLy(modelBuilder);
             SeedDaiLy(modelBuilder);
             SeedMatHang(modelBuilder);
+            SeedPhieuXuat(modelBuilder);  
+            SeedChiTietPhieuXuat(modelBuilder);
+            SeedPhieuThu(modelBuilder);
         }
 
         private static void SeedThamSo(ModelBuilder modelBuilder)
@@ -409,6 +412,359 @@ namespace QuanLyDaiLy.Helpers
                     TenMatHang = "Cafe",
                     MaDonViTinh = 1,
                     SoLuongTon = 60
+                }
+            );
+        }
+
+        private static void SeedPhieuXuat(ModelBuilder modelBuilder)
+        {
+            var seedDate = new DateTime(2023, 1, 1);
+
+            modelBuilder.Entity<PhieuXuat>().HasData(
+                new PhieuXuat
+                {
+                    MaPhieuXuat = 1,
+                    MaDaiLy = 1,
+                    NgayLapPhieu = seedDate.AddDays(5),
+                    TongTriGia = 2500000
+                },
+                new PhieuXuat
+                {
+                    MaPhieuXuat = 2,
+                    MaDaiLy = 2,
+                    NgayLapPhieu = seedDate.AddDays(10),
+                    TongTriGia = 1800000
+                },
+                new PhieuXuat
+                {
+                    MaPhieuXuat = 3,
+                    MaDaiLy = 3,
+                    NgayLapPhieu = seedDate.AddDays(15),
+                    TongTriGia = 3200000
+                },
+                new PhieuXuat
+                {
+                    MaPhieuXuat = 4,
+                    MaDaiLy = 4,
+                    NgayLapPhieu = seedDate.AddDays(20),
+                    TongTriGia = 1500000
+                },
+                new PhieuXuat
+                {
+                    MaPhieuXuat = 5,
+                    MaDaiLy = 5,
+                    NgayLapPhieu = seedDate.AddDays(25),
+                    TongTriGia = 2200000
+                },
+                new PhieuXuat
+                {
+                    MaPhieuXuat = 6,
+                    MaDaiLy = 1,
+                    NgayLapPhieu = seedDate.AddDays(35),
+                    TongTriGia = 1700000
+                },
+                new PhieuXuat
+                {
+                    MaPhieuXuat = 7,
+                    MaDaiLy = 2,
+                    NgayLapPhieu = seedDate.AddDays(40),
+                    TongTriGia = 2800000
+                },
+                new PhieuXuat
+                {
+                    MaPhieuXuat = 8,
+                    MaDaiLy = 6,
+                    NgayLapPhieu = seedDate.AddDays(45),
+                    TongTriGia = 3500000
+                },
+                new PhieuXuat
+                {
+                    MaPhieuXuat = 9,
+                    MaDaiLy = 7,
+                    NgayLapPhieu = seedDate.AddDays(50),
+                    TongTriGia = 1900000
+                },
+                new PhieuXuat
+                {
+                    MaPhieuXuat = 10,
+                    MaDaiLy = 8,
+                    NgayLapPhieu = seedDate.AddDays(55),
+                    TongTriGia = 2700000
+                }
+            );
+        }
+
+        private static void SeedChiTietPhieuXuat(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<ChiTietPhieuXuat>().HasData(
+                // Phiếu xuất 1
+                new ChiTietPhieuXuat
+                {
+                    MaChiTietPhieuXuat = 1,
+                    MaPhieuXuat = 1,
+                    MaMatHang = 1,
+                    SoLuongXuat = 10,
+                    DonGia = 120000,
+                    ThanhTien = 1200000
+                },
+                new ChiTietPhieuXuat
+                {
+                    MaChiTietPhieuXuat = 2,
+                    MaPhieuXuat = 1,
+                    MaMatHang = 3,
+                    SoLuongXuat = 5,
+                    DonGia = 260000,
+                    ThanhTien = 1300000
+                },
+
+                // Phiếu xuất 2
+                new ChiTietPhieuXuat
+                {
+                    MaChiTietPhieuXuat = 3,
+                    MaPhieuXuat = 2,
+                    MaMatHang = 2,
+                    SoLuongXuat = 20,
+                    DonGia = 30000,
+                    ThanhTien = 600000
+                },
+                new ChiTietPhieuXuat
+                {
+                    MaChiTietPhieuXuat = 4,
+                    MaPhieuXuat = 2,
+                    MaMatHang = 4,
+                    SoLuongXuat = 15,
+                    DonGia = 80000,
+                    ThanhTien = 1200000
+                },
+
+                // Phiếu xuất 3
+                new ChiTietPhieuXuat
+                {
+                    MaChiTietPhieuXuat = 5,
+                    MaPhieuXuat = 3,
+                    MaMatHang = 5,
+                    SoLuongXuat = 8,
+                    DonGia = 50000,
+                    ThanhTien = 400000
+                },
+                new ChiTietPhieuXuat
+                {
+                    MaChiTietPhieuXuat = 6,
+                    MaPhieuXuat = 3,
+                    MaMatHang = 6,
+                    SoLuongXuat = 10,
+                    DonGia = 180000,
+                    ThanhTien = 1800000
+                },
+                new ChiTietPhieuXuat
+                {
+                    MaChiTietPhieuXuat = 7,
+                    MaPhieuXuat = 3,
+                    MaMatHang = 7,
+                    SoLuongXuat = 20,
+                    DonGia = 50000,
+                    ThanhTien = 1000000
+                },
+
+                // Phiếu xuất 4
+                new ChiTietPhieuXuat
+                {
+                    MaChiTietPhieuXuat = 8,
+                    MaPhieuXuat = 4,
+                    MaMatHang = 8,
+                    SoLuongXuat = 12,
+                    DonGia = 75000,
+                    ThanhTien = 900000
+                },
+                new ChiTietPhieuXuat
+                {
+                    MaChiTietPhieuXuat = 9,
+                    MaPhieuXuat = 4,
+                    MaMatHang = 9,
+                    SoLuongXuat = 10,
+                    DonGia = 60000,
+                    ThanhTien = 600000
+                },
+
+                // Phiếu xuất 5
+                new ChiTietPhieuXuat
+                {
+                    MaChiTietPhieuXuat = 10,
+                    MaPhieuXuat = 5,
+                    MaMatHang = 10,
+                    SoLuongXuat = 25,
+                    DonGia = 28000,
+                    ThanhTien = 700000
+                },
+                new ChiTietPhieuXuat
+                {
+                    MaChiTietPhieuXuat = 11,
+                    MaPhieuXuat = 5,
+                    MaMatHang = 11,
+                    SoLuongXuat = 15,
+                    DonGia = 100000,
+                    ThanhTien = 1500000
+                },
+
+                // Phiếu xuất 6
+                new ChiTietPhieuXuat
+                {
+                    MaChiTietPhieuXuat = 12,
+                    MaPhieuXuat = 6,
+                    MaMatHang = 12,
+                    SoLuongXuat = 10,
+                    DonGia = 170000,
+                    ThanhTien = 1700000
+                },
+
+                // Phiếu xuất 7
+                new ChiTietPhieuXuat
+                {
+                    MaChiTietPhieuXuat = 13,
+                    MaPhieuXuat = 7,
+                    MaMatHang = 13,
+                    SoLuongXuat = 30,
+                    DonGia = 20000,
+                    ThanhTien = 600000
+                },
+                new ChiTietPhieuXuat
+                {
+                    MaChiTietPhieuXuat = 14,
+                    MaPhieuXuat = 7,
+                    MaMatHang = 14,
+                    SoLuongXuat = 10,
+                    DonGia = 40000,
+                    ThanhTien = 400000
+                },
+                new ChiTietPhieuXuat
+                {
+                    MaChiTietPhieuXuat = 15,
+                    MaPhieuXuat = 7,
+                    MaMatHang = 15,
+                    SoLuongXuat = 12,
+                    DonGia = 150000,
+                    ThanhTien = 1800000
+                },
+
+                // Phiếu xuất 8
+                new ChiTietPhieuXuat
+                {
+                    MaChiTietPhieuXuat = 16,
+                    MaPhieuXuat = 8,
+                    MaMatHang = 16,
+                    SoLuongXuat = 20,
+                    DonGia = 45000,
+                    ThanhTien = 900000
+                },
+                new ChiTietPhieuXuat
+                {
+                    MaChiTietPhieuXuat = 17,
+                    MaPhieuXuat = 8,
+                    MaMatHang = 17,
+                    SoLuongXuat = 25,
+                    DonGia = 40000,
+                    ThanhTien = 1000000
+                },
+                new ChiTietPhieuXuat
+                {
+                    MaChiTietPhieuXuat = 18,
+                    MaPhieuXuat = 8,
+                    MaMatHang = 18,
+                    SoLuongXuat = 40,
+                    DonGia = 40000,
+                    ThanhTien = 1600000
+                },
+
+                // Phiếu xuất 9
+                new ChiTietPhieuXuat
+                {
+                    MaChiTietPhieuXuat = 19,
+                    MaPhieuXuat = 9,
+                    MaMatHang = 19,
+                    SoLuongXuat = 15,
+                    DonGia = 30000,
+                    ThanhTien = 450000
+                },
+                new ChiTietPhieuXuat
+                {
+                    MaChiTietPhieuXuat = 20,
+                    MaPhieuXuat = 9,
+                    MaMatHang = 20,
+                    SoLuongXuat = 10,
+                    DonGia = 85000,
+                    ThanhTien = 850000
+                },
+                new ChiTietPhieuXuat
+                {
+                    MaChiTietPhieuXuat = 21,
+                    MaPhieuXuat = 9,
+                    MaMatHang = 21,
+                    SoLuongXuat = 6,
+                    DonGia = 100000,
+                    ThanhTien = 600000
+                },
+
+                // Phiếu xuất 10
+                new ChiTietPhieuXuat
+                {
+                    MaChiTietPhieuXuat = 22,
+                    MaPhieuXuat = 10,
+                    MaMatHang = 22,
+                    SoLuongXuat = 18,
+                    DonGia = 50000,
+                    ThanhTien = 900000
+                },
+                new ChiTietPhieuXuat
+                {
+                    MaChiTietPhieuXuat = 23,
+                    MaPhieuXuat = 10,
+                    MaMatHang = 23,
+                    SoLuongXuat = 15,
+                    DonGia = 120000,
+                    ThanhTien = 1800000
+                }
+            );
+        }
+
+        private static void SeedPhieuThu(ModelBuilder modelBuilder)
+        {
+            var seedDate = new DateTime(2023, 1, 1);
+
+            modelBuilder.Entity<PhieuThu>().HasData(
+                new PhieuThu
+                {
+                    MaPhieuThu = 1,
+                    MaDaiLy = 1,
+                    NgayThuTien = seedDate.AddDays(15),
+                    SoTienThu = 2000000
+                },
+                new PhieuThu
+                {
+                    MaPhieuThu = 2,
+                    MaDaiLy = 2,
+                    NgayThuTien = seedDate.AddDays(20),
+                    SoTienThu = 1500000
+                },
+                new PhieuThu
+                {
+                    MaPhieuThu = 3,
+                    MaDaiLy = 3,
+                    NgayThuTien = seedDate.AddDays(25),
+                    SoTienThu = 3000000
+                },
+                new PhieuThu
+                {
+                    MaPhieuThu = 4,
+                    MaDaiLy = 4,
+                    NgayThuTien = seedDate.AddDays(30),
+                    SoTienThu = 1000000
+                },
+                new PhieuThu
+                {
+                    MaPhieuThu = 5,
+                    MaDaiLy = 5,
+                    NgayThuTien = seedDate.AddDays(35),
+                    SoTienThu = 2500000
                 }
             );
         }

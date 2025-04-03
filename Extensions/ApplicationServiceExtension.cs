@@ -62,6 +62,7 @@ public static class ApplicationServiceExtensions
         services.AddTransient<Views.MatHangViews.CapNhatMatHangWindow>();
         services.AddTransient<Views.PhieuThuViews.PhieuThuPage>();
         services.AddTransient<Views.PhieuXuatViews.PhieuXuatPage>();
+        services.AddTransient<Views.PhieuXuatViews.ThemPhieuXuatWindow>();
         services.AddTransient<Views.DonViTinhViews.DonViTinhPage>();
         services.AddTransient<Views.DonViTinhViews.ThemDonViTinhWindow>();
         services.AddTransient<Views.DonViTinhViews.CapNhatDonViTinhWindow>();
@@ -89,6 +90,7 @@ public static class ApplicationServiceExtensions
         );
         services.AddTransient<ViewModels.PhieuThuViewModels.PhieuThuPageViewModel>();
         services.AddTransient<ViewModels.PhieuXuatViewModels.PhieuXuatPageViewModel>();
+        services.AddTransient<ViewModels.PhieuXuatViewModels.ThemPhieuXuatWindowViewModel>();
         services.AddTransient<ViewModels.DonViTinhViewModels.DonViTinhPageViewModel>();
         services.AddTransient<ViewModels.DonViTinhViewModels.ThemDonViTinhPageViewModel>();
         services.AddTransient<Func<int, ViewModels.DonViTinhViewModels.CapNhatDonViTinhPageViewModel> >(dvt => dvtID =>

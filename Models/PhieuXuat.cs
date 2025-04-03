@@ -11,7 +11,7 @@ namespace QuanLyDaiLy.Models
         public long TongTriGia { get; set; } = 0;
 
         // Navigation properties
-        public DaiLy DaiLy { get; set; } = new();
+        public DaiLy DaiLy { get; set; } = null!;
         public ICollection<ChiTietPhieuXuat> DsChiTietPhieuXuat { get; set; } = [];
     }
 }

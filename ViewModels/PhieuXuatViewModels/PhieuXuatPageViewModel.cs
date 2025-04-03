@@ -1,19 +1,123 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Windows;
+using System.Windows.Input;
+using Microsoft.Extensions.DependencyInjection;
+using QuanLyDaiLy.Commands;
+using QuanLyDaiLy.Models;
+using QuanLyDaiLy.Services;
+using QuanLyDaiLy.Views.PhieuXuatViews;
 
 namespace QuanLyDaiLy.ViewModels.PhieuXuatViewModels
 {
     public class PhieuXuatPageViewModel : INotifyPropertyChanged
     {
-        private string _hello = "Hello";
-        public string Hello
+        private readonly IPhieuXuatService _phieuXuatService;
+        //private readonly Func<int, ChinhSuaPhieuXuatViewModel> _chinhSuaPhieuXuatFactory;
+        private readonly IServiceProvider _serviceProvider;
+
+        public PhieuXuatPageViewModel(IPhieuXuatService phieuXuatService, IServiceProvider serviceProvider)
         {
-            get => _hello;
+            _phieuXuatService = phieuXuatService;
+            _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
+
+            // Initialize commands
+            LoadDataCommand = new RelayCommand(async () => await LoadDataExecuteAsync());
+            AddPhieuXuatCommand = new RelayCommand(AddPhieuXuat);
+            EditPhieuXuatCommand = new RelayCommand(EditPhieuXuat);
+            DeletePhieuXuatCommand = new RelayCommand(DeletePhieuXuat);
+            SearchPhieuXuatCommand = new RelayCommand(SearchPhieuXuat);
+
+            // Load initial data
+            _ = LoadDataAsync();
+        }
+
+        // Binding properties
+        private ObservableCollection<PhieuXuat> _danhSachPhieuXuat = [];
+        public ObservableCollection<PhieuXuat> DanhSachPhieuXuat
+        {
+            get => _danhSachPhieuXuat;
             set
             {
-                _hello = value;
+                _danhSachPhieuXuat = value;
                 OnPropertyChanged();
             }
+        }
+
+        private PhieuXuat _selectedPhieuXuat = null!;
+        public PhieuXuat SelectedPhieuXuat
+        {
+            get => _selectedPhieuXuat;
+            set
+            {
+                _selectedPhieuXuat = value;
+                OnPropertyChanged();
+            }
+        }
+
+        // Commands
+        public ICommand LoadDataCommand { get; }
+        public ICommand AddPhieuXuatCommand { get; }
+        public ICommand EditPhieuXuatCommand { get; }
+        public ICommand DeletePhieuXuatCommand { get; }
+        public ICommand SearchPhieuXuatCommand { get; } 
+
+        // Command methods
+        private async Task LoadDataAsync()
+        {
+            var list = await _phieuXuatService.GetAllPhieuXuat();
+            DanhSachPhieuXuat = [.. list];
+        }
+
+        private async Task LoadDataExecuteAsync()
+        {
+            SelectedPhieuXuat = null!;
+            await LoadDataAsync();
+            MessageBox.Show("Tải lại danh sách thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+
+        private void AddPhieuXuat()
+        {
+            SelectedPhieuXuat = null!;
+
+            var addPhieuXuatWindow = _serviceProvider.GetRequiredService<ThemPhieuXuatWindow>();
+            if (addPhieuXuatWindow.DataContext is ThemPhieuXuatWindowViewModel viewModel)
+            {
+                viewModel.DataChanged += async (sender, e) => await LoadDataAsync();
+            }
+            addPhieuXuatWindow.Show();
+        }
+
+        private void EditPhieuXuat()
+        {
+            MessageBox.Show("Not implemented");
+        }
+
+        private void DeletePhieuXuat()
+        {
+            _ = ExecuteDeletePhieuXuat();
+        }
+
+        private async Task ExecuteDeletePhieuXuat()
+        {
+            if (SelectedPhieuXuat != null)
+            {
+                var result = MessageBox.Show("Bạn có chắc chắn muốn xóa phiếu xuất này?", "Xác nhận", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                if (result == MessageBoxResult.Yes)
+                {
+                    // Call the service to delete the selected PhieuXuat
+                    _phieuXuatService.DeletePhieuXuat(SelectedPhieuXuat.MaPhieuXuat);
+                    await LoadDataAsync();
+                }
+            }
+        }
+
+        private void SearchPhieuXuat()
+        {
+            SelectedPhieuXuat = null!;
+
+            MessageBox.Show("Not implemented");
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
