@@ -107,7 +107,7 @@ namespace QuanLyDaiLy.ViewModels.PhieuXuatViewModels
                 if (result == MessageBoxResult.Yes)
                 {
                     // Call the service to delete the selected PhieuXuat
-                    _phieuXuatService.DeletePhieuXuat(SelectedPhieuXuat.MaPhieuXuat);
+                    await _phieuXuatService.DeletePhieuXuat(SelectedPhieuXuat.MaPhieuXuat);
                     await LoadDataAsync();
                 }
             }
