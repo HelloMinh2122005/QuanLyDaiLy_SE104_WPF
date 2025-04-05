@@ -14,13 +14,17 @@ namespace QuanLyDaiLy.ViewModels.PhieuXuatViewModels
     public class PhieuXuatPageViewModel : INotifyPropertyChanged
     {
         private readonly IPhieuXuatService _phieuXuatService;
-        //private readonly Func<int, ChinhSuaPhieuXuatViewModel> _chinhSuaPhieuXuatFactory;
+        private readonly Func<int, CapNhatPhieuXuatWindowViewModel> _capNhatPhieuXuatFactory;
         private readonly IServiceProvider _serviceProvider;
 
-        public PhieuXuatPageViewModel(IPhieuXuatService phieuXuatService, IServiceProvider serviceProvider)
-        {
+        public PhieuXuatPageViewModel(
+            IPhieuXuatService phieuXuatService, 
+            IServiceProvider serviceProvider,
+            Func<int, CapNhatPhieuXuatWindowViewModel> capNhatPhieuXuatFactory
+        ) {
             _phieuXuatService = phieuXuatService;
             _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
+            _capNhatPhieuXuatFactory = capNhatPhieuXuatFactory;
 
             // Initialize commands
             LoadDataCommand = new RelayCommand(async () => await LoadDataExecuteAsync());
@@ -91,7 +95,26 @@ namespace QuanLyDaiLy.ViewModels.PhieuXuatViewModels
 
         private void EditPhieuXuat()
         {
-            MessageBox.Show("Not implemented");
+            if (SelectedPhieuXuat == null!)
+            {
+                MessageBox.Show("Vui lòng chọn phiếu xuất để chỉnh sửa!", "Thông báo", MessageBoxButton.OK,
+                    MessageBoxImage.Information);
+                return;
+            }
+
+            try
+            {
+                var viewmodel = _capNhatPhieuXuatFactory(SelectedPhieuXuat.MaPhieuXuat);
+                viewmodel.DataChanged += async (sender, e) => await LoadDataAsync();
+
+                var window = new CapNhatPhieuXuatWindow(viewmodel);
+                window.Show();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi mở cửa sổ chỉnh sửa phiếu xuất: {ex.Message}", "Lỗi", MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+            }
         }
 
         private void DeletePhieuXuat()

@@ -53,24 +53,33 @@ public static class ApplicationServiceExtensions
 
         // Register Page Views
         services.AddTransient<Views.DashboardViews.DashboardPage>();
+
         services.AddTransient<Views.LoaiDaiLyViews.LoaiDaiLyPage>();
+
         services.AddTransient<Views.QuanViews.QuanPage>();
         services.AddTransient<Views.QuanViews.ThemQuanWindow>();
         services.AddTransient<Views.QuanViews.CapNhatQuanWindow>();
+
         services.AddTransient<Views.MatHangViews.MatHangPage>();
         services.AddTransient<Views.MatHangViews.ThemMatHangWindow>();
         services.AddTransient<Views.MatHangViews.CapNhatMatHangWindow>();
+
         services.AddTransient<Views.PhieuThuViews.PhieuThuPage>();
+
         services.AddTransient<Views.PhieuXuatViews.PhieuXuatPage>();
         services.AddTransient<Views.PhieuXuatViews.ThemPhieuXuatWindow>();
+
         services.AddTransient<Views.DonViTinhViews.DonViTinhPage>();
         services.AddTransient<Views.DonViTinhViews.ThemDonViTinhWindow>();
         services.AddTransient<Views.DonViTinhViews.CapNhatDonViTinhWindow>();
+
         services.AddTransient<Views.ThamSoViews.ThamSoPage>();
 
         // Register Page ViewModels
         services.AddTransient<ViewModels.DashboardViewModels.DashboardPageViewModel>();
+
         services.AddTransient<ViewModels.LoaiDaiLyViewModels.LoaiDaiLyPageViewModel>();
+
         services.AddTransient<ViewModels.QuanViewModels.QuanPageViewModel>();
         services.AddTransient<ViewModels.QuanViewModels.ThemQuanViewModel>();
         services.AddTransient<Func<int, ViewModels.QuanViewModels.ChinhSuaQuanViewModel>>(sp => quanId =>
@@ -79,6 +88,7 @@ public static class ApplicationServiceExtensions
                 quanId
             )
         );
+
         services.AddTransient<ViewModels.MatHangViewModels.MatHangPageViewModel>();
         services.AddTransient<ViewModels.MatHangViewModels.ThemMatHangWindowViewModel>();
         services.AddTransient<Func<int, ViewModels.MatHangViewModels.CapNhatMatHangWindowViewModel>>(sp => matHangId =>
@@ -88,9 +98,22 @@ public static class ApplicationServiceExtensions
                 matHangId
             )
         );
+
         services.AddTransient<ViewModels.PhieuThuViewModels.PhieuThuPageViewModel>();
+
         services.AddTransient<ViewModels.PhieuXuatViewModels.PhieuXuatPageViewModel>();
         services.AddTransient<ViewModels.PhieuXuatViewModels.ThemPhieuXuatWindowViewModel>();
+        services.AddTransient<Func<int, ViewModels.PhieuXuatViewModels.CapNhatPhieuXuatWindowViewModel>>(px => phieuXuatId => 
+            new ViewModels.PhieuXuatViewModels.CapNhatPhieuXuatWindowViewModel(
+                px.GetRequiredService<IPhieuXuatService>(),
+                px.GetRequiredService<IChiTietPhieuXuatService>(),
+                px.GetRequiredService<IDaiLyService>(),
+                px.GetRequiredService<IMatHangService>(),
+                px.GetRequiredService<ILoaiDaiLyService>(),
+                phieuXuatId
+            )
+        );
+
         services.AddTransient<ViewModels.DonViTinhViewModels.DonViTinhPageViewModel>();
         services.AddTransient<ViewModels.DonViTinhViewModels.ThemDonViTinhPageViewModel>();
         services.AddTransient<Func<int, ViewModels.DonViTinhViewModels.CapNhatDonViTinhPageViewModel> >(dvt => dvtID =>
@@ -99,7 +122,7 @@ public static class ApplicationServiceExtensions
                 dvtID
             )
         );
-        services.AddTransient<ViewModels.DonViTinhViewModels.CapNhatDonViTinhPageViewModel>();
+
         services.AddTransient<ViewModels.ThamSoViewModels.ThamSoPageViewModel>();
 
         return services;
