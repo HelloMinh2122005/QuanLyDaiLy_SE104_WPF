@@ -104,7 +104,7 @@ namespace QuanLyDaiLy.ViewModels.QuanViewModels
 
         private void OpenEditQuanWindow()
         {
-            if (string.IsNullOrEmpty(SelectedQuan.TenQuan))
+            if (SelectedQuan == null! || string.IsNullOrEmpty(SelectedQuan.TenQuan))
             {
                 MessageBox.Show("Vui lòng chọn quận để chỉnh sửa!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
@@ -131,7 +131,7 @@ namespace QuanLyDaiLy.ViewModels.QuanViewModels
         }
         private async Task DeleteQuanAsync()
         {
-            if (string.IsNullOrEmpty(SelectedQuan.TenQuan))
+            if (SelectedQuan == null! || string.IsNullOrEmpty(SelectedQuan.TenQuan))
             {
                 MessageBox.Show("Vui lòng chọn quận để xóa!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
                 return;

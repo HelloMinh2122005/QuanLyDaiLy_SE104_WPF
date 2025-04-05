@@ -1,9 +1,8 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using QuanLyDaiLy.Models;
 
-namespace QuanLyDaiLy.ViewModels.PhieuXuatViewModels.dto
+namespace QuanLyDaiLy.Models.dto
 {
     public class DisplayMatHangPhieuXuat : INotifyPropertyChanged
     {

@@ -1,29 +1,31 @@
-﻿using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Windows;
-using System.Windows.Input;
-using QuanLyDaiLy.Commands;
-using QuanLyDaiLy.Models;
+﻿using QuanLyDaiLy.Commands;
 using QuanLyDaiLy.Models.dto;
+using QuanLyDaiLy.Models;
 using QuanLyDaiLy.Services;
 using QuanLyDaiLy.Views.PhieuXuatViews;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Windows.Input;
+using System.Windows;
 
 namespace QuanLyDaiLy.ViewModels.PhieuXuatViewModels
 {
-    public class ThemPhieuXuatWindowViewModel : INotifyPropertyChanged
+    public class CapNhatPhieuXuatWindowViewModel : INotifyPropertyChanged
     {
         private readonly IPhieuXuatService _phieuXuatService;
         private readonly IChiTietPhieuXuatService _phieuXuatChiTietService;
         private readonly IDaiLyService _daiLyService;
         private readonly IMatHangService _matHangService;
         private readonly ILoaiDaiLyService _loaiDaiLyService;
+        private readonly int _maPhieuXuatPassed;
 
-        public ThemPhieuXuatWindowViewModel(
+        public CapNhatPhieuXuatWindowViewModel(
             IPhieuXuatService phieuXuatService,
             IChiTietPhieuXuatService phieuXuatChiTietService,
             IDaiLyService daiLyService,
             IMatHangService matHangService,
-            ILoaiDaiLyService loaiDaiLyService
+            ILoaiDaiLyService loaiDaiLyService,
+            int maPhieuXuatPassed
         )
         {
             _phieuXuatService = phieuXuatService;
@@ -31,11 +33,11 @@ namespace QuanLyDaiLy.ViewModels.PhieuXuatViewModels
             _daiLyService = daiLyService;
             _matHangService = matHangService;
             _loaiDaiLyService = loaiDaiLyService;
+            _maPhieuXuatPassed = maPhieuXuatPassed;
 
             // Initialize commands
             CloseCommand = new RelayCommand(CloseWindow);
-            LapPhieuXuatCommand = new RelayCommand(LapPhieuXuat);
-            PhieuXuatMoiCommand = new RelayCommand(PhieuXuatMoi);
+            CapNhatPhieuXuatCommand = new RelayCommand(CapNhatPhieuXuat);
             ThemMatHangCommand = new RelayCommand(ThemMatHang);
             XoaMatHangCommand = new RelayCommand(XoaMatHang);
             BoChonMatHangCommand = new RelayCommand(BoChonMatHang);
@@ -159,140 +161,114 @@ namespace QuanLyDaiLy.ViewModels.PhieuXuatViewModels
 
         // Commands 
         public ICommand CloseCommand { get; }
-        public ICommand LapPhieuXuatCommand { get; }
-        public ICommand PhieuXuatMoiCommand { get; }
+        public ICommand CapNhatPhieuXuatCommand { get; }
         public ICommand ThemMatHangCommand { get; }
         public ICommand XoaMatHangCommand { get; }
         public ICommand BoChonMatHangCommand { get; }
-    
+
 
         // Methods for commands
         private void CloseWindow()
         {
             DataChanged?.Invoke(this, EventArgs.Empty);
-            Application.Current.Windows.OfType<ThemPhieuXuatWindow>().FirstOrDefault()?.Close();
+            Application.Current.Windows.OfType<CapNhatPhieuXuatWindow>().FirstOrDefault()?.Close();
         }
 
-        private void LapPhieuXuat()
+        private void CapNhatPhieuXuat()
         {
             // Use Task.Run to execute the async method without awaiting
-            _ = LapPhieuXuatAsync();
+            _ = CapNhatPhieuXuatAsync();
         }
 
-        private async Task LapPhieuXuatAsync()
+        private async Task CapNhatPhieuXuatAsync()
         {
             try
             {
-                if (SelectedDaiLy == null)
-                {
-                    MessageBox.Show("Vui lòng chọn đại lý", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
-                    return;
-                }
-
                 if (DanhSachMatHangPhieuXuat.Count == 0)
                 {
                     MessageBox.Show("Vui lòng thêm ít nhất một mặt hàng", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
 
-                // Validate quantities and prices
                 foreach (var item in DanhSachMatHangPhieuXuat)
                 {
                     if (item.SoLuongXuat <= 0)
                     {
-                        MessageBox.Show($"Số lượng xuất cho {item.SelectedMatHang.TenMatHang} phải lớn hơn 0",
+                        MessageBox.Show($"Số lượng xuất của {item.SelectedMatHang.TenMatHang} phải lớn hơn 0",
                             "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
                         return;
                     }
 
                     if (item.SoLuongXuat > item.SoLuongTon)
                     {
-                        MessageBox.Show($"Số lượng xuất cho {item.SelectedMatHang.TenMatHang} không được vượt quá số lượng tồn ({item.SoLuongTon})",
+                        MessageBox.Show($"Số lượng xuất của {item.SelectedMatHang.TenMatHang} không được vượt quá số lượng tồn",
                             "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
                         return;
                     }
 
                     if (item.DonGiaXuat <= 0)
                     {
-                        MessageBox.Show($"Đơn giá xuất cho {item.SelectedMatHang.TenMatHang} phải lớn hơn 0",
+                        MessageBox.Show($"Đơn giá xuất của {item.SelectedMatHang.TenMatHang} phải lớn hơn 0",
                             "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
                         return;
                     }
                 }
 
-                //long newDebt = TienNo + TongTien;
-                //if (newDebt > NoToiDa)
-                //{
-                //    var result = MessageBox.Show(
-                //        $"Tổng nợ ({newDebt:N0} VND) sau khi xuất hàng sẽ vượt quá nợ tối đa ({NoToiDa:N0} VND).\nBạn có muốn tiếp tục?",
-                //        "Cảnh báo",
-                //        MessageBoxButton.YesNo,
-                //        MessageBoxImage.Warning
-                //    );
+                var phieuXuat = await _phieuXuatService.GetPhieuXuatById(_maPhieuXuatPassed);
+                long oldTongTriGia = phieuXuat.TongTriGia;
 
-                //    if (result == MessageBoxResult.No)
-                //        return;
-                //}
+                phieuXuat.MaDaiLy = SelectedDaiLy.MaDaiLy;
+                phieuXuat.NgayLapPhieu = NgayLap;
+                phieuXuat.TongTriGia = TongTien;
 
-                if (string.IsNullOrEmpty(MaPhieuXuat))
+                await _phieuXuatService.UpdatePhieuXuat(phieuXuat);
+
+                var existingChiTiet = await _phieuXuatChiTietService.GetChiTietPhieuXuatByPhieuXuatId(_maPhieuXuatPassed);
+
+                foreach (var chiTiet in existingChiTiet)
                 {
-                    int newId = await _phieuXuatService.GenerateAvailableId();
-                    MaPhieuXuat = newId.ToString();
+                    var matHang = await _matHangService.GetMatHangById(chiTiet.MaMatHang);
+                    matHang.SoLuongTon += chiTiet.SoLuongXuat;
+                    await _matHangService.UpdateMatHang(matHang);
+                    await _phieuXuatChiTietService.DeleteChiTietPhieuXuat(chiTiet.MaChiTietPhieuXuat);
                 }
-
-                var phieuXuat = new PhieuXuat
-                {
-                    MaPhieuXuat = int.Parse(MaPhieuXuat),
-                    MaDaiLy = SelectedDaiLy.MaDaiLy,
-                    NgayLapPhieu = NgayLap,
-                    TongTriGia = TongTien
-                };
-
-                await _phieuXuatService.AddPhieuXuat(phieuXuat);
 
                 foreach (var item in DanhSachMatHangPhieuXuat)
                 {
-                    var chiTiet = new ChiTietPhieuXuat
+                    var chiTietPhieuXuat = new ChiTietPhieuXuat
                     {
-                        MaPhieuXuat = phieuXuat.MaPhieuXuat,
+                        MaPhieuXuat = _maPhieuXuatPassed,
                         MaMatHang = item.SelectedMatHang.MaMatHang,
                         SoLuongXuat = item.SoLuongXuat,
                         DonGia = item.DonGiaXuat,
                         ThanhTien = item.ThanhTien
                     };
 
-                    await _phieuXuatChiTietService.AddChiTietPhieuXuat(chiTiet);
+                    await _phieuXuatChiTietService.AddChiTietPhieuXuat(chiTietPhieuXuat);
 
                     var matHang = await _matHangService.GetMatHangById(item.SelectedMatHang.MaMatHang);
                     matHang.SoLuongTon -= item.SoLuongXuat;
                     await _matHangService.UpdateMatHang(matHang);
                 }
 
-                SelectedDaiLy.TienNo += TongTien;
-                await _daiLyService.UpdateDaiLy(SelectedDaiLy);
+                var daiLy = await _daiLyService.GetDaiLyById(SelectedDaiLy.MaDaiLy);
+                daiLy.TienNo = daiLy.TienNo - oldTongTriGia + TongTien;
 
-                MessageBox.Show($"Lập phiếu xuất thành công. Mã phiếu xuất: {MaPhieuXuat}",
-                    "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+                await _daiLyService.UpdateDaiLy(daiLy);
+
+                MessageBox.Show("Cập nhật phiếu xuất thành công", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Có lỗi xảy ra khi lập phiếu xuất: {ex.Message}",
+                MessageBox.Show($"Có lỗi xảy ra khi cập nhật phiếu xuất: {ex.Message}",
                     "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
-
-        private void PhieuXuatMoi()
-        {
-            SelectedDaiLy = null!;
-            SelectedMatHangPhieuXuat = null!;
-            TongTien = 0;
-            _ = LoadDataAsync();
-        }
-
         private void ThemMatHang()
         {
-            if (_danhSachMatHang.Any())
+            if (_danhSachMatHang.Count != 0)
             {
                 SelectedMatHangPhieuXuat = null!;
 
@@ -311,7 +287,7 @@ namespace QuanLyDaiLy.ViewModels.PhieuXuatViewModels
 
         private void XoaMatHang()
         {
-            if (SelectedMatHangPhieuXuat == null)
+            if (SelectedMatHangPhieuXuat == null!)
             {
                 MessageBox.Show("Vui lòng chọn mặt hàng để xóa", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
@@ -342,14 +318,36 @@ namespace QuanLyDaiLy.ViewModels.PhieuXuatViewModels
         // Load data 
         private async Task LoadDataAsync()
         {
-            _danhSachMatHang = [.. (await _matHangService.GetAllMatHang())];
-            var listDaiLy = await _daiLyService.GetAllDaiLy();
-            DaiLies = [.. listDaiLy];
-            if (DaiLies.Count > 0)
+            try
             {
-                SelectedDaiLy = DaiLies.First();
-                NoToiDa = (await _loaiDaiLyService.GetLoaiDaiLyById(SelectedDaiLy.MaLoaiDaiLy)).NoToiDa;
-                TienNo = SelectedDaiLy.TienNo;
+                MaPhieuXuat = _maPhieuXuatPassed.ToString();
+                var existingPhieuXuat = await _phieuXuatService.GetPhieuXuatById(_maPhieuXuatPassed);
+                SelectedDaiLy = existingPhieuXuat.DaiLy;
+                NgayLap = existingPhieuXuat.NgayLapPhieu;
+                TongTien = existingPhieuXuat.TongTriGia;
+
+                _danhSachMatHang = [.. (await _matHangService.GetAllMatHang())];
+                var listDaiLy = await _daiLyService.GetAllDaiLy();
+                DaiLies = [.. listDaiLy];
+                
+
+                DanhSachMatHangPhieuXuat.Clear();
+
+                var listChiTietPhieuXuat = await _phieuXuatChiTietService.GetChiTietPhieuXuatByPhieuXuatId(_maPhieuXuatPassed);
+                foreach (var chiTiet in listChiTietPhieuXuat)
+                {
+                    DanhSachMatHangPhieuXuat.Add(new DisplayMatHangPhieuXuat(_danhSachMatHang)
+                    {
+                        SelectedMatHang = await _matHangService.GetMatHangById(chiTiet.MaMatHang),
+                        SoLuongXuat = chiTiet.SoLuongXuat,
+                        DonGiaXuat = chiTiet.DonGia,
+                    });
+                }
+
+            } catch (Exception ex)
+            {
+                MessageBox.Show($"Có lỗi xảy ra khi tải dữ liệu: {ex.Message}",
+                    "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -362,7 +360,7 @@ namespace QuanLyDaiLy.ViewModels.PhieuXuatViewModels
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Please god don't go in here" );
+                MessageBox.Show(ex.Message, "Please god don't go in here");
             }
         }
 
