@@ -4,7 +4,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:helpers="clr-namespace:QuanLyDaiLy.Helpers"
-    xmlns:local="clr-namespace:QuanLyDaiLy.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="HoSoDaiLyWinDow"
     Width="1360"
@@ -142,7 +141,7 @@
         </Style>
 
         <!--  ComboBoxItem Style  -->
-        <Style x:Key="StyledComboBoxItem" TargetType="{x:Type ComboBoxItem}">
+        <Style TargetType="{x:Type ComboBoxItem}">
             <Setter Property="Padding" Value="8,6" />
             <Setter Property="Template">
                 <Setter.Value>
@@ -722,6 +721,7 @@
                         </StackPanel>
 
                         <StackPanel
+                            Grid.Column="0"
                             Margin="10,0,0,0"
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Stretch"
@@ -861,6 +861,7 @@
                                                                 FontSize="{TemplateBinding FontSize}" />
                                                             <Popup
                                                                 x:Name="PART_Popup"
+                                                                Grid.Column="0"
                                                                 AllowsTransparency="True"
                                                                 PlacementTarget="{Binding ElementName=PART_Root}"
                                                                 StaysOpen="False" />
@@ -998,6 +999,7 @@
                                                                 FontSize="{TemplateBinding FontSize}" />
                                                             <Popup
                                                                 x:Name="PART_Popup"
+                                                                Grid.Column="0"
                                                                 AllowsTransparency="True"
                                                                 PlacementTarget="{Binding ElementName=PART_Root}"
                                                                 StaysOpen="False" />
@@ -1285,6 +1287,7 @@
                         </StackPanel>
 
                         <StackPanel
+                            Grid.Column="0"
                             Margin="10,0,0,0"
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Stretch"
@@ -1424,6 +1427,7 @@
                                                                 FontSize="{TemplateBinding FontSize}" />
                                                             <Popup
                                                                 x:Name="PART_Popup"
+                                                                Grid.Column="0"
                                                                 AllowsTransparency="True"
                                                                 PlacementTarget="{Binding ElementName=PART_Root}"
                                                                 StaysOpen="False" />
@@ -1560,6 +1564,7 @@
                                                                 FontSize="{TemplateBinding FontSize}" />
                                                             <Popup
                                                                 x:Name="PART_Popup"
+                                                                Grid.Column="0"
                                                                 AllowsTransparency="True"
                                                                 PlacementTarget="{Binding ElementName=PART_Root}"
                                                                 StaysOpen="False" />
@@ -1724,6 +1729,7 @@
                         </StackPanel>
 
                         <StackPanel
+                            Grid.Column="0"
                             Margin="10,0,0,0"
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Stretch"
@@ -1903,6 +1909,7 @@
                         </StackPanel>
 
                         <StackPanel
+                            Grid.Column="0"
                             Margin="10,0,0,0"
                             HorizontalAlignment="Stretch"
                             VerticalAlignment="Stretch"

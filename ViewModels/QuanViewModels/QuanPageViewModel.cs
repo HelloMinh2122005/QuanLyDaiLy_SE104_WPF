@@ -72,18 +72,21 @@ namespace QuanLyDaiLy.ViewModels.QuanViewModels
 
         private async Task LoadDataExecute()
         {
+            SelectedQuan = null!;
             await LoadData();
             MessageBox.Show("Tải lại danh sách thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
-        private static void OpenSearchQuanWindow()
+        private void OpenSearchQuanWindow()
         {
+            SelectedQuan = null!;
             MessageBox.Show("Tính năng tra cứu quận đang được phát triển.", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
         // Open add window
         private void OpenAddQuanWindow()
         {
+            SelectedQuan = null!;
             try
             {
                 var addQuanWindow = _serviceProvider.GetRequiredService<ThemQuanWindow>();

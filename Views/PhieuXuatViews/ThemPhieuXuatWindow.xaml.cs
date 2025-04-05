@@ -1,11 +1,11 @@
-﻿using System.Windows.Controls;
+﻿using System.Windows;
 using QuanLyDaiLy.ViewModels.PhieuXuatViewModels;
 
 namespace QuanLyDaiLy.Views.PhieuXuatViews
 {
-    public partial class PhieuXuatPage : Page
+    public partial class ThemPhieuXuatWindow : Window
     {
-        public PhieuXuatPage(PhieuXuatPageViewModel vm)
+        public ThemPhieuXuatWindow(ThemPhieuXuatWindowViewModel vm)
         {
             InitializeComponent();
             DataContext = vm;

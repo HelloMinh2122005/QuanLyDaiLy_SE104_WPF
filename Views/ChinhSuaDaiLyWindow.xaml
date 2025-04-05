@@ -309,6 +309,10 @@
                 </StackPanel>
 
             </Grid>
+
+            <Border Grid.Row="1" Background="LightGray" />
+            <Border Grid.Row="3" Background="LightGray" />
+
             <!--  Body  -->
             <Border
                 Grid.Row="2"

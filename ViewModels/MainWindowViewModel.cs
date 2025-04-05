@@ -49,6 +49,7 @@ namespace QuanLyDaiLy.ViewModels
         {
             var list = await _dailyService.GetAllDaiLy();
             DanhSachDaiLy = [.. list];
+            SelectedDaiLy = null!;
         }
 
         public ICommand OpenHoSoDaiLyCommand { get; }
@@ -59,6 +60,8 @@ namespace QuanLyDaiLy.ViewModels
 
         private void OpenHoSoDaiLyWindow()
         {
+            SelectedDaiLy = null!;
+
             var hoSoDaiLyWindow = _serviceProvider.GetRequiredService<HoSoDaiLyWinDow>();
 
             if (hoSoDaiLyWindow.DataContext is HoSoDaiLyViewModel viewModel)
@@ -106,6 +109,8 @@ namespace QuanLyDaiLy.ViewModels
 
         private void OpenSearchDaiLyWindow()
         {
+            SelectedDaiLy = null!;
+
             var traCuuDaiLyWindow = _serviceProvider.GetRequiredService<TraCuuDaiLyWindow>();
 
             if (traCuuDaiLyWindow.DataContext is TraCuuDaiLyViewModel viewModel)
@@ -135,7 +140,7 @@ namespace QuanLyDaiLy.ViewModels
 
         private void OpenChinhSuaDaiLyWindow()
         {
-            if (string.IsNullOrEmpty(SelectedDaiLy.TenDaiLy))
+            if (SelectedDaiLy == null || string.IsNullOrEmpty(SelectedDaiLy.TenDaiLy))
             {
                 MessageBox.Show("Vui lòng chọn đại lý để chỉnh sửa!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
                 return;

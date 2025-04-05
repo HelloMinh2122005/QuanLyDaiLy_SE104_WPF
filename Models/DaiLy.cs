@@ -29,8 +29,8 @@ namespace QuanLyDaiLy.Models
         public long TienNo { get; set; } = 0;
 
         // Navigation properties
-        public LoaiDaiLy LoaiDaiLy { get; set; } = new();
-        public Quan Quan { get; set; } = new();
+        public LoaiDaiLy LoaiDaiLy { get; set; } = null!;
+        public Quan Quan { get; set; } = null!;
         public ICollection<PhieuThu> DsPhieuThu { get; set; } = [];
         public ICollection<PhieuXuat> DsPhieuXuat { get; set; } = [];
     }
