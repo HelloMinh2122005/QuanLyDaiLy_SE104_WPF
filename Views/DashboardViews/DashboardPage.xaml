@@ -1106,7 +1106,7 @@
                                             Height="25"
                                             Margin="0,3,0,0"
                                             ItemsSource="{Binding MonthOptions}"
-                                            SelectedItem="{Binding SelectedMonth}"
+                                            SelectedItem="{Binding RevenueChartMonth}"
                                             Style="{StaticResource StyledComboBox}" />
                                     </Grid>
 
@@ -1130,7 +1130,7 @@
                                             Height="25"
                                             Margin="0,3,0,0"
                                             ItemsSource="{Binding YearOptions}"
-                                            SelectedItem="{Binding SelectedYear, Mode=TwoWay}"
+                                            SelectedItem="{Binding RevenueChartYear}"
                                             Style="{StaticResource StyledComboBox}" />
                                     </Grid>
                                 </StackPanel>
@@ -1365,7 +1365,7 @@
                                             Height="25"
                                             Margin="0,3,0,0"
                                             ItemsSource="{Binding MonthOptions}"
-                                            SelectedItem="{Binding SelectedMonth}"
+                                            SelectedItem="{Binding PieChartMonth}"
                                             Style="{StaticResource StyledComboBox}" />
                                     </Grid>
 
@@ -1389,7 +1389,7 @@
                                             Height="25"
                                             Margin="0,3,0,0"
                                             ItemsSource="{Binding YearOptions}"
-                                            SelectedItem="{Binding SelectedYear, Mode=TwoWay}"
+                                            SelectedItem="{Binding PieChartYear, Mode=TwoWay}"
                                             Style="{StaticResource StyledComboBox}" />
                                     </Grid>
                                 </StackPanel>
@@ -1576,7 +1576,7 @@
                                             Height="25"
                                             Margin="0,3,0,0"
                                             ItemsSource="{Binding MonthOptions}"
-                                            SelectedItem="{Binding SelectedMonth}"
+                                            SelectedItem="{Binding TopAgentChartMonth}"
                                             Style="{StaticResource StyledComboBox}" />
                                     </Grid>
 
@@ -1600,7 +1600,7 @@
                                             Height="25"
                                             Margin="0,3,0,0"
                                             ItemsSource="{Binding YearOptions}"
-                                            SelectedItem="{Binding SelectedYear, Mode=TwoWay}"
+                                            SelectedItem="{Binding TopAgentChartYear, Mode=TwoWay}"
                                             Style="{StaticResource StyledComboBox}" />
                                     </Grid>
                                 </StackPanel>
@@ -1802,7 +1802,7 @@
                                             Height="25"
                                             Margin="0,3,0,0"
                                             ItemsSource="{Binding MonthOptions}"
-                                            SelectedItem="{Binding SelectedMonth}"
+                                            SelectedItem="{Binding DebtChartMonth}"
                                             Style="{StaticResource StyledComboBox}" />
                                     </Grid>
 
@@ -1826,7 +1826,7 @@
                                             Height="25"
                                             Margin="0,3,0,0"
                                             ItemsSource="{Binding YearOptions}"
-                                            SelectedItem="{Binding SelectedYear, Mode=TwoWay}"
+                                            SelectedItem="{Binding DebtChartYear, Mode=TwoWay}"
                                             Style="{StaticResource StyledComboBox}" />
                                     </Grid>
                                 </StackPanel>

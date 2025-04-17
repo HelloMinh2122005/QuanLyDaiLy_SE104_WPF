@@ -377,7 +377,7 @@
                                 BorderBrush="#33000000"
                                 BorderThickness="1"
                                 FontFamily="Nunito"
-                                FontSize="15"
+                                FontSize="20"
                                 FontStyle="Normal"
                                 FontWeight="SemiBold"
                                 Foreground="White"
