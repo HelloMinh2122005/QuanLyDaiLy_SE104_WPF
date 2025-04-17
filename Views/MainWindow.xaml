@@ -164,6 +164,12 @@
                         Tag="PhieuXuat" />
                     <RadioButton
                         Checked="RadioButton_Checked"
+                        Content="📈   Báo cáo chi tiết"
+                        GroupName="NavGroup"
+                        Style="{StaticResource NavButtonStyle}"
+                        Tag="BaoCao" />
+                    <RadioButton
+                        Checked="RadioButton_Checked"
                         Content="📏   Đơn vị tính"
                         GroupName="NavGroup"
                         Style="{StaticResource NavButtonStyle}"

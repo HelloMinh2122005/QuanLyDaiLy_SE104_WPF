@@ -108,6 +108,10 @@ namespace QuanLyDaiLy.Views
                     var thamSoPage = _serviceProvider.GetRequiredService<ThamSoViews.ThamSoPage>();
                     MainContent.Navigate(thamSoPage);
                     break;
+                case "BaoCao":
+                    var baoCaoPage = _serviceProvider.GetRequiredService<BaoCaoViews.BaoCaoChiTietPage>();
+                    MainContent.Navigate(baoCaoPage);
+                    break;
                 default:
                     break;
             }

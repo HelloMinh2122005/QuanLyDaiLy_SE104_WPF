@@ -30,7 +30,6 @@ namespace QuanLyDaiLy.ViewModels.DashboardViewModels
             BorderBrush = new SolidColorBrush(Color.FromRgb(200, 200, 200))
         };
 
-
         // Define a separate tooltip for the pie chart
         public DefaultTooltip PieTooltip { get; set; } = new DefaultTooltip
         {
@@ -145,8 +144,7 @@ namespace QuanLyDaiLy.ViewModels.DashboardViewModels
                     Values = new ChartValues<double> { loai1Count },
                     DataLabels = true,
                     LabelPoint = point => $"{point.Participation:P1}",
-                    Fill = new SolidColorBrush(Color.FromRgb(33, 150, 243)), // Blue
-                    ToolTip = $"Loại đại lý 1: {loai1Count} đại lý"
+                    Fill = new SolidColorBrush(Color.FromRgb(33, 150, 243)) // Blue
                 },
                 new PieSeries
                 {
@@ -154,8 +152,7 @@ namespace QuanLyDaiLy.ViewModels.DashboardViewModels
                     Values = new ChartValues<double> { loai2Count },
                     DataLabels = true,
                     LabelPoint = point => $"{point.Participation:P1}",
-                    Fill = new SolidColorBrush(Color.FromRgb(76, 175, 80)), // Green
-                    ToolTip = $"Loại đại lý 2: {loai2Count} đại lý"
+                    Fill = new SolidColorBrush(Color.FromRgb(76, 175, 80)) // Green
                 },
                 new PieSeries
                 {
@@ -163,8 +160,7 @@ namespace QuanLyDaiLy.ViewModels.DashboardViewModels
                     Values = new ChartValues<double> { loai3Count },
                     DataLabels = true,
                     LabelPoint = point => $"{point.Participation:P1}",
-                    Fill = new SolidColorBrush(Color.FromRgb(255, 152, 0)), // Orange
-                    ToolTip = $"Loại đại lý 3: {loai3Count} đại lý"
+                    Fill = new SolidColorBrush(Color.FromRgb(255, 152, 0)) // Orange
                 },
                 new PieSeries
                 {
@@ -172,9 +168,8 @@ namespace QuanLyDaiLy.ViewModels.DashboardViewModels
                     Values = new ChartValues<double> { loai4Count },
                     DataLabels = true,
                     LabelPoint = point => $"{point.Participation:P1}",
-                    Fill = new SolidColorBrush(Color.FromRgb(233, 30, 99)), // Pink
-                    ToolTip = $"Loại đại lý 4: {loai4Count} đại lý"
-                },
+                    Fill = new SolidColorBrush(Color.FromRgb(233, 30, 99)) // Pink
+                }
             ];
         }
 
@@ -260,10 +255,10 @@ namespace QuanLyDaiLy.ViewModels.DashboardViewModels
                 {
                     Title = "Công nợ",
                     Values = new ChartValues<double>(sortedDebts),
-                    DataLabels = false,
+                    DataLabels = true,
                     LabelPoint = point => point.Y.ToString("N0") + " đ",
                     Fill = new SolidColorBrush(Color.FromRgb(233, 30, 99)), // Pink
-                    MaxColumnWidth = 50  // Smaller width to fit more columns
+                    MaxColumnWidth = 50
                 }
             ];
         }
@@ -290,11 +285,334 @@ namespace QuanLyDaiLy.ViewModels.DashboardViewModels
                 YearOptions.Add(i);
             }
 
-            // Set default selections
-            SelectedMonth = MonthOptions[currentMonth - 1]; // Arrays are 0-based
-            SelectedYear = currentYear;
+            // Set default selections for all combo boxes
+            _revenueChartMonth = MonthOptions[currentMonth - 1];
+            _revenueChartYear = currentYear;
+            _pieChartMonth = MonthOptions[currentMonth - 1];
+            _pieChartYear = currentYear;
+            _topAgentChartMonth = MonthOptions[currentMonth - 1];
+            _topAgentChartYear = currentYear;
+            _debtChartMonth = MonthOptions[currentMonth - 1];
+            _debtChartYear = currentYear;
         }
 
+        #region Chart-specific update methods
+
+        private void UpdateLineChart()
+        {
+            // Create a seed value based on month and year for consistent "random" data
+            var seed = RevenueChartMonth.GetHashCode() + RevenueChartYear;
+            var random = new Random(seed);
+
+            // Create new data for the current year
+            var thisYearData = new ChartValues<double>();
+            for (int i = 0; i < 12; i++)
+            {
+                // Generate a value between 10M and 40M
+                thisYearData.Add(10000000 + random.Next(30000000));
+            }
+
+            // Create new data for the previous year
+            var lastYearData = new ChartValues<double>();
+            for (int i = 0; i < 12; i++)
+            {
+                // Generate a value between 8M and 30M
+                lastYearData.Add(8000000 + random.Next(22000000));
+            }
+
+            // Create completely new series with the updated data
+            SpendingSeries = new SeriesCollection
+            {
+                new LineSeries
+                {
+                    Title = RevenueChartYear.ToString(),
+                    Values = thisYearData,
+                    PointGeometry = DefaultGeometries.Circle,
+                    PointGeometrySize = 12,
+                    LineSmoothness = 0,
+                    Stroke = System.Windows.Media.Brushes.Gray,
+                    Fill = System.Windows.Media.Brushes.Transparent,
+                    DataLabels = false,
+                    LabelPoint = point => point.Y.ToString("N0") + " đ",
+                    StrokeThickness = 3
+                },
+                new LineSeries
+                {
+                    Title = (RevenueChartYear - 1).ToString(),
+                    Values = lastYearData,
+                    PointGeometry = DefaultGeometries.Square,
+                    PointGeometrySize = 12,
+                    LineSmoothness = 1,
+                    Stroke = System.Windows.Media.Brushes.DodgerBlue,
+                    Fill = System.Windows.Media.Brushes.Transparent,
+                    DataLabels = false,
+                    LabelPoint = point => point.Y.ToString("N0") + " đ",
+                    StrokeThickness = 2
+                }
+            };
+
+            OnPropertyChanged(nameof(SpendingSeries));
+        }
+
+        private void UpdatePieChart()
+        {
+            // Generate random counts based on month and year
+            var seed = PieChartMonth.GetHashCode() + PieChartYear;
+            var random = new Random(seed);
+
+            int loai1Count = 300 + random.Next(200);  // 300-500
+            int loai2Count = 350 + random.Next(150);  // 350-500
+            int loai3Count = 150 + random.Next(100);  // 150-250
+            int loai4Count = 100 + random.Next(100);  // 100-200
+
+            // Create completely new series with the updated data
+            DaiLyDistributionSeries = new SeriesCollection
+            {
+                new PieSeries
+                {
+                    Title = $"Loại đại lý 1 ({loai1Count})",
+                    Values = new ChartValues<double> { loai1Count },
+                    DataLabels = true,
+                    LabelPoint = point => $"{point.Participation:P1}",
+                    Fill = new SolidColorBrush(Color.FromRgb(33, 150, 243)) // Blue
+                },
+                new PieSeries
+                {
+                    Title = $"Loại đại lý 2 ({loai2Count})",
+                    Values = new ChartValues<double> { loai2Count },
+                    DataLabels = true,
+                    LabelPoint = point => $"{point.Participation:P1}",
+                    Fill = new SolidColorBrush(Color.FromRgb(76, 175, 80)) // Green
+                },
+                new PieSeries
+                {
+                    Title = $"Loại đại lý 3 ({loai3Count})",
+                    Values = new ChartValues<double> { loai3Count },
+                    DataLabels = true,
+                    LabelPoint = point => $"{point.Participation:P1}",
+                    Fill = new SolidColorBrush(Color.FromRgb(255, 152, 0)) // Orange
+                },
+                new PieSeries
+                {
+                    Title = $"Loại đại lý 4 ({loai4Count})",
+                    Values = new ChartValues<double> { loai4Count },
+                    DataLabels = true,
+                    LabelPoint = point => $"{point.Participation:P1}",
+                    Fill = new SolidColorBrush(Color.FromRgb(233, 30, 99)) // Pink
+                }
+            };
+
+            OnPropertyChanged(nameof(DaiLyDistributionSeries));
+        }
+
+        private void UpdateColumnChart()
+        {
+            var seed = TopAgentChartMonth.GetHashCode() + TopAgentChartYear;
+            var random = new Random(seed);
+
+            // Get the current labels
+            var dailyNames = TopDaiLyLabels;
+
+            // Create new income data
+            var newValues = new double[dailyNames.Length];
+            for (int i = 0; i < dailyNames.Length; i++)
+            {
+                // Generate values between 20M and 55M
+                newValues[i] = 20000000 + random.Next(35000000);
+            }
+
+            // Sort the data to show highest first
+            var sortedData = dailyNames.Zip(newValues, (name, income) => new { Name = name, Income = income })
+                .OrderByDescending(item => item.Income)
+                .ToArray();
+
+            // Update the labels
+            TopDaiLyLabels = sortedData.Select(item => item.Name).ToArray();
+            OnPropertyChanged(nameof(TopDaiLyLabels));
+
+            // Create a completely new series
+            TopDaiLySeries = new SeriesCollection
+            {
+                new ColumnSeries
+                {
+                    Title = "Doanh số",
+                    Values = new ChartValues<double>(sortedData.Select(item => item.Income)),
+                    DataLabels = true,
+                    LabelPoint = point => point.Y.ToString("N0") + " đ",
+                    Fill = new SolidColorBrush(Color.FromRgb(76, 175, 80)), // Green
+                    MaxColumnWidth = 70
+                }
+            };
+
+            OnPropertyChanged(nameof(TopDaiLySeries));
+        }
+
+        private void UpdateDebtColumnChart()
+        {
+            var seed = DebtChartMonth.GetHashCode() + DebtChartYear;
+            var random = new Random(seed);
+
+            // Get the current labels
+            var dailyNames = TopDebtDaiLyLabels;
+
+            // Create new debt data for each agent
+            var newValues = new double[dailyNames.Length];
+            for (int i = 0; i < dailyNames.Length; i++)
+            {
+                // Generate debt between 25M and 60M
+                newValues[i] = 25000000 + random.Next(35000000);
+            }
+
+            // Sort by debt value (descending)
+            var sortedData = dailyNames.Zip(newValues, (name, debt) => new { Name = name, Debt = debt })
+                .OrderByDescending(item => item.Debt)
+                .ToArray();
+
+            // Update the labels
+            TopDebtDaiLyLabels = sortedData.Select(item => item.Name).ToArray();
+            OnPropertyChanged(nameof(TopDebtDaiLyLabels));
+
+            // Create a completely new series
+            TopDebtDaiLySeries = new SeriesCollection
+            {
+                new ColumnSeries
+                {
+                    Title = "Công nợ",
+                    Values = new ChartValues<double>(sortedData.Select(item => item.Debt)),
+                    DataLabels = true,
+                    LabelPoint = point => point.Y.ToString("N0") + " đ",
+                    Fill = new SolidColorBrush(Color.FromRgb(233, 30, 99)), // Pink
+                    MaxColumnWidth = 50
+                }
+            };
+
+            OnPropertyChanged(nameof(TopDebtDaiLySeries));
+        }
+
+
+        private string _revenueChartMonth = "Tháng 4";
+        public string RevenueChartMonth
+        {
+            get => _revenueChartMonth;
+            set
+            {
+                if (_revenueChartMonth != value)
+                {
+                    _revenueChartMonth = value;
+                    OnPropertyChanged();
+                    UpdateLineChart();
+                }
+            }
+        }
+
+        private int _revenueChartYear = 2025;
+        public int RevenueChartYear
+        {
+            get => _revenueChartYear;
+            set
+            {
+                if (_revenueChartYear != value)
+                {
+                    _revenueChartYear = value;
+                    OnPropertyChanged();
+                    UpdateLineChart();
+                }
+            }
+        }
+
+        private string _pieChartMonth = "Tháng 4";
+        public string PieChartMonth
+        {
+            get => _pieChartMonth;
+            set
+            {
+                if (_pieChartMonth != value)
+                {
+                    _pieChartMonth = value;
+                    OnPropertyChanged();
+                    UpdatePieChart();
+                }
+            }
+        }
+
+        private int _pieChartYear = 2025;
+        public int PieChartYear
+        {
+            get => _pieChartYear;
+            set
+            {
+                if (_pieChartYear != value)
+                {
+                    _pieChartYear = value;
+                    OnPropertyChanged();
+                    UpdatePieChart();
+                }
+            }
+        }
+
+        private string _topAgentChartMonth = "Tháng 4";
+        public string TopAgentChartMonth
+        {
+            get => _topAgentChartMonth;
+            set
+            {
+                if (_topAgentChartMonth != value)
+                {
+                    _topAgentChartMonth = value;
+                    OnPropertyChanged();
+                    UpdateColumnChart();
+                }
+            }
+        }
+
+        private int _topAgentChartYear = 2025;
+        public int TopAgentChartYear
+        {
+            get => _topAgentChartYear;
+            set
+            {
+                if (_topAgentChartYear != value)
+                {
+                    _topAgentChartYear = value;
+                    OnPropertyChanged();
+                    UpdateColumnChart();
+                }
+            }
+        }
+
+        private string _debtChartMonth = "Tháng 4";
+        public string DebtChartMonth
+        {
+            get => _debtChartMonth;
+            set
+            {
+                if (_debtChartMonth != value)
+                {
+                    _debtChartMonth = value;
+                    OnPropertyChanged();
+                    UpdateDebtColumnChart();
+                }
+            }
+        }
+
+        private int _debtChartYear = 2025;
+        public int DebtChartYear
+        {
+            get => _debtChartYear;
+            set
+            {
+                if (_debtChartYear != value)
+                {
+                    _debtChartYear = value;
+                    OnPropertyChanged();
+                    UpdateDebtColumnChart();
+                }
+            }
+        }
+
+        #endregion
+
+        // Keep these for backward compatibility
         private string _selectedMonth = "Tháng 4";
         public string SelectedMonth
         {
@@ -305,6 +623,12 @@ namespace QuanLyDaiLy.ViewModels.DashboardViewModels
                 {
                     _selectedMonth = value;
                     OnPropertyChanged();
+
+                    // Update all chart-specific month properties to keep consistency
+                    RevenueChartMonth = value;
+                    PieChartMonth = value;
+                    TopAgentChartMonth = value;
+                    DebtChartMonth = value;
                 }
             }
         }
@@ -319,10 +643,15 @@ namespace QuanLyDaiLy.ViewModels.DashboardViewModels
                 {
                     _selectedYear = value;
                     OnPropertyChanged();
+
+                    // Update all chart-specific year properties to keep consistency
+                    RevenueChartYear = value;
+                    PieChartYear = value;
+                    TopAgentChartYear = value;
+                    DebtChartYear = value;
                 }
             }
         }
-
 
         public event PropertyChangedEventHandler? PropertyChanged;
 

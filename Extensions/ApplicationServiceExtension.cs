@@ -75,6 +75,10 @@ public static class ApplicationServiceExtensions
 
         services.AddTransient<Views.ThamSoViews.ThamSoPage>();
 
+        services.AddTransient<Views.BaoCaoViews.BaoCaoChiTietPage>();
+        services.AddTransient<Views.BaoCaoViews.BaoCaoCongNoWindow>();
+        services.AddTransient<Views.BaoCaoViews.BaoCaoDoanhSoWindow>();
+
         // Register Page ViewModels
         services.AddTransient<ViewModels.DashboardViewModels.DashboardPageViewModel>();
 
@@ -124,6 +128,10 @@ public static class ApplicationServiceExtensions
         );
 
         services.AddTransient<ViewModels.ThamSoViewModels.ThamSoPageViewModel>();
+
+        services.AddTransient<ViewModels.BaoCaoViewModels.BaoCaoChiTietViewModel>();
+        services.AddTransient<ViewModels.BaoCaoViewModels.BaoCaoCongNoViewModel>();
+        services.AddTransient<ViewModels.BaoCaoViewModels.BaoCaoDoanhSoViewModel>();
 
         return services;
     }   
