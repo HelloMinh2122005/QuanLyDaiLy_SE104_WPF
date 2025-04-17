@@ -295,7 +295,7 @@ namespace QuanLyDaiLy.ViewModels.DashboardViewModels
             SelectedYear = currentYear;
         }
 
-        private string _selectedMonth;
+        private string _selectedMonth = "Tháng 4";
         public string SelectedMonth
         {
             get => _selectedMonth;
@@ -309,7 +309,7 @@ namespace QuanLyDaiLy.ViewModels.DashboardViewModels
             }
         }
 
-        private int _selectedYear;
+        private int _selectedYear = 2025;
         public int SelectedYear
         {
             get => _selectedYear;
