@@ -59,6 +59,7 @@ public static class ApplicationServiceExtensions
         services.AddTransient<Views.QuanViews.QuanPage>();
         services.AddTransient<Views.QuanViews.ThemQuanWindow>();
         services.AddTransient<Views.QuanViews.CapNhatQuanWindow>();
+        services.AddTransient<Views.QuanViews.TraCuuQuanWindow>();
 
         services.AddTransient<Views.MatHangViews.MatHangPage>();
         services.AddTransient<Views.MatHangViews.ThemMatHangWindow>();
@@ -92,6 +93,7 @@ public static class ApplicationServiceExtensions
                 quanId
             )
         );
+        services.AddTransient<ViewModels.QuanViewModels.TraCuuQuanWindowViewModel>();
 
         services.AddTransient<ViewModels.MatHangViewModels.MatHangPageViewModel>();
         services.AddTransient<ViewModels.MatHangViewModels.ThemMatHangWindowViewModel>();

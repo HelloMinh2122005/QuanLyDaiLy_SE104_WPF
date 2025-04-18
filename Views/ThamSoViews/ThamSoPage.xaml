@@ -316,8 +316,6 @@
                     </ToggleButton.Style>
                 </ToggleButton>
             </StackPanel>
-
-
         </Grid>
     </Grid>
 </Page>
