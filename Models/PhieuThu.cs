@@ -11,6 +11,6 @@ namespace QuanLyDaiLy.Models
         public long SoTienThu { get; set; } = 0;
 
         // Navigation property
-        public DaiLy DaiLy { get; set; } = new();
+        public DaiLy DaiLy { get; set; } = null!;
     }
 }

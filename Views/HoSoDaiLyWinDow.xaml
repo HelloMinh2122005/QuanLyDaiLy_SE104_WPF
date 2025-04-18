@@ -4,7 +4,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:helpers="clr-namespace:QuanLyDaiLy.Helpers"
-    xmlns:local="clr-namespace:QuanLyDaiLy.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="HoSoDaiLyWinDow"
     Width="960"
@@ -181,6 +180,9 @@
                 <RowDefinition Height="1" />
                 <RowDefinition Height="80" />
             </Grid.RowDefinitions>
+
+            <Border Grid.Row="1" Background="LightGray" />
+            <Border Grid.Row="3" Background="LightGray" />
 
             <!--  Header  -->
             <Grid Grid.Row="0">
@@ -791,7 +793,7 @@
                 Orientation="Horizontal">
                 <Border CornerRadius="8">
                     <Button
-                        Width="180"
+                        Width="200"
                         Background="#00AAFF"
                         Command="{Binding TiepNhanDaiLyCommand}"
                         Content="➕Tiếp nhận đại lý"

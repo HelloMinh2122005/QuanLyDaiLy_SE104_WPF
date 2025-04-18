@@ -39,5 +39,11 @@ namespace QuanLyDaiLy.Repositories
                 await _context.SaveChangesAsync();
             }
         }
+
+        public async Task<int> GenerateAvailableId()
+        {
+            int maxId = await _context.DsThamSo.MaxAsync(d => d.Id);
+            return maxId + 1;
+        }
     }
 }

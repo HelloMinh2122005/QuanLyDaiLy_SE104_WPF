@@ -2,28 +2,24 @@
 using Microsoft.EntityFrameworkCore;
 using QuanLyDaiLy.Data;
 using System.IO;
+using System.Reflection;
 
 namespace QuanLyDaiLy.Configs;
 
 public class DatabaseConfig
 {
-    private SqliteConnection? sqliteConnection;
-    private DataContext? dataContext;
+    private SqliteConnection? _sqliteConnection;
+    private DataContext? _dataContext;
 
-    public DataContext DataContext => dataContext ?? throw new ArgumentNullException("Database not initialized!");
+    public DataContext DataContext => _dataContext ?? throw new ArgumentNullException("Database not initialized!");
 
     public static string GetDefaultDatabasePath()
     {
-        string appDataPath = Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-            "QuanLyDaiLy");
+        // Get the directory where the application is running
+        string appDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) ??
+                              AppDomain.CurrentDomain.BaseDirectory;
 
-        if (!Directory.Exists(appDataPath))
-        {
-            Directory.CreateDirectory(appDataPath);
-        }
-
-        return Path.Combine(appDataPath, "quanlydaily1.db");
+        return Path.Combine(appDirectory, "quanlydaily1.db");
     }
 
     public async Task Initialize(string? dbPath = null)
@@ -32,15 +28,15 @@ public class DatabaseConfig
         {
             dbPath ??= GetDefaultDatabasePath();
 
-            sqliteConnection = new SqliteConnection($"Data Source={dbPath}");
-            await sqliteConnection.OpenAsync();
+            _sqliteConnection = new SqliteConnection($"Data Source={dbPath}");
+            await _sqliteConnection.OpenAsync();
 
             var dbOptions = new DbContextOptionsBuilder<DataContext>()
-                .UseSqlite(sqliteConnection)
+                .UseSqlite(_sqliteConnection)
                 .Options;
 
-            dataContext = new DataContext(dbOptions);
-            await dataContext.Database.EnsureCreatedAsync();
+            _dataContext = new DataContext(dbOptions);
+            await _dataContext.Database.EnsureCreatedAsync();
         }
         catch (Exception ex)
         {
@@ -51,10 +47,10 @@ public class DatabaseConfig
 
     public void CloseConnection()
     {
-        if (sqliteConnection != null)
+        if (_sqliteConnection != null)
         {
-            sqliteConnection.Close();
-            sqliteConnection = null;
+            _sqliteConnection.Close();
+            _sqliteConnection = null;
         }
     }
 }

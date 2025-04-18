@@ -59,5 +59,11 @@ namespace QuanLyDaiLy.Repositories
                 .Include(l => l.DsDaiLy)
                 .ToListAsync();
         }
+
+        public async Task<int> GenerateAvailableId()
+        {
+            int maxId = await _context.DsLoaiDaiLy.MaxAsync(d => d.MaLoaiDaiLy);
+            return maxId + 1;
+        }
     }
 }

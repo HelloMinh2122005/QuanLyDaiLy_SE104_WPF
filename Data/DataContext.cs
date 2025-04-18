@@ -25,28 +25,28 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
             .HasOne(d => d.LoaiDaiLy)
             .WithMany(l => l.DsDaiLy)
             .HasForeignKey(d => d.MaLoaiDaiLy)
-            .OnDelete(DeleteBehavior.Restrict);
+            .OnDelete(DeleteBehavior.Cascade);
 
         // DaiLy (1:n) <- (1:1) Quan
         modelBuilder.Entity<DaiLy>()
             .HasOne(d => d.Quan)
             .WithMany(q => q.DsDaiLy)
             .HasForeignKey(d => d.MaQuan)
-            .OnDelete(DeleteBehavior.Restrict);
+            .OnDelete(DeleteBehavior.Cascade);
 
         // PhieuThu (1:n) <- (1:1) DaiLy
         modelBuilder.Entity<PhieuThu>()
             .HasOne(p => p.DaiLy)
             .WithMany(d => d.DsPhieuThu)
             .HasForeignKey(p => p.MaDaiLy)
-            .OnDelete(DeleteBehavior.Restrict);
+            .OnDelete(DeleteBehavior.Cascade);
 
         // PhieuXuat (1:n) <- (1:1) DaiLy
         modelBuilder.Entity<PhieuXuat>()
             .HasOne(p => p.DaiLy)
             .WithMany(d => d.DsPhieuXuat)
             .HasForeignKey(p => p.MaDaiLy)
-            .OnDelete(DeleteBehavior.Restrict);
+            .OnDelete(DeleteBehavior.Cascade);
 
         // ChiTietPhieuXuat (1:n) <- (1:1) PhieuXuat
         modelBuilder.Entity<ChiTietPhieuXuat>()
@@ -60,14 +60,14 @@ public class DataContext(DbContextOptions<DataContext> options) : DbContext(opti
             .HasOne(c => c.MatHang)
             .WithMany(m => m.DsChiTietPhieuXuat)
             .HasForeignKey(c => c.MaMatHang)
-            .OnDelete(DeleteBehavior.Restrict);
+            .OnDelete(DeleteBehavior.Cascade);
 
         // MatHang (1:n) <- (1:1) DonViTinh
         modelBuilder.Entity<MatHang>()
             .HasOne(m => m.DonViTinh)
             .WithMany(d => d.DsMatHang)
             .HasForeignKey(m => m.MaDonViTinh)
-            .OnDelete(DeleteBehavior.Restrict);
+            .OnDelete(DeleteBehavior.Cascade);
 
         DatabaseSeeder.Seed(modelBuilder);
     }

@@ -63,5 +63,11 @@ namespace QuanLyDaiLy.Repositories
             _context.Entry(donViTinh).State = EntityState.Modified;
             await _context.SaveChangesAsync();
         }
+
+        public async Task<int> GenerateAvailableId()
+        {
+            int maxId = await _context.DsDonViTinh.MaxAsync(d => d.MaDonViTinh);
+            return maxId + 1;
+        }
     }
 }
