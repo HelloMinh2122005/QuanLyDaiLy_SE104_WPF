@@ -358,7 +358,7 @@
                                 FontStyle="Normal"
                                 FontWeight="Medium"
                                 Foreground="#000000"
-                                Text="Mã phiếu thu tiền" />
+                                Text="Mã Phiếu thu tiền" />
                             <TextBox
                                 Grid.Row="1"
                                 Margin="10"
