@@ -80,7 +80,7 @@ namespace QuanLyDaiLy.ViewModels
 
         private async void OpenDeleteDaiLyWindow()
         {
-            if (string.IsNullOrEmpty(SelectedDaiLy.TenDaiLy))
+            if (SelectedDaiLy == null! || string.IsNullOrEmpty(SelectedDaiLy.TenDaiLy))
             {
                 MessageBox.Show("Vui lòng chọn đại lý để xóa!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
