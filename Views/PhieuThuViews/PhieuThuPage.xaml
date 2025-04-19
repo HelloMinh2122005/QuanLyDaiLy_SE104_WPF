@@ -275,7 +275,7 @@
                         Height="40"
                         Background="#00AAFF"
                         Command="{Binding AddPhieuThuCommand}"
-                        Content="➕ Thêm phiếu thu"
+                        Content="💰 Thêm phiếu thu"
                         FontFamily="Roboto"
                         FontSize="16"
                         FontStyle="Normal"

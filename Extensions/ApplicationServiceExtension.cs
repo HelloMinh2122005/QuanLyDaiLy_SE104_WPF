@@ -69,6 +69,8 @@ public static class ApplicationServiceExtensions
 
         services.AddTransient<Views.PhieuXuatViews.PhieuXuatPage>();
         services.AddTransient<Views.PhieuXuatViews.ThemPhieuXuatWindow>();
+        services.AddTransient<Views.PhieuXuatViews.CapNhatPhieuXuatWindow>();
+        services.AddTransient<Views.PhieuXuatViews.TraCuuPhieuXuatWindow>();
 
         services.AddTransient<Views.DonViTinhViews.DonViTinhPage>();
         services.AddTransient<Views.DonViTinhViews.ThemDonViTinhWindow>();
@@ -119,6 +121,7 @@ public static class ApplicationServiceExtensions
                 phieuXuatId
             )
         );
+        services.AddTransient<ViewModels.PhieuXuatViewModels.TraCuuPhieuXuatWindowViewModel>();
 
         services.AddTransient<ViewModels.DonViTinhViewModels.DonViTinhPageViewModel>();
         services.AddTransient<ViewModels.DonViTinhViewModels.ThemDonViTinhPageViewModel>();

@@ -140,7 +140,8 @@ namespace QuanLyDaiLy.ViewModels.PhieuXuatViewModels
         {
             SelectedPhieuXuat = null!;
 
-            MessageBox.Show("Not implemented");
+            var searchPhieuXuat = _serviceProvider.GetRequiredService<TraCuuPhieuXuatWindow>();
+            searchPhieuXuat.Show();
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
