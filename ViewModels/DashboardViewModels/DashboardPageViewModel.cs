@@ -298,6 +298,9 @@ namespace QuanLyDaiLy.ViewModels.DashboardViewModels
 
         #region Chart-specific update methods
 
+
+
+
         private void UpdateLineChart()
         {
             // Create a seed value based on month and year for consistent "random" data

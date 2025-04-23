@@ -160,7 +160,7 @@
                         Tag="MatHang" />
                     <RadioButton
                         Checked="RadioButton_Checked"
-                        Content="🧾   Phiếu thu"
+                        Content="💰   Phiếu thu"
                         GroupName="NavGroup"
                         Style="{StaticResource NavButtonStyle}"
                         Tag="PhieuThu" />
@@ -784,10 +784,10 @@
                         ShadowDepth="3"
                         Color="Black" />
                 </Border.Effect>
-
                 <DataGrid
+                    AlternatingRowBackground="#F8F9FA"
                     AutoGenerateColumns="False"
-                    Background="Transparent"
+                    Background="White"
                     BorderThickness="0"
                     CanUserAddRows="False"
                     CanUserDeleteRows="False"
@@ -795,6 +795,7 @@
                     HeadersVisibility="Column"
                     IsReadOnly="True"
                     ItemsSource="{Binding DanhSachDaiLy}"
+                    RowBackground="#FFFFFF"
                     RowHeight="60"
                     ScrollViewer.VerticalScrollBarVisibility="Auto"
                     SelectedItem="{Binding SelectedDaiLy}">

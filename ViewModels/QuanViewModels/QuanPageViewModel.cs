@@ -80,7 +80,13 @@ namespace QuanLyDaiLy.ViewModels.QuanViewModels
         private void OpenSearchQuanWindow()
         {
             SelectedQuan = null!;
-            MessageBox.Show("Tính năng tra cứu quận đang được phát triển.", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+            
+            var searchQuanWindow = _serviceProvider.GetRequiredService<TraCuuQuanWindow>();
+            if (searchQuanWindow.DataContext is TraCuuQuanWindowViewModel viewModel)
+            {
+                viewModel.DataChanged += async (sender, e) => await LoadData();
+            }
+            searchQuanWindow.Show();
         }
 
         // Open add window

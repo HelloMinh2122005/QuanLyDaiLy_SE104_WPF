@@ -59,6 +59,7 @@ public static class ApplicationServiceExtensions
         services.AddTransient<Views.QuanViews.QuanPage>();
         services.AddTransient<Views.QuanViews.ThemQuanWindow>();
         services.AddTransient<Views.QuanViews.CapNhatQuanWindow>();
+        services.AddTransient<Views.QuanViews.TraCuuQuanWindow>();
 
         services.AddTransient<Views.MatHangViews.MatHangPage>();
         services.AddTransient<Views.MatHangViews.ThemMatHangWindow>();
@@ -68,6 +69,8 @@ public static class ApplicationServiceExtensions
 
         services.AddTransient<Views.PhieuXuatViews.PhieuXuatPage>();
         services.AddTransient<Views.PhieuXuatViews.ThemPhieuXuatWindow>();
+        services.AddTransient<Views.PhieuXuatViews.CapNhatPhieuXuatWindow>();
+        services.AddTransient<Views.PhieuXuatViews.TraCuuPhieuXuatWindow>();
 
         services.AddTransient<Views.DonViTinhViews.DonViTinhPage>();
         services.AddTransient<Views.DonViTinhViews.ThemDonViTinhWindow>();
@@ -92,6 +95,7 @@ public static class ApplicationServiceExtensions
                 quanId
             )
         );
+        services.AddTransient<ViewModels.QuanViewModels.TraCuuQuanWindowViewModel>();
 
         services.AddTransient<ViewModels.MatHangViewModels.MatHangPageViewModel>();
         services.AddTransient<ViewModels.MatHangViewModels.ThemMatHangWindowViewModel>();
@@ -117,6 +121,7 @@ public static class ApplicationServiceExtensions
                 phieuXuatId
             )
         );
+        services.AddTransient<ViewModels.PhieuXuatViewModels.TraCuuPhieuXuatWindowViewModel>();
 
         services.AddTransient<ViewModels.DonViTinhViewModels.DonViTinhPageViewModel>();
         services.AddTransient<ViewModels.DonViTinhViewModels.ThemDonViTinhPageViewModel>();
