@@ -72,6 +72,7 @@ public static class ApplicationServiceExtensions
         services.AddTransient<Views.PhieuXuatViews.CapNhatPhieuXuatWindow>();
         services.AddTransient<Views.PhieuXuatViews.TraCuuPhieuXuatWindow>();
 
+        // ĐƠN VỊ TÍNH CỦA THÀNH
         services.AddTransient<Views.DonViTinhViews.DonViTinhPage>();
         services.AddTransient<Views.DonViTinhViews.ThemDonViTinhWindow>();
         services.AddTransient<Views.DonViTinhViews.CapNhatDonViTinhWindow>();
