@@ -4,6 +4,7 @@ using QuanLyDaiLy.Helpers;
 using QuanLyDaiLy.Repositories;
 using QuanLyDaiLy.Services;
 using QuanLyDaiLy.ViewModels;
+using QuanLyDaiLy.ViewModels.DashboardViewModels;
 using QuanLyDaiLy.Views;
 
 namespace QuanLyDaiLy.Extensions;
@@ -61,9 +62,11 @@ public static class ApplicationServiceExtensions
         services.AddTransient<Views.QuanViews.CapNhatQuanWindow>();
         services.AddTransient<Views.QuanViews.TraCuuQuanWindow>();
 
+        // MẶT HÀNG CỦA THÀNH
         services.AddTransient<Views.MatHangViews.MatHangPage>();
         services.AddTransient<Views.MatHangViews.ThemMatHangWindow>();
         services.AddTransient<Views.MatHangViews.CapNhatMatHangWindow>();
+        services.AddTransient<Views.MatHangViews.TraCuuMatHangWindow>();
 
         services.AddTransient<Views.PhieuThuViews.PhieuThuPage>();
 
@@ -72,6 +75,7 @@ public static class ApplicationServiceExtensions
         services.AddTransient<Views.PhieuXuatViews.CapNhatPhieuXuatWindow>();
         services.AddTransient<Views.PhieuXuatViews.TraCuuPhieuXuatWindow>();
 
+        // ĐƠN VỊ TÍNH CỦA THÀNH
         services.AddTransient<Views.DonViTinhViews.DonViTinhPage>();
         services.AddTransient<Views.DonViTinhViews.ThemDonViTinhWindow>();
         services.AddTransient<Views.DonViTinhViews.CapNhatDonViTinhWindow>();
@@ -106,6 +110,7 @@ public static class ApplicationServiceExtensions
                 matHangId
             )
         );
+        services.AddTransient<ViewModels.MatHangViewModels.TraCuuMatHangWindowViewModel>();
 
         services.AddTransient<ViewModels.PhieuThuViewModels.PhieuThuPageViewModel>();
 

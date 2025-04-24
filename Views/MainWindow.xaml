@@ -76,7 +76,9 @@
     <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
         <Grid.ColumnDefinitions>
             <ColumnDefinition x:Name="NavColumn" Width="65" />
-            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="328*" />
+            <ColumnDefinition Width="37*"/>
+            <ColumnDefinition Width="365*"/>
         </Grid.ColumnDefinitions>
 
         <!--  Navigation Rail/Drawer  -->
@@ -197,7 +199,7 @@
             </Grid>
         </Border>
 
-        <Grid Grid.Column="1">
+        <Grid Grid.Column="1" Grid.ColumnSpan="3">
             <Grid.RowDefinitions>
                 <RowDefinition Height="15*" />
                 <RowDefinition Height="5*" />
@@ -1039,7 +1041,7 @@
             Panel.ZIndex="1"
             ContentRendered="MainContent_ContentRendered"
             IsHitTestVisible="True"
-            NavigationUIVisibility="Hidden" />
+            NavigationUIVisibility="Hidden" Navigated="MainContent_Navigated" VerticalAlignment="Stretch" Grid.ColumnSpan="3" />
 
     </Grid>
 </Window>

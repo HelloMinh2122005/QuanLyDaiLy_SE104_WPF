@@ -19,10 +19,39 @@ namespace QuanLyDaiLy.Repositories
             }
         }
 
+        public async Task<long> GetTotalPhieuXuatByCurrentMonthYear(int month, int year)
+        {
+            // Xác định ngày đầu và cuối của tháng/year
+            var startDate = new DateTime(year, month, 1);
+            var endDate = new DateTime(year, month, DateTime.DaysInMonth(year, month));
+            // Đếm tất cả phiếu xuất có NgayLapPhieu trong khoảng thời gian này
+            return await _context.DsPhieuXuat
+                .Where(p => p.NgayLapPhieu >= startDate && p.NgayLapPhieu <= endDate)
+                .SumAsync(p => p.TongTriGia);
+        }
+
         public async Task AddPhieuXuat(PhieuXuat phieuXuat)
         {
             _context.DsPhieuXuat.Add(phieuXuat);
             await _context.SaveChangesAsync();
+        }
+        public async Task<Dictionary<int, long>> GetTotalValueByDaiLyAsync(int month, int year)
+        {
+            // Lấy tổng TongTriGia của mỗi đại lý trong tháng/năm, không giới hạn số lượng
+            var list = await _context.DsPhieuXuat
+                .AsNoTracking()
+                .Where(px => px.NgayLapPhieu.Month == month
+                          && px.NgayLapPhieu.Year == year)
+                .GroupBy(px => px.MaDaiLy)
+                .Select(g => new
+                {
+                    MaDaiLy = g.Key,
+                    TotalValue = g.Sum(px => px.TongTriGia)
+                })
+                .ToListAsync();
+
+            // Chuyển sang Dictionary<MaDaiLy, TotalValue>
+            return list.ToDictionary(x => x.MaDaiLy, x => x.TotalValue);
         }
 
         public async Task DeletePhieuXuat(int id)

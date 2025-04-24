@@ -130,5 +130,10 @@ namespace QuanLyDaiLy.Views
             // Make sure navigation buttons reflect current page
             // This ensures sync if navigation happens programmatically
         }
+
+        private void MainContent_Navigated(object sender, System.Windows.Navigation.NavigationEventArgs e)
+        {
+
+        }
     }
 }

@@ -9,6 +9,7 @@ namespace QuanLyDaiLy.ViewModels.BaoCaoViewModels
 {
     public class BaoCaoDoanhSoViewModel : INotifyPropertyChanged
     {
+
         public BaoCaoDoanhSoViewModel()
         {
             CloseCommand = new RelayCommand(CloseWindow);

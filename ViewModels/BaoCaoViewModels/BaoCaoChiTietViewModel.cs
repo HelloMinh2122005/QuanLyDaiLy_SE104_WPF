@@ -7,23 +7,37 @@ using System.Windows.Media;
 using Microsoft.Extensions.DependencyInjection;
 using QuanLyDaiLy.Commands;
 using QuanLyDaiLy.Views.BaoCaoViews;
+using QuanLyDaiLy.Services;
+using QuanLyDaiLy.Models;
+using System.Windows;
 
 namespace QuanLyDaiLy.ViewModels.BaoCaoViewModels
 {
     public class BaoCaoChiTietViewModel : INotifyPropertyChanged
     {
         private readonly IServiceProvider _serviceProvider;
+        private readonly IDaiLyService _daiLyService;
+        private readonly IPhieuXuatService _phieuXuatService;
+        private readonly IPhieuThuService _phieuThuService;
 
-        public BaoCaoChiTietViewModel(IServiceProvider serviceProvider)
+        public BaoCaoChiTietViewModel(
+            IServiceProvider serviceProvider,
+            IDaiLyService daiLyService,
+            IPhieuXuatService phieuXuatService,
+            IPhieuThuService phieuThuService
+            )
         {
+            _daiLyService = daiLyService;
             _serviceProvider = serviceProvider;
+            _phieuXuatService = phieuXuatService;
+            _phieuThuService = phieuThuService;
 
             DoanhSoCommand = new RelayCommand(OpenDoanhSoWindow);
             CongNoCommand = new RelayCommand(OpenCongNoWindow);
 
             InitializeMonthYearOptions();
-            InitializeDoanhSoData();
-            InitializeCongNoData();
+            _ = InitializeDoanhSoData();
+            _ = InitializeCongNoData();
         }
 
         public SeriesCollection DoanhSoSeries { get; set; } = [];
@@ -56,7 +70,7 @@ namespace QuanLyDaiLy.ViewModels.BaoCaoViewModels
             BorderBrush = new SolidColorBrush(Color.FromRgb(200, 200, 200))
         };
 
-        private string _selectedDoanhSoMonth = "Tháng 4";
+        private string _selectedDoanhSoMonth = $"Tháng {DateTime.Now.Month}";
         public string SelectedDoanhSoMonth
         {
             get => _selectedDoanhSoMonth;
@@ -71,7 +85,7 @@ namespace QuanLyDaiLy.ViewModels.BaoCaoViewModels
             }
         }
 
-        private int _selectedDoanhSoYear = 2025;
+        private int _selectedDoanhSoYear = DateTime.Now.Year;
         public int SelectedDoanhSoYear
         {
             get => _selectedDoanhSoYear;
@@ -86,7 +100,7 @@ namespace QuanLyDaiLy.ViewModels.BaoCaoViewModels
             }
         }
 
-        private string _selectedCongNoMonth = "Tháng 4";
+        private string _selectedCongNoMonth = $"Tháng {DateTime.Now.Month}";
         public string SelectedCongNoMonth
         {
             get => _selectedCongNoMonth;
@@ -101,7 +115,7 @@ namespace QuanLyDaiLy.ViewModels.BaoCaoViewModels
             }
         }
 
-        private int _selectedCongNoYear = 2025; 
+        private int _selectedCongNoYear = DateTime.Now.Year;
         public int SelectedCongNoYear
         {
             get => _selectedCongNoYear;
@@ -156,86 +170,114 @@ namespace QuanLyDaiLy.ViewModels.BaoCaoViewModels
             SelectedCongNoMonth = MonthOptions[currentMonth - 1];
             SelectedCongNoYear = currentYear;
         }
-
-        private void InitializeDoanhSoData()
+        private async Task InitializeDoanhSoData()
         {
-            var dailyNames = new[] {
-                "Việt Tiến",
-                "Hà Nội",
-                "Minh Quang",
-                "An Phát",
-                "Thành Công",
-                "Phú Đạt",
-                "Hoàng Anh",
-                "Kim Cương",
-                "Đại Phát",
-                "Tân Thanh"
-            };
+            if (!int.TryParse(new string(SelectedDoanhSoMonth?.Where(char.IsDigit).ToArray()), out int selectedMonth))
+                return;
 
-            var dailyIncomes = new[] {
-                45000000,  // 45 million
-                38500000,  // 38.5 million
-                32000000,  // 32 million
-                27500000,  // 27.5 million
-                25000000,  // 25 million
-                22500000,  // 22.5 million
-                20000000,  // 20 million
-                18000000,  // 18 million
-                16500000,  // 16.5 million
-                15000000   // 15 million
-            };
+            int selectedYear = SelectedDoanhSoYear;
 
-            var dailyIncomesDouble = dailyIncomes.Select(x => (double)x).ToArray();
+            var allPhieuXuatsTask = _phieuXuatService.GetAllPhieuXuat();
+            var allDaiLysTask = _daiLyService.GetAllDaiLy();
+            await Task.WhenAll(allPhieuXuatsTask, allDaiLysTask);
 
-            DoanhSoLabels = dailyNames;
-            DoanhSoSeries =
-            [
+            var allPhieuXuats = allPhieuXuatsTask.Result
+                .Where(p => p.NgayLapPhieu.Month == selectedMonth && p.NgayLapPhieu.Year == selectedYear)
+                .ToList();
+
+            var doanhSoDict = allPhieuXuats
+                .GroupBy(p => p.MaDaiLy)
+                .ToDictionary(g => g.Key, g => g.Sum(p => p.TongTriGia));
+
+            var daiLyDoanhSoList = allDaiLysTask.Result
+                .Select(d => new
+                {
+                    d.TenDaiLy,
+                    TongDoanhSo = doanhSoDict.TryGetValue(d.MaDaiLy, out var value) ? value : 0
+                })
+                .OrderByDescending(d => d.TongDoanhSo)
+                .Take(10)
+                .ToList();
+
+            DoanhSoLabels = daiLyDoanhSoList.Select(d => d.TenDaiLy).ToArray();
+            DoanhSoSeries = new SeriesCollection
+            {
                 new ColumnSeries
                 {
                     Title = "Doanh số",
-                    Values = new ChartValues<double>(dailyIncomesDouble),
+                    Values = new ChartValues<double>(daiLyDoanhSoList.Select(d => (double)d.TongDoanhSo)),
                     DataLabels = true,
                     LabelPoint = point => point.Y.ToString("N0") + " đ",
-                    Fill = new SolidColorBrush(Color.FromRgb(76, 175, 80)), // Green
+                    Fill = new SolidColorBrush(Color.FromRgb(76, 175, 80)),
                     MaxColumnWidth = 50
                 }
-            ];
-        }
-
-        private void InitializeCongNoData()
-        {
-            var dailyNames = new[] {
-                "Minh Quang",
-                "Việt Tiến",
-                "Tân Thành",
-                "Hoàng Gia",
-                "Đại Phát",
-                "Thành Đạt",
-                "Thái Dương",
-                "Tiến Phát",
-                "Kim Cương",
-                "Phúc Lộc"
             };
 
-            var random = new Random(DateTime.Now.Millisecond);
-            var dailyDebts = new double[10];
+            OnPropertyChanged(nameof(DoanhSoSeries));
+            OnPropertyChanged(nameof(DoanhSoLabels));
+        }
 
-            for (int i = 0; i < 10; i++)
+
+
+
+        private async Task InitializeCongNoData()
+        {
+            var selectedMonth = int.Parse(new string(SelectedCongNoMonth.Where(char.IsDigit).ToArray()));
+            var selectedYear = SelectedCongNoYear;
+
+            var daiLyList = (await _daiLyService.GetAllDaiLy())?.ToList();
+
+            if (daiLyList == null || !daiLyList.Any())
             {
-                dailyDebts[i] = 25000000 + random.Next(35000000);
+                CongNoLabels = Array.Empty<string>();
+                CongNoSeries = new SeriesCollection();
+                return;
             }
 
-            // Sort by debt value (descending)
-            var sortedData = dailyNames.Zip(dailyDebts, (name, debt) => new { Name = name, Debt = debt })
-                .OrderByDescending(item => item.Debt)
+            var tasks = daiLyList.Select(async daiLy =>
+            {
+                var phieuThuTask = _phieuThuService.GetPhieuThuByDaiLyId(daiLy.MaDaiLy);
+                var phieuXuatTask = _phieuXuatService.GetPhieuXuatByDaiLyId(daiLy.MaDaiLy);
+
+                await Task.WhenAll(phieuThuTask, phieuXuatTask);
+
+                var phieuThus = (phieuThuTask.Result ?? Enumerable.Empty<PhieuThu>())
+                    .Where(p => p.NgayThuTien.Month == selectedMonth && p.NgayThuTien.Year == selectedYear);
+
+                var phieuXuats = (phieuXuatTask.Result ?? Enumerable.Empty<PhieuXuat>())
+                    .Where(p => p.NgayLapPhieu.Month == selectedMonth && p.NgayLapPhieu.Year == selectedYear);
+
+                double tongThu = phieuThus.Sum(p => p.SoTienThu);
+                double tongXuat = phieuXuats.Sum(p => p.TongTriGia);
+                double congNo = tongXuat - tongThu;
+
+                return (TenDaiLy: daiLy.TenDaiLy, CongNo: congNo);
+            });
+
+            var daiLyCongNoList = await Task.WhenAll(tasks);
+
+            // Lọc các đại lý có CongNo > 0
+            var filteredData = daiLyCongNoList
+                //.Where(d => d.CongNo >= 0)
+                .OrderByDescending(d => d.CongNo)
+                .Take(10)
                 .ToArray();
 
-            // Store names and debt values in the correct order
-            CongNoLabels = sortedData.Select(item => item.Name).ToArray();
-            var sortedDebts = sortedData.Select(item => item.Debt).ToArray();
+            // Nếu không có đại lý nào có CongNo > 0, không hiển thị gì
+            if (!filteredData.Any())
+            {
+                CongNoLabels = Array.Empty<string>();
+                CongNoSeries = new SeriesCollection();
+                OnPropertyChanged(nameof(CongNoSeries));
+                OnPropertyChanged(nameof(CongNoLabels));
+                return;
+            }
 
-            CongNoSeries =
-            [
+            CongNoLabels = filteredData.Select(d => d.TenDaiLy).ToArray();
+            var sortedDebts = filteredData.Select(d => d.CongNo).ToArray();
+
+            CongNoSeries = new SeriesCollection
+            {
                 new ColumnSeries
                 {
                     Title = "Công nợ",
@@ -243,35 +285,25 @@ namespace QuanLyDaiLy.ViewModels.BaoCaoViewModels
                     DataLabels = true,
                     LabelPoint = point => point.Y.ToString("N0") + " đ",
                     Fill = new SolidColorBrush(Color.FromRgb(233, 30, 99)),
-                    MaxColumnWidth = 50 
+                    MaxColumnWidth = 50
                 }
-            ];
+            };
+
+            OnPropertyChanged(nameof(CongNoSeries));
+            OnPropertyChanged(nameof(CongNoLabels));
         }
 
-        private void UpdateDoanhSoData()
+
+
+
+        private async void UpdateDoanhSoData()
         {
-            var random = new Random(SelectedDoanhSoMonth.GetHashCode() + SelectedDoanhSoYear);
-
-            var newValues = new ChartValues<double>();
-            for (int i = 0; i < DoanhSoLabels.Length; i++)
-            {
-                newValues.Add(15000000 + random.Next(35000000));
-            }
-
-            DoanhSoSeries[0].Values = newValues;
+            await InitializeDoanhSoData();
         }
 
-        private void UpdateCongNoData()
+        private async void UpdateCongNoData()
         {
-            var random = new Random(SelectedCongNoMonth.GetHashCode() + SelectedCongNoYear);
-
-            var newValues = new ChartValues<double>();
-            for (int i = 0; i < CongNoLabels.Length; i++)
-            {
-                newValues.Add(20000000 + random.Next(30000000));
-            }
-
-            CongNoSeries[0].Values = newValues;
+            await InitializeCongNoData();
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
