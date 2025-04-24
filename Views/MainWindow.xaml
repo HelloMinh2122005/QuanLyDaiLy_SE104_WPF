@@ -1041,7 +1041,7 @@
             Panel.ZIndex="1"
             ContentRendered="MainContent_ContentRendered"
             IsHitTestVisible="True"
-            NavigationUIVisibility="Hidden" Navigated="MainContent_Navigated" Height="733" VerticalAlignment="Center" Grid.ColumnSpan="3" />
+            NavigationUIVisibility="Hidden" Navigated="MainContent_Navigated" VerticalAlignment="Stretch" Grid.ColumnSpan="3" />
 
     </Grid>
 </Window>
