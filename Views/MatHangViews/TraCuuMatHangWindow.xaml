@@ -370,7 +370,7 @@
                                 FontStyle="Normal"
                                 FontWeight="SemiBold"
                                 Foreground="Black"
-                                Text="{Binding MaDaiLy}"
+                                Text="{Binding MaMatHang}"
                                 TextAlignment="Left">
                                 <TextBox.Resources>
                                     <Style TargetType="{x:Type Border}">
@@ -412,7 +412,7 @@
                                 FontStyle="Normal"
                                 FontWeight="SemiBold"
                                 Foreground="Black"
-                                Text="{Binding MaDaiLy}"
+                                Text="{Binding TenMatHang}"
                                 TextAlignment="Left">
                                 <TextBox.Resources>
                                     <Style TargetType="{x:Type Border}">
@@ -443,12 +443,12 @@
                             <!--  Tên loại đại lý ComboBox  -->
                             <ComboBox
                                 Grid.Row="1"
-                                ItemsSource="{Binding LoaiDaiLies}"
-                                SelectedItem="{Binding SelectedLoaiDaiLy}"
+                                ItemsSource="{Binding DonViTinhs}"
+                                SelectedItem="{Binding SelectedDonViTinh}"
                                 Style="{StaticResource StyledComboBox}">
                                 <ComboBox.ItemTemplate>
                                     <DataTemplate>
-                                        <TextBlock Text="{Binding TenLoaiDaiLy}" />
+                                        <TextBlock Text="{Binding TenDonViTinh}" />
                                     </DataTemplate>
                                 </ComboBox.ItemTemplate>
                             </ComboBox>
@@ -560,8 +560,8 @@
                     <Button
                         Width="250"
                         Background="#00AAFF"
-                        Command="{Binding TraCuuDaiLyCommand}"
-                        Content="🔍 Tra cứu Phiếu xuất"
+                        Command="{Binding TraCuuMatHangCommand}"
+                        Content="🔍 Tra cứu Mặt hàng"
                         FontFamily="Roboto"
                         FontSize="19"
                         FontStyle="Normal"
