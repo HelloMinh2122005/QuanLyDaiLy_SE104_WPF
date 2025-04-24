@@ -140,6 +140,26 @@ namespace QuanLyDaiLy.ViewModels.MatHangViewModels
         {
             try
             {
+                // 1. Kiểm tra nếu chưa nhập gì hết thì hỏi xác nhận
+                bool isFilterEmpty =
+                    string.IsNullOrEmpty(MaMatHang) &&
+                    string.IsNullOrEmpty(TenMatHang) &&
+                    SelectedDonViTinh.MaDonViTinh == 0 &&
+                    string.IsNullOrEmpty(SoLuongTonCuaMatHangXuatFrom) &&
+                    string.IsNullOrEmpty(SoLuongTonCuaMatHangXuatTo);
+
+                if (isFilterEmpty)
+                {
+                    var result = MessageBox.Show(
+                        "Liệt tay hay sao mà không nhập thông tin tìm kiếm.\nBạn có chắc muốn tiếp tục tra cứu không?",
+                        "Xác nhận",
+                        MessageBoxButton.YesNo,
+                        MessageBoxImage.Question);
+
+                    if (result == MessageBoxResult.No)
+                        return;  // Dừng hàm, không thực hiện search
+                }
+
                 var matHangs = await _matHangService.GetAllMatHang();
                 ObservableCollection<MatHang> filteredResults = [.. matHangs];
 
