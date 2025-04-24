@@ -39,7 +39,7 @@
 
         <Border
             Grid.Row="1"
-            Width="1400"
+            HorizontalAlignment="Stretch"
             Margin="20"
             VerticalAlignment="Stretch"
             Background="White"
