@@ -25,6 +25,31 @@ namespace QuanLyDaiLy.Repositories
             await _context.SaveChangesAsync();
         }
 
+        public async Task<int> GetTotalDaiLyUpToMonthYear(int month, int year)
+        {
+            // Xác định ngày cuối của tháng/year
+            var endDate = new DateTime(year, month, DateTime.DaysInMonth(year, month));
+
+            // Đếm tất cả đại lý có NgayTiepNhan <= endDate
+            return await _context.DsDaiLy
+                .CountAsync(d => d.NgayTiepNhan <= endDate);
+        }
+        // Trả về Dictionary<MaLoaiDaiLy, Count>
+        public async Task<Dictionary<int, int>> GetCountsGroupedByLoaiAsync(int month, int year)
+        {
+            return await _context.DsDaiLy
+                .Where(d => d.NgayTiepNhan.Month == month && d.NgayTiepNhan.Year == year) // Lọc theo tháng và năm
+                .GroupBy(d => d.MaLoaiDaiLy) // Nhóm theo loại đại lý
+                .ToDictionaryAsync(g => g.Key, g => g.Count()); // Đếm số lượng đại lý cho từng loại
+        }
+
+        public async Task<List<DaiLy>> GetDaiLysByIdsAsync(IEnumerable<int> ids)
+        {
+            return await _context.DsDaiLy
+                    .AsNoTracking()
+                    .Where(d => ids.Contains(d.MaDaiLy))
+                    .ToListAsync();
+        }
         public async Task DeleteDaiLy(int id)
         {
             var daiLy = await _context.DsDaiLy.FindAsync(id);

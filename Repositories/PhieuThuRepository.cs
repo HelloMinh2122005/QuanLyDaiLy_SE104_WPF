@@ -19,6 +19,33 @@ namespace QuanLyDaiLy.Repositories
             }
         }
 
+        public async Task<long> GetTotalPhieuThuByCurrentMonthYear(int month, int year)
+        {
+            // Xác định ngày đầu và cuối của tháng/year
+            var startDate = new DateTime(year, month, 1);
+            var endDate = new DateTime(year, month, DateTime.DaysInMonth(year, month));
+            // Đếm tất cả phiếu thu có NgayThuTien trong khoảng thời gian này
+            return await _context.DsPhieuThu
+                .Where(p => p.NgayThuTien >= startDate && p.NgayThuTien <= endDate)
+                .SumAsync(p => p.SoTienThu);
+        }
+        public async Task<IEnumerable<PhieuThu>> GetPhieuThuByCurrentYearAndLastYear(int currentYear, int lastYear)
+        {
+            return await _context.DsPhieuThu
+                    .Include(p => p.DaiLy)
+                    .Where(p => new[] { currentYear, lastYear }.Contains(p.NgayThuTien.Year))
+                    .ToListAsync();
+        }
+
+        public async Task<long> GetTotalPhieuThuUpToMonthYear(int month, int year)
+        {
+            // Xác định ngày cuối của tháng/year
+            var endDate = new DateTime(year, month, DateTime.DaysInMonth(year, month));
+            // Đếm tất cả phiếu thu có NgayThuTien <= endDate
+            return await _context.DsPhieuThu
+                .Where(p => p.NgayThuTien <= endDate)
+                .SumAsync(p => p.SoTienThu);
+        }
         public async Task AddPhieuThu(PhieuThu phieuThu)
         {
             _context.DsPhieuThu.Add(phieuThu);
