@@ -28,7 +28,6 @@ namespace QuanLyDaiLy.ViewModels.DonViTinhViewModels
             _chinhSuaDonViTinhFactory = chinhSuaDonViTinhFactory;
 
             // Initialize commands
-            SearchDonViTinhCommand = new RelayCommand(OpenSearchDonViTinhWindow);
             LoadDataCommand = new RelayCommand(async () => await LoadDataExecute());
             AddDonViTinhCommand = new RelayCommand(OpenAddDonViTinhWindow);
             EditDonViTinhCommand = new RelayCommand(OpenEditDonViTinhWindow);
@@ -80,21 +79,6 @@ namespace QuanLyDaiLy.ViewModels.DonViTinhViewModels
             await LoadData();
             MessageBox.Show("Tải lại danh sách thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
         }
-
-
-        /// <summary>
-        /// PHẦN CỦA THÀNH CẦN SỬA
-        /// </summary>
-        private void OpenSearchDonViTinhWindow()
-        {
-            SelectedDonViTinh = null!;
-            MessageBox.Show("Tính năng tra cứu đơn vị tính đang được phát triển.", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
-        }
-        /// <summary>
-        /// PHẦN CỦA THÀNH CẦN SỬA
-        /// </summary>
-        /// 
-
 
         private void OpenAddDonViTinhWindow()
         {
