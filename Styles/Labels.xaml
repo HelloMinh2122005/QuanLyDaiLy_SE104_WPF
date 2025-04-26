@@ -1,0 +1,62 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!--  Base Label Style  -->
+    <Style x:Key="BaseLabel" TargetType="Label">
+        <Setter Property="Foreground" Value="{StaticResource TextPrimaryBrush}" />
+        <Setter Property="FontFamily" Value="Nunito" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="Margin" Value="0,5,0,5" />
+        <Setter Property="VerticalAlignment" Value="Center" />
+    </Style>
+
+    <!--  Form Field Label  -->
+    <Style
+        x:Key="FormLabel"
+        BasedOn="{StaticResource BaseLabel}"
+        TargetType="Label">
+        <Setter Property="Margin" Value="0,5,10,5" />
+        <Setter Property="HorizontalAlignment" Value="Right" />
+        <Setter Property="FontWeight" Value="SemiBold" />
+    </Style>
+
+    <!--  Section Header Label  -->
+    <Style
+        x:Key="SectionHeaderLabel"
+        BasedOn="{StaticResource BaseLabel}"
+        TargetType="Label">
+        <Setter Property="FontSize" Value="18" />
+        <Setter Property="FontWeight" Value="Bold" />
+        <Setter Property="Margin" Value="0,10,0,5" />
+        <Setter Property="Foreground" Value="{StaticResource PrimaryBrush}" />
+    </Style>
+
+    <!--  Required Field Label  -->
+    <Style
+        x:Key="RequiredFieldLabel"
+        BasedOn="{StaticResource FormLabel}"
+        TargetType="Label">
+        <Setter Property="ContentTemplate">
+            <Setter.Value>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal">
+                        <ContentPresenter Content="{Binding}" />
+                        <TextBlock
+                            Margin="2,0,0,0"
+                            Foreground="Red"
+                            Text="*" />
+                    </StackPanel>
+                </DataTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
+    <!--  Small Description Label  -->
+    <Style
+        x:Key="DescriptionLabel"
+        BasedOn="{StaticResource BaseLabel}"
+        TargetType="Label">
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="Foreground" Value="{StaticResource TextSecondaryBrush}" />
+        <Setter Property="FontStyle" Value="Italic" />
+    </Style>
+</ResourceDictionary>

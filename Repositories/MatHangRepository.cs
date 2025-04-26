@@ -42,6 +42,15 @@ namespace QuanLyDaiLy.Repositories
                 .ToListAsync();
         }
 
+        public async Task<IEnumerable<MatHang>> GetMatHangPage(int offset, int size)
+        {
+            return await _context.DsMatHang
+                .Include(m => m.DonViTinh)
+                .Skip(offset)
+                .Take(size)
+                .ToListAsync();
+        }
+
         public async Task<MatHang> GetMatHangById(int id)
         {
             MatHang? matHang = await _context.DsMatHang

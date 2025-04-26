@@ -1,0 +1,64 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+
+    <!--  Button Hover Animation  -->
+    <Storyboard x:Key="ButtonHoverOn">
+        <ColorAnimation
+            Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
+            To="#0088CC"
+            Duration="0:0:0.2" />
+        <DoubleAnimation
+            Storyboard.TargetProperty="(Effect).BlurRadius"
+            To="8"
+            Duration="0:0:0.2" />
+        <DoubleAnimation
+            Storyboard.TargetProperty="(Effect).Opacity"
+            To="0.3"
+            Duration="0:0:0.2" />
+        <DoubleAnimation
+            Storyboard.TargetProperty="(Effect).ShadowDepth"
+            To="4"
+            Duration="0:0:0.2" />
+    </Storyboard>
+
+    <Storyboard x:Key="ButtonHoverOff">
+        <ColorAnimation
+            Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
+            To="#00AAFF"
+            Duration="0:0:0.2" />
+        <DoubleAnimation
+            Storyboard.TargetProperty="(Effect).BlurRadius"
+            To="0"
+            Duration="0:0:0.2" />
+        <DoubleAnimation
+            Storyboard.TargetProperty="(Effect).Opacity"
+            To="0"
+            Duration="0:0:0.2" />
+        <DoubleAnimation
+            Storyboard.TargetProperty="(Effect).ShadowDepth"
+            To="0"
+            Duration="0:0:0.2" />
+    </Storyboard>
+
+    <!--  Card Hover Animation  -->
+    <Storyboard x:Key="CardHoverOn">
+        <DoubleAnimation
+            Storyboard.TargetProperty="(Effect).BlurRadius"
+            To="12"
+            Duration="0:0:0.2" />
+        <DoubleAnimation
+            Storyboard.TargetProperty="(Effect).ShadowDepth"
+            To="5"
+            Duration="0:0:0.2" />
+    </Storyboard>
+
+    <Storyboard x:Key="CardHoverOff">
+        <DoubleAnimation
+            Storyboard.TargetProperty="(Effect).BlurRadius"
+            To="8"
+            Duration="0:0:0.2" />
+        <DoubleAnimation
+            Storyboard.TargetProperty="(Effect).ShadowDepth"
+            To="2"
+            Duration="0:0:0.2" />
+    </Storyboard>
+</ResourceDictionary>
