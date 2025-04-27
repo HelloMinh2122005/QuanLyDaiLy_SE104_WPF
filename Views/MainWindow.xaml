@@ -117,13 +117,7 @@
                     MaxHeight="100"
                     Margin="0,30,0,0"
                     Background="White"
-                    CornerRadius="90">
-                    <Image
-                        MaxWidth="100"
-                        MaxHeight="100"
-                        Source="pack://application:,,,/QuanLyDaiLy;component/Resources/uittogether-removebg-preview.png"
-                        Stretch="Uniform" />
-                </Border>
+                    CornerRadius="90"/>
 
 
                 <StackPanel Grid.Row="1" Margin="0,20,0,0">

@@ -6,8 +6,9 @@
     xmlns:helpers="clr-namespace:QuanLyDaiLy.Helpers"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="HoSoDaiLyWinDow"
-    Width="1450"
+    Width="1360"
     Height="610"
+
     AllowsTransparency="True"
     Background="Transparent"
     WindowStartupLocation="CenterScreen"
@@ -374,7 +375,7 @@
                                 FontStyle="Normal"
                                 FontWeight="SemiBold"
                                 Foreground="Black"
-                                Text="{Binding MaDaiLy}"
+                                Text="{Binding MaPhieuThu}"
                                 TextAlignment="Left">
                                 <TextBox.Resources>
                                     <Style TargetType="{x:Type Border}">
@@ -404,12 +405,12 @@
                             <!--  Tên loại đại lý ComboBox  -->
                             <ComboBox
                                 Grid.Row="1"
-                                ItemsSource="{Binding LoaiDaiLies}"
-                                SelectedItem="{Binding SelectedLoaiDaiLy}"
+                                ItemsSource="{Binding DaiLies}"
+                                SelectedItem="{Binding SelectedDaiLy}"
                                 Style="{StaticResource StyledComboBox}">
                                 <ComboBox.ItemTemplate>
                                     <DataTemplate>
-                                        <TextBlock Text="{Binding TenLoaiDaiLy}" />
+                                        <TextBlock Text="{Binding TenDaiLy}" />
                                     </DataTemplate>
                                 </ComboBox.ItemTemplate>
                             </ComboBox>
@@ -447,7 +448,7 @@
                                 FontStyle="Normal"
                                 FontWeight="SemiBold"
                                 Foreground="Black"
-                                Text="{Binding MaDaiLy}"
+                                Text="{Binding DienThoai}"
                                 TextAlignment="Left">
                                 <TextBox.Resources>
                                     <Style TargetType="{x:Type Border}">
@@ -488,7 +489,7 @@
                                 FontStyle="Normal"
                                 FontWeight="SemiBold"
                                 Foreground="Black"
-                                Text="{Binding MaDaiLy}"
+                                Text="{Binding DiaChi}"
                                 TextAlignment="Left">
                                 <TextBox.Resources>
                                     <Style TargetType="{x:Type Border}">
@@ -529,7 +530,7 @@
                                 FontStyle="Normal"
                                 FontWeight="SemiBold"
                                 Foreground="Black"
-                                Text="{Binding MaDaiLy}"
+                                Text="{Binding Email}"
                                 TextAlignment="Left">
                                 <TextBox.Resources>
                                     <Style TargetType="{x:Type Border}">
@@ -600,12 +601,12 @@
                             <ComboBox
                                 Grid.Row="1"
                                 Width="250"
-                                ItemsSource="{Binding LoaiDaiLies}"
-                                SelectedItem="{Binding SelectedLoaiDaiLy}"
+                                ItemsSource="{Binding Quans}"
+                                SelectedItem="{Binding SelectedQuan}"
                                 Style="{StaticResource StyledComboBox}">
                                 <ComboBox.ItemTemplate>
                                     <DataTemplate>
-                                        <TextBlock Text="{Binding TenLoaiDaiLy}" />
+                                        <TextBlock Text="{Binding TenQuan}" />
                                     </DataTemplate>
                                 </ComboBox.ItemTemplate>
                             </ComboBox>
@@ -649,10 +650,9 @@
                                 Foreground="Red"
                                 Text="từ" />
                             <DatePicker
-                                Width="195"
+                                Width="169"
                                 Margin="10,10,0,10"
                                 Padding="10,0,0,0"
-                                HorizontalAlignment="Stretch"
                                 VerticalAlignment="Stretch"
                                 Background="#FFFFFF"
                                 BorderBrush="#33000000"
@@ -787,10 +787,9 @@
                                 Foreground="Red"
                                 Text="đến" />
                             <DatePicker
-                                Width="190"
+                                Width="161"
                                 Margin="10,10,0,10"
                                 Padding="10,0,0,0"
-                                HorizontalAlignment="Stretch"
                                 VerticalAlignment="Stretch"
                                 Background="#FFFFFF"
                                 BorderBrush="#33000000"
@@ -955,7 +954,7 @@
                                 FontStyle="Normal"
                                 FontWeight="SemiBold"
                                 Foreground="Black"
-                                Text="{Binding MaPhieuXuatFrom}"
+                                Text="{Binding NoDaiLyFrom}"
                                 TextAlignment="Left">
                                 <TextBox.Resources>
                                     <Style TargetType="{x:Type Border}">
@@ -975,10 +974,9 @@
                                 Foreground="Red"
                                 Text="đến" />
                             <TextBox
-                                Width="232"
+                                Width="206"
                                 Margin="10,10,0,10"
                                 Padding="10,0,0,0"
-                                HorizontalAlignment="Stretch"
                                 VerticalAlignment="Stretch"
                                 VerticalContentAlignment="Center"
                                 Background="#FFFFFF"
@@ -989,7 +987,7 @@
                                 FontStyle="Normal"
                                 FontWeight="SemiBold"
                                 Foreground="Black"
-                                Text="{Binding MaPhieuXuatTo}"
+                                Text="{Binding NoDaiLyTo}"
                                 TextAlignment="Left">
                                 <TextBox.Resources>
                                     <Style TargetType="{x:Type Border}">
@@ -1050,7 +1048,7 @@
                                 FontStyle="Normal"
                                 FontWeight="SemiBold"
                                 Foreground="Black"
-                                Text="{Binding TongGiaTriPhieuXuatFrom}"
+                                Text="{Binding SoTienThuFrom}"
                                 TextAlignment="Left">
                                 <TextBox.Resources>
                                     <Style TargetType="{x:Type Border}">
@@ -1070,10 +1068,9 @@
                                 Foreground="Red"
                                 Text="đến" />
                             <TextBox
-                                Width="223"
+                                Width="196"
                                 Margin="10,10,0,10"
                                 Padding="10,0,0,0"
-                                HorizontalAlignment="Stretch"
                                 VerticalAlignment="Stretch"
                                 VerticalContentAlignment="Center"
                                 Background="#FFFFFF"
@@ -1084,8 +1081,8 @@
                                 FontStyle="Normal"
                                 FontWeight="SemiBold"
                                 Foreground="Black"
-                                Text="{Binding TongGiaTriPhieuXuatTo}"
-                                TextAlignment="Left">
+                                Text="{Binding SoTienThuTo}"
+                                TextAlignment="Left" TextChanged="TextBox_TextChanged">
                                 <TextBox.Resources>
                                     <Style TargetType="{x:Type Border}">
                                         <Setter Property="CornerRadius" Value="10" />
@@ -1121,10 +1118,9 @@
                                 Foreground="Red"
                                 Text="từ" />
                             <DatePicker
-                                Width="228"
+                                Width="186"
                                 Margin="10,10,0,10"
                                 Padding="10,0,0,0"
-                                HorizontalAlignment="Stretch"
                                 VerticalAlignment="Stretch"
                                 Background="#FFFFFF"
                                 BorderBrush="#33000000"
@@ -1134,7 +1130,7 @@
                                 FontStyle="Normal"
                                 FontWeight="Normal"
                                 Foreground="#9A000000"
-                                SelectedDate="{Binding NgayLapPhieuXuatFrom}">
+                                SelectedDate="{Binding NgayThuTienFrom}">
 
                                 <DatePicker.Resources>
                                     <Style TargetType="DatePickerTextBox">
@@ -1259,10 +1255,9 @@
                                 Foreground="Red"
                                 Text="đến" />
                             <DatePicker
-                                Width="228"
+                                Width="176"
                                 Margin="10,10,0,10"
                                 Padding="10,0,0,0"
-                                HorizontalAlignment="Stretch"
                                 VerticalAlignment="Stretch"
                                 Background="#FFFFFF"
                                 BorderBrush="#33000000"
@@ -1272,7 +1267,7 @@
                                 FontStyle="Normal"
                                 FontWeight="Normal"
                                 Foreground="#9A000000"
-                                SelectedDate="{Binding NgayLapPhieuXuatTo}">
+                                SelectedDate="{Binding NgayThuTienTo}">
 
                                 <DatePicker.Resources>
                                     <Style TargetType="DatePickerTextBox">
@@ -1400,7 +1395,7 @@
                     <Button
                         Width="250"
                         Background="#00AAFF"
-                        Command="{Binding TraCuuDaiLyCommand}"
+                        Command="{Binding TraCuuPhieuThuCommand}"
                         Content="🔍 Tra cứu Phiếu thu"
                         FontFamily="Roboto"
                         FontSize="19"
