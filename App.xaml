@@ -11,6 +11,7 @@
                 <ResourceDictionary Source="Styles/ComboBoxes.xaml" />
                 <ResourceDictionary Source="Styles/Borders.xaml" />
                 <ResourceDictionary Source="Styles/DataGrids.xaml" />
+                <ResourceDictionary Source="Styles/DatePickers.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
