@@ -24,11 +24,7 @@
             Color="Black" />
     </Window.Resources>
 
-    <Border
-        Background="White"
-        BorderBrush="#DDDDDD"
-        BorderThickness="1"
-        CornerRadius="20">
+    <Border Style="{StaticResource WindowPopUpBorder}">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="80" />
@@ -65,16 +61,7 @@
             </Grid>
 
             <!--  Body  -->
-            <Border
-                Grid.Row="2"
-                Margin="15"
-                Padding="10"
-                HorizontalAlignment="Stretch"
-                VerticalAlignment="Stretch"
-                Background="#F7F9FD"
-                BorderBrush="Transparent"
-                CornerRadius="11"
-                Effect="{StaticResource DropShadowEffect}">
+            <Border Grid.Row="2" Style="{StaticResource WindowBorderContentWrapper}">
                 <Grid Margin="10">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="1.5*" />

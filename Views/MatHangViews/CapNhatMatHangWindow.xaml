@@ -4,7 +4,6 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:fa="http://schemas.fontawesome.io/icons/"
-    xmlns:helpers="clr-namespace:QuanLyDaiLy.Helpers"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="HoSoDaiLyWinDow"
     Width="960"
@@ -14,20 +13,7 @@
     WindowStyle="None"
     mc:Ignorable="d">
 
-    <Window.Resources>
-        <DropShadowEffect
-            x:Key="DropShadowEffect"
-            BlurRadius="10"
-            Opacity="0.5"
-            ShadowDepth="0"
-            Color="Black" />
-    </Window.Resources>
-
-    <Border
-        Background="White"
-        BorderBrush="#DDDDDD"
-        BorderThickness="1"
-        CornerRadius="20">
+    <Border Style="{StaticResource WindowPopUpBorder}">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="80" />
@@ -67,16 +53,7 @@
 
             </Grid>
             <!--  Body  -->
-            <Border
-                Grid.Row="2"
-                Margin="15"
-                Padding="10"
-                HorizontalAlignment="Stretch"
-                VerticalAlignment="Stretch"
-                Background="#F7F9FD"
-                BorderBrush="Transparent"
-                CornerRadius="11"
-                Effect="{StaticResource DropShadowEffect}">
+            <Border Grid.Row="2" Style="{StaticResource WindowBorderContentWrapper}">
                 <Grid Margin="10">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="33*" />
