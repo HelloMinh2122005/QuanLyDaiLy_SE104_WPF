@@ -224,28 +224,8 @@
                                 Text="Mã mặt hàng" />
                             <TextBox
                                 Grid.Row="1"
-                                Margin="10"
-                                Padding="10,0,0,0"
-                                HorizontalAlignment="Stretch"
-                                VerticalAlignment="Stretch"
-                                VerticalContentAlignment="Center"
-                                Background="#A2A2A2"
-                                BorderBrush="#33000000"
-                                BorderThickness="1"
-                                FontFamily="Nunito"
-                                FontSize="18"
-                                FontStyle="Normal"
-                                FontWeight="SemiBold"
-                                Foreground="White"
-                                IsReadOnly="True"
-                                Text="{Binding MaMatHang}"
-                                TextAlignment="Left">
-                                <TextBox.Resources>
-                                    <Style TargetType="{x:Type Border}">
-                                        <Setter Property="CornerRadius" Value="10" />
-                                    </Style>
-                                </TextBox.Resources>
-                            </TextBox>
+                                Style="{StaticResource ReadOnlyTextBoxStyle}"
+                                Text="{Binding MaMatHang}" />
                         </Grid>
 
                         <!--  Tên đại lý  -->
@@ -261,27 +241,8 @@
                                 Text="Tên mặt hàng" />
                             <TextBox
                                 Grid.Row="1"
-                                Margin="10"
-                                Padding="10,0,0,0"
-                                HorizontalAlignment="Stretch"
-                                VerticalAlignment="Stretch"
-                                VerticalContentAlignment="Center"
-                                Background="#FFFFFF"
-                                BorderBrush="#33000000"
-                                BorderThickness="1"
-                                FontFamily="Nunito"
-                                FontSize="18"
-                                FontStyle="Normal"
-                                FontWeight="Normal"
-                                Foreground="Black"
-                                Text="{Binding TenMatHang}"
-                                TextAlignment="Left">
-                                <TextBox.Resources>
-                                    <Style TargetType="{x:Type Border}">
-                                        <Setter Property="CornerRadius" Value="10" />
-                                    </Style>
-                                </TextBox.Resources>
-                            </TextBox>
+                                Style="{StaticResource StandardTextBoxStyle}"
+                                Text="{Binding TenMatHang}" />
                         </Grid>
                     </Grid>
 
@@ -334,27 +295,9 @@
                                 Text="Số lượng tồn" />
                             <TextBox
                                 Grid.Row="1"
-                                Margin="10"
                                 Padding="10,0,0,0"
-                                HorizontalAlignment="Stretch"
-                                VerticalAlignment="Stretch"
-                                VerticalContentAlignment="Center"
-                                Background="#FFFFFF"
-                                BorderBrush="#33000000"
-                                BorderThickness="1"
-                                FontFamily="Nunito"
-                                FontSize="18"
-                                FontStyle="Normal"
-                                FontWeight="Normal"
-                                Foreground="Black"
-                                Text="{Binding SoLuongTon}"
-                                TextAlignment="Left">
-                                <TextBox.Resources>
-                                    <Style TargetType="{x:Type Border}">
-                                        <Setter Property="CornerRadius" Value="10" />
-                                    </Style>
-                                </TextBox.Resources>
-                            </TextBox>
+                                Style="{StaticResource NumericTextBoxStyle}"
+                                Text="{Binding SoLuongTon}" />
                         </Grid>
                     </Grid>
                 </Grid>
