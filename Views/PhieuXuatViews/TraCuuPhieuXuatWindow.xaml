@@ -377,7 +377,7 @@
                                 FontStyle="Normal"
                                 FontWeight="SemiBold"
                                 Foreground="Black"
-                                Text="{Binding MaDaiLy}"
+                                Text="{Binding MaPhieuXuat}"
                                 TextAlignment="Left">
                                 <TextBox.Resources>
                                     <Style TargetType="{x:Type Border}">
@@ -407,12 +407,12 @@
                             <!--  Tên loại đại lý ComboBox  -->
                             <ComboBox
                                 Grid.Row="1"
-                                ItemsSource="{Binding LoaiDaiLies}"
-                                SelectedItem="{Binding SelectedLoaiDaiLy}"
+                                ItemsSource="{Binding DaiLies}"
+                                SelectedItem="{Binding SelectedDaiLies}"
                                 Style="{StaticResource StyledComboBox}">
                                 <ComboBox.ItemTemplate>
                                     <DataTemplate>
-                                        <TextBlock Text="{Binding TenLoaiDaiLy}" />
+                                        <TextBlock Text="{Binding TenDaiLy}" />
                                     </DataTemplate>
                                 </ComboBox.ItemTemplate>
                             </ComboBox>
@@ -450,7 +450,7 @@
                                 FontStyle="Normal"
                                 FontWeight="SemiBold"
                                 Foreground="Black"
-                                Text="{Binding MaDaiLy}"
+                                Text="{Binding DienThoai}"
                                 TextAlignment="Left">
                                 <TextBox.Resources>
                                     <Style TargetType="{x:Type Border}">
@@ -491,7 +491,7 @@
                                 FontStyle="Normal"
                                 FontWeight="SemiBold"
                                 Foreground="Black"
-                                Text="{Binding MaDaiLy}"
+                                Text="{Binding DiaChi}"
                                 TextAlignment="Left">
                                 <TextBox.Resources>
                                     <Style TargetType="{x:Type Border}">
@@ -532,7 +532,7 @@
                                 FontStyle="Normal"
                                 FontWeight="SemiBold"
                                 Foreground="Black"
-                                Text="{Binding MaDaiLy}"
+                                Text="{Binding Email}"
                                 TextAlignment="Left">
                                 <TextBox.Resources>
                                     <Style TargetType="{x:Type Border}">
@@ -603,12 +603,12 @@
                             <ComboBox
                                 Grid.Row="1"
                                 Width="250"
-                                ItemsSource="{Binding LoaiDaiLies}"
-                                SelectedItem="{Binding SelectedLoaiDaiLy}"
+                                ItemsSource="{Binding quans}"
+                                SelectedItem="{Binding SelectedQuans}"
                                 Style="{StaticResource StyledComboBox}">
                                 <ComboBox.ItemTemplate>
                                     <DataTemplate>
-                                        <TextBlock Text="{Binding TenLoaiDaiLy}" />
+                                        <TextBlock Text="{Binding TenQuan}" />
                                     </DataTemplate>
                                 </ComboBox.ItemTemplate>
                             </ComboBox>
@@ -958,7 +958,7 @@
                                 FontStyle="Normal"
                                 FontWeight="SemiBold"
                                 Foreground="Black"
-                                Text="{Binding MaPhieuXuatFrom}"
+                                Text="{Binding NoDaiLyFrom}"
                                 TextAlignment="Left">
                                 <TextBox.Resources>
                                     <Style TargetType="{x:Type Border}">
@@ -992,7 +992,7 @@
                                 FontStyle="Normal"
                                 FontWeight="SemiBold"
                                 Foreground="Black"
-                                Text="{Binding MaPhieuXuatTo}"
+                                Text="{Binding NoDaiLyTo}"
                                 TextAlignment="Left">
                                 <TextBox.Resources>
                                     <Style TargetType="{x:Type Border}">
@@ -1411,11 +1411,11 @@
                         <ComboBox
                             Width="250"
                             ItemsSource="{Binding MatHangXuats}"
-                            SelectedItem="{Binding SelectedMatHangXuat}"
+                            SelectedItem="{Binding SelectedMatHangXuats}"
                             Style="{StaticResource StyledComboBox}">
                             <ComboBox.ItemTemplate>
                                 <DataTemplate>
-                                    <TextBlock Text="{Binding TenMatHang}" />
+                                    <TextBlock Text="{Binding TenMatHangXuat}" />
                                 </DataTemplate>
                             </ComboBox.ItemTemplate>
                         </ComboBox>
@@ -1435,11 +1435,11 @@
                         <ComboBox
                             Width="250"
                             ItemsSource="{Binding DonViTinhs}"
-                            SelectedItem="{Binding SelectedDonViTinh}"
+                            SelectedItem="{Binding SelectedDonViTinhs}"
                             Style="{StaticResource StyledComboBox}">
                             <ComboBox.ItemTemplate>
                                 <DataTemplate>
-                                    <TextBlock Text="{Binding TenDonViTinh}" />
+                                    <TextBlock Text="{Binding MaDonViTinh}" />
                                 </DataTemplate>
                             </ComboBox.ItemTemplate>
                         </ComboBox>
@@ -1819,7 +1819,7 @@
                     <Button
                         Width="250"
                         Background="#00AAFF"
-                        Command="{Binding TraCuuDaiLyCommand}"
+                        Command="{Binding TraCuuPhieuXuatCommand}"
                         Content="🔍 Tra cứu Phiếu xuất"
                         FontFamily="Roboto"
                         FontSize="19"
