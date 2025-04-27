@@ -169,13 +169,7 @@
                     Grid.Column="0"
                     Margin="20,15,0,0"
                     VerticalAlignment="Center">
-                    <TextBlock
-                        FontFamily="Nunito"
-                        FontSize="40"
-                        FontStyle="Normal"
-                        FontWeight="SemiBold"
-                        LineHeight="55"
-                        Text="Tiếp nhận mặt hàng" />
+                    <TextBlock Style="{StaticResource WindowHeaderTextBlockStyle}" Text="Tiếp nhận mặt hàng" />
                 </StackPanel>
 
                 <StackPanel
@@ -226,14 +220,7 @@
 
                             <TextBlock
                                 Grid.Row="0"
-                                Margin="10,0,0,0"
-                                HorizontalAlignment="Left"
-                                VerticalAlignment="Center"
-                                FontFamily="Nunito"
-                                FontSize="25"
-                                FontStyle="Normal"
-                                FontWeight="Medium"
-                                Foreground="#000000"
+                                Style="{StaticResource FieldLabelTextBlockStyle}"
                                 Text="Mã mặt hàng" />
                             <TextBox
                                 Grid.Row="1"
@@ -270,14 +257,7 @@
 
                             <TextBlock
                                 Grid.Row="0"
-                                Margin="10,0,0,0"
-                                HorizontalAlignment="Left"
-                                VerticalAlignment="Center"
-                                FontFamily="Nunito"
-                                FontSize="25"
-                                FontStyle="Normal"
-                                FontWeight="Medium"
-                                Foreground="#000000"
+                                Style="{StaticResource FieldLabelTextBlockStyle}"
                                 Text="Tên mặt hàng" />
                             <TextBox
                                 Grid.Row="1"
@@ -326,16 +306,8 @@
 
                             <TextBlock
                                 Grid.Row="0"
-                                Margin="10,0,0,0"
-                                HorizontalAlignment="Left"
-                                VerticalAlignment="Center"
-                                FontFamily="Nunito"
-                                FontSize="25"
-                                FontStyle="Normal"
-                                FontWeight="Medium"
-                                Foreground="#000000"
+                                Style="{StaticResource FieldLabelTextBlockStyle}"
                                 Text="Đơn vị tính" />
-                            <!--  Tên loại đại lý ComboBox  -->
                             <ComboBox
                                 Grid.Row="1"
                                 ItemsSource="{Binding DonViTinhs}"
@@ -358,14 +330,7 @@
 
                             <TextBlock
                                 Grid.Row="0"
-                                Margin="10,0,0,0"
-                                HorizontalAlignment="Left"
-                                VerticalAlignment="Center"
-                                FontFamily="Nunito"
-                                FontSize="25"
-                                FontStyle="Normal"
-                                FontWeight="Medium"
-                                Foreground="#000000"
+                                Style="{StaticResource FieldLabelTextBlockStyle}"
                                 Text="Số lượng tồn" />
                             <TextBox
                                 Grid.Row="1"
