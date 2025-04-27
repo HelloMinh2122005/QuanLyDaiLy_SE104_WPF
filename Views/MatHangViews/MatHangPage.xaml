@@ -19,25 +19,8 @@
 
         <TextBlock
             Grid.Row="0"
-            Margin="20,10,0,0"
-            HorizontalAlignment="Left"
-            VerticalAlignment="Center"
-            FontFamily="Nunito"
-            FontSize="60"
-            FontStyle="Normal"
-            FontWeight="Bold"
-            Foreground="#333333"
-            LineHeight="50"
-            Text="Danh sách Mặt hàng">
-            <TextBlock.Effect>
-                <DropShadowEffect
-                    BlurRadius="3"
-                    Direction="330"
-                    Opacity="0.3"
-                    ShadowDepth="1"
-                    Color="#CCCCCC" />
-            </TextBlock.Effect>
-        </TextBlock>
+            Style="{StaticResource PageHeaderTextBlockStyle}"
+            Text="Danh sách Mặt hàng" />
 
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>
