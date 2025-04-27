@@ -61,7 +61,6 @@ public static class ApplicationServiceExtensions
         services.AddTransient<Views.QuanViews.CapNhatQuanWindow>();
         services.AddTransient<Views.QuanViews.TraCuuQuanWindow>();
 
-        // MẶT HÀNG CỦA THÀNH
         services.AddTransient<Views.MatHangViews.MatHangPage>();
         services.AddTransient<Views.MatHangViews.ThemMatHangWindow>();
         services.AddTransient<Views.MatHangViews.CapNhatMatHangWindow>();
@@ -69,13 +68,11 @@ public static class ApplicationServiceExtensions
 
         services.AddTransient<Views.PhieuThuViews.PhieuThuPage>();
 
-        // PHIẾU XUẤT CỦA THÀNH
         services.AddTransient<Views.PhieuXuatViews.PhieuXuatPage>();
         services.AddTransient<Views.PhieuXuatViews.ThemPhieuXuatWindow>();
         services.AddTransient<Views.PhieuXuatViews.CapNhatPhieuXuatWindow>();
         services.AddTransient<Views.PhieuXuatViews.TraCuuPhieuXuatWindow>();
 
-        // ĐƠN VỊ TÍNH CỦA THÀNH
         services.AddTransient<Views.DonViTinhViews.DonViTinhPage>();
         services.AddTransient<Views.DonViTinhViews.ThemDonViTinhWindow>();
         services.AddTransient<Views.DonViTinhViews.CapNhatDonViTinhWindow>();
@@ -114,7 +111,7 @@ public static class ApplicationServiceExtensions
 
         services.AddTransient<ViewModels.PhieuThuViewModels.PhieuThuPageViewModel>();
 
-        // MẶT HÀNG CỦA THÀNH
+        // PHIẾU XUẤT CỦA THÀNH
         services.AddTransient<ViewModels.PhieuXuatViewModels.PhieuXuatPageViewModel>();
         services.AddTransient<ViewModels.PhieuXuatViewModels.ThemPhieuXuatWindowViewModel>();
         services.AddTransient<Func<int, ViewModels.PhieuXuatViewModels.CapNhatPhieuXuatWindowViewModel>>(px => phieuXuatId => 

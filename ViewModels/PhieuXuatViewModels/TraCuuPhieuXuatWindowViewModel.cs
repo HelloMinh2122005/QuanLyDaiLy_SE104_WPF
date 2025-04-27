@@ -123,6 +123,17 @@ namespace QuanLyDaiLy.ViewModels.PhieuXuatViewModels
             }
         }
 
+        private Quan _selectedQuans = new();
+        public Quan SelectedQuans
+        {
+            get => _selectedQuans;
+            set
+            {
+                _selectedQuans = value;
+                OnPropertyChanged();
+            }
+        }
+
         private DateTime _ngayTiepNhanFrom;
         public DateTime NgayTiepNhanFrom
         {
@@ -321,7 +332,7 @@ namespace QuanLyDaiLy.ViewModels.PhieuXuatViewModels
             }
         }
 
-        private DaiLy _selectedDaiLies = new DaiLy();
+        private DaiLy _selectedDaiLies = new();
         public DaiLy SelectedDaiLies
         {
             get => _selectedDaiLies;
@@ -332,7 +343,7 @@ namespace QuanLyDaiLy.ViewModels.PhieuXuatViewModels
             }
         }
 
-        private LoaiDaiLy _selectedLoaiDaiLies = new LoaiDaiLy();
+        private LoaiDaiLy _selectedLoaiDaiLies = new();
         public LoaiDaiLy SelectedLoaiDaiLies
         {
             get => _selectedLoaiDaiLies;
@@ -341,20 +352,9 @@ namespace QuanLyDaiLy.ViewModels.PhieuXuatViewModels
                 _selectedLoaiDaiLies = value;
                 OnPropertyChanged();
             }
-        }
+        }       
 
-        private Quan _selectedQuans = new Quan();
-        public Quan SelectedQuans
-        {
-            get => _selectedQuans;
-            set
-            {
-                _selectedQuans = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private MatHang _selectedMatHangXuats = new MatHang();
+        private MatHang _selectedMatHangXuats = new();
         public MatHang SelectedMatHangXuats
         {
             get => _selectedMatHangXuats;
@@ -365,13 +365,35 @@ namespace QuanLyDaiLy.ViewModels.PhieuXuatViewModels
             }
         }
 
-        private DonViTinh _selectedDonViTinhs = new DonViTinh();
+        private string _tenMatHang = string.Empty;
+        public string TenMatHang
+        {
+            get => _tenMatHang;
+            set
+            {
+                _tenMatHang = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private DonViTinh _selectedDonViTinhs = new();
         public DonViTinh SelectedDonViTinhs
         {
             get => _selectedDonViTinhs;
             set
             {
                 _selectedDonViTinhs = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _tenDonViTinh = string.Empty;
+        public string TenDonViTinh
+        {
+            get => _tenDonViTinh;
+            set
+            {
+                _tenDonViTinh = value;
                 OnPropertyChanged();
             }
         }
@@ -407,7 +429,7 @@ namespace QuanLyDaiLy.ViewModels.PhieuXuatViewModels
                 var listDaiLy = await _daiLyService.GetAllDaiLy();
                 var listLoaiDaiLy = await _loaiDaiLyService.GetAllLoaiDaiLy();
                 var listQuan = await _quanService.GetAllQuan();
-                var listMatHangXuat = await _matHangService.GetAllMatHang();
+                var listMatHang = await _matHangService.GetAllMatHang();
                 var listDonViTinh = await _donViTinhService.GetAllDonViTinh();
 
                 LoaiDaiLies.Clear();
@@ -421,7 +443,7 @@ namespace QuanLyDaiLy.ViewModels.PhieuXuatViewModels
                 LoaiDaiLies = [.. listLoaiDaiLy];
                 DaiLies = [.. listDaiLy];
                 Quans = [.. listQuan];
-                MatHangXuats = [.. listMatHangXuat];
+                MatHangXuats = [.. listMatHang];
                 DonViTinhs = [.. listDonViTinh];
             }
             catch (Exception ex)
