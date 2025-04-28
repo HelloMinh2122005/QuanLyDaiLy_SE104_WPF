@@ -15,6 +15,7 @@
             <RowDefinition Height="15*" />
             <RowDefinition Height="5*" />
             <RowDefinition Height="80*" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <TextBlock
@@ -150,6 +151,37 @@
                         Header="Số lượng tồn" />
                 </DataGrid.Columns>
             </DataGrid>
+        </Border>
+
+        <Border Grid.Row="3" Style="{StaticResource PaginationBorder}">
+            <StackPanel
+                HorizontalAlignment="Right"
+                VerticalAlignment="Stretch"
+                Orientation="Horizontal">
+                <Button
+                    Content="← Trang trước"
+                    Style="{StaticResource BackForwardButtonStyle}"
+                    Visibility="Visible" />
+                <Border
+                    Width="1"
+                    Margin="4,0"
+                    Background="#E0E0E0"
+                    Visibility="Visible" />
+                <Button Content="1" Style="{StaticResource PageButtonUnSelectedStyle}" />
+                <Button Content="2" Style="{StaticResource PageButtonSelectedStyle}" />
+                <Button Content="3" Style="{StaticResource PageButtonUnSelectedStyle}" />
+                <Button Content="4" Style="{StaticResource PageButtonUnSelectedStyle}" />
+                <Button Content="5" Style="{StaticResource PageButtonUnSelectedStyle}" />
+                <Button Content="6" Style="{StaticResource PageButtonUnSelectedStyle}" />
+                <Border
+                    Width="1"
+                    Margin="4,0"
+                    Background="#E0E0E0" />
+                <Button
+                    Content="Trang sau →"
+                    Style="{StaticResource BackForwardButtonStyle}"
+                    Visibility="Visible" />
+            </StackPanel>
         </Border>
     </Grid>
 </Page>
