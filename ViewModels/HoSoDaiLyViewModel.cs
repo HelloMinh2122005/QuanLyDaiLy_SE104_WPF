@@ -198,7 +198,7 @@ namespace QuanLyDaiLy.ViewModels
                 return;
             }
 
-            var soLuongDaiLyTrongQuan = await _quanService.GetSoLuongDaiLyTrongQuan(SelectedQuan.MaQuan);
+            var soLuongDaiLyTrongQuan = SelectedQuan.DsDaiLy.Count;
             var thamSo = await _thamSoService.GetThamSo();
             var soLuongDaiLyToiDaTrongQuan = thamSo.SoLuongDaiLyToiDa;
 

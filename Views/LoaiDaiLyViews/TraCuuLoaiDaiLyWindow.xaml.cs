@@ -1,4 +1,5 @@
-﻿using System;
+﻿using QuanLyDaiLy.ViewModels.LoaiDaiLyViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,9 +20,10 @@ namespace QuanLyDaiLy.Views.LoaiDaiLyViews
     /// </summary>
     public partial class TraCuuLoaiDaiLyWindow : Window
     {
-        public TraCuuLoaiDaiLyWindow()
+        public TraCuuLoaiDaiLyWindow(TraCuuLoaiDaiLyWindowViewModel vm)
         {
             InitializeComponent();
+            DataContext = vm;
         }
     }
 }
