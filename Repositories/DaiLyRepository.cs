@@ -34,14 +34,7 @@ namespace QuanLyDaiLy.Repositories
             return await _context.DsDaiLy
                 .CountAsync(d => d.NgayTiepNhan <= endDate);
         }
-        // Trả về Dictionary<MaLoaiDaiLy, Count>
-        public async Task<Dictionary<int, int>> GetCountsGroupedByLoaiAsync(int month, int year)
-        {
-            return await _context.DsDaiLy
-                .Where(d => d.NgayTiepNhan.Month == month && d.NgayTiepNhan.Year == year) // Lọc theo tháng và năm
-                .GroupBy(d => d.MaLoaiDaiLy) // Nhóm theo loại đại lý
-                .ToDictionaryAsync(g => g.Key, g => g.Count()); // Đếm số lượng đại lý cho từng loại
-        }
+
 
         public async Task<List<DaiLy>> GetDaiLysByIdsAsync(IEnumerable<int> ids)
         {
