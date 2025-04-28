@@ -3,6 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:fa="http://schemas.fontawesome.io/icons/"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="MainWindow"
     Background="#FFFFFF"
@@ -77,8 +78,8 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition x:Name="NavColumn" Width="65" />
             <ColumnDefinition Width="328*" />
-            <ColumnDefinition Width="37*"/>
-            <ColumnDefinition Width="365*"/>
+            <ColumnDefinition Width="37*" />
+            <ColumnDefinition Width="365*" />
         </Grid.ColumnDefinitions>
 
         <!--  Navigation Rail/Drawer  -->
@@ -129,72 +130,114 @@
                 <StackPanel Grid.Row="1" Margin="0,20,0,0">
                     <RadioButton
                         Checked="RadioButton_Checked"
-                        Content="📊   Bảng điều khiển"
                         GroupName="NavGroup"
                         IsChecked="True"
                         Style="{StaticResource NavButtonStyle}"
-                        Tag="Dashboard" />
+                        Tag="Dashboard">
+                        <StackPanel Orientation="Horizontal">
+                            <fa:FontAwesome Margin="3,0,10,0" Icon="Dashboard" />
+                            <TextBlock Text="Bảng điều khiển" />
+                        </StackPanel>
+                    </RadioButton>
                     <RadioButton
                         Checked="RadioButton_Checked"
-                        Content="🏠   Đại lý"
                         GroupName="NavGroup"
                         Style="{StaticResource NavButtonStyle}"
-                        Tag="DaiLy" />
+                        Tag="DaiLy">
+                        <StackPanel Orientation="Horizontal">
+                            <fa:FontAwesome Margin="3,0,10,0" Icon="Home" />
+                            <TextBlock Text="Đại lý" />
+                        </StackPanel>
+                    </RadioButton>
                     <RadioButton
                         Checked="RadioButton_Checked"
-                        Content="🕵️‍♂️   Loại đại lý"
                         GroupName="NavGroup"
                         Style="{StaticResource NavButtonStyle}"
-                        Tag="LoaiDaiLy" />
+                        Tag="LoaiDaiLy">
+                        <StackPanel Orientation="Horizontal">
+                            <fa:FontAwesome Margin="3,0,10,0" Icon="Tags" />
+                            <TextBlock Text="Loại đại lý" />
+                        </StackPanel>
+                    </RadioButton>
                     <RadioButton
                         Checked="RadioButton_Checked"
-                        Content="📍   Quận"
                         GroupName="NavGroup"
                         Style="{StaticResource NavButtonStyle}"
-                        Tag="Quan" />
+                        Tag="Quan">
+                        <StackPanel Orientation="Horizontal">
+                            <fa:FontAwesome Margin="7,0,15,0" Icon="MapMarker" />
+                            <TextBlock Text="Quận" />
+                        </StackPanel>
+                    </RadioButton>
                     <RadioButton
                         Checked="RadioButton_Checked"
-                        Content="📦   Mặt hàng"
                         GroupName="NavGroup"
                         Style="{StaticResource NavButtonStyle}"
-                        Tag="MatHang" />
+                        Tag="MatHang">
+                        <StackPanel Orientation="Horizontal">
+                            <fa:FontAwesome Margin="3,0,10,0" Icon="Cubes" />
+                            <TextBlock Text="Mặt hàng" />
+                        </StackPanel>
+                    </RadioButton>
                     <RadioButton
                         Checked="RadioButton_Checked"
-                        Content="💰   Phiếu thu"
                         GroupName="NavGroup"
                         Style="{StaticResource NavButtonStyle}"
-                        Tag="PhieuThu" />
+                        Tag="PhieuThu">
+                        <StackPanel Orientation="Horizontal">
+                            <fa:FontAwesome Margin="3,0,10,0" Icon="Money" />
+                            <TextBlock Text="Phiếu thu" />
+                        </StackPanel>
+                    </RadioButton>
                     <RadioButton
                         Checked="RadioButton_Checked"
-                        Content="📄   Phiếu xuất"
                         GroupName="NavGroup"
                         Style="{StaticResource NavButtonStyle}"
-                        Tag="PhieuXuat" />
+                        Tag="PhieuXuat">
+                        <StackPanel Orientation="Horizontal">
+                            <fa:FontAwesome Margin="3,0,10,0" Icon="FileText" />
+                            <TextBlock Text="Phiếu xuất" />
+                        </StackPanel>
+                    </RadioButton>
                     <RadioButton
                         Checked="RadioButton_Checked"
-                        Content="📈   Báo cáo chi tiết"
                         GroupName="NavGroup"
                         Style="{StaticResource NavButtonStyle}"
-                        Tag="BaoCao" />
+                        Tag="BaoCao">
+                        <StackPanel Orientation="Horizontal">
+                            <fa:FontAwesome Margin="3,0,10,0" Icon="LineChart" />
+                            <TextBlock Text="Báo cáo chi tiết" />
+                        </StackPanel>
+                    </RadioButton>
                     <RadioButton
                         Checked="RadioButton_Checked"
-                        Content="📏   Đơn vị tính"
                         GroupName="NavGroup"
                         Style="{StaticResource NavButtonStyle}"
-                        Tag="DonViTinh" />
+                        Tag="DonViTinh">
+                        <StackPanel Orientation="Horizontal">
+                            <fa:FontAwesome Margin="3,0,10,0" Icon="BalanceScale" />
+                            <TextBlock Text="Đơn vị tính" />
+                        </StackPanel>
+                    </RadioButton>
                     <RadioButton
                         Checked="RadioButton_Checked"
-                        Content="⚙️   Tham số"
                         GroupName="NavGroup"
                         Style="{StaticResource NavButtonStyle}"
-                        Tag="ThamSo" />
+                        Tag="ThamSo">
+                        <StackPanel Orientation="Horizontal">
+                            <fa:FontAwesome Margin="5,0,8,0" Icon="Cog" />
+                            <TextBlock Text="Tham số" />
+                        </StackPanel>
+                    </RadioButton>
                 </StackPanel>
 
                 <Border Grid.Row="2">
-                    <Button
-                        HorizontalAlignment="Stretch"
-                        Content="👤  Phan Đình Minh"
-                        Style="{StaticResource ProfileButtonStyle}" />
+                    <Button HorizontalAlignment="Stretch" Style="{StaticResource ProfileButtonStyle}">
+                        <StackPanel Orientation="Horizontal">
+                            <fa:FontAwesome Margin="4,0,9,0" Icon="User" />
+                            <TextBlock Text="Phan Đình Minh" />
+                        </StackPanel>
+                    </Button>
                 </Border>
             </Grid>
         </Border>
@@ -1038,10 +1081,13 @@
         <Frame
             x:Name="MainContent"
             Grid.Column="1"
+            Grid.ColumnSpan="3"
+            VerticalAlignment="Stretch"
             Panel.ZIndex="1"
             ContentRendered="MainContent_ContentRendered"
             IsHitTestVisible="True"
-            NavigationUIVisibility="Hidden" Navigated="MainContent_Navigated" VerticalAlignment="Stretch" Grid.ColumnSpan="3" />
+            Navigated="MainContent_Navigated"
+            NavigationUIVisibility="Hidden" />
 
     </Grid>
 </Window>

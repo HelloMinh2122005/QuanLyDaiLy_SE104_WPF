@@ -59,6 +59,40 @@ namespace QuanLyDaiLy.ViewModels.MatHangViewModels
             }
         }
 
+        private Visibility _previousButtonVisibility = Visibility.Collapsed;
+        public Visibility PreviousButtonVisibility
+        {
+            get => _previousButtonVisibility;
+            set
+            {
+                _previousButtonVisibility = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private Visibility _nextButtonVisibility = Visibility.Visible;
+        public Visibility NextButtonVisibility
+        {
+            get => _nextButtonVisibility;
+            set
+            {
+                _nextButtonVisibility = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private Style _buttonStyleFirst;
+        public Style ButtonStyleFirst
+        {
+            get => _buttonStyleFirst;
+            set
+            {
+                _buttonStyleFirst = value;
+                OnPropertyChanged();
+            }
+        }
+
+
         // Commands
         public ICommand SearchMatHangCommand { get; }
         public ICommand AddMatHangCommand { get; }
