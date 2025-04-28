@@ -111,14 +111,33 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <!--  Existing content  -->
-                <Border
+                <!--  Logo with Title  -->
+                <StackPanel
                     Grid.Row="0"
-                    MaxWidth="100"
-                    MaxHeight="100"
-                    Margin="0,30,0,0"
-                    Background="White"
-                    CornerRadius="90"/>
+                    Margin="0,20,0,0"
+                    HorizontalAlignment="Left"
+                    Orientation="Horizontal">
+                    <Border
+                        MaxWidth="60"
+                        MaxHeight="60"
+                        Margin="0,0,0,8"
+                        Background="White"
+                        CornerRadius="90">
+                        <Image
+                            MaxWidth="70"
+                            MaxHeight="70"
+                            Source="pack://application:,,,/QuanLyDaiLy;component/Resources/uittogether-removebg-preview.png"
+                            Stretch="Uniform" />
+                    </Border>
+                    <TextBlock
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        FontFamily="Nunito"
+                        FontSize="19"
+                        FontWeight="Bold"
+                        Foreground="#1976D2"
+                        Text=" UIT Together" />
+                </StackPanel>
 
 
                 <StackPanel Grid.Row="1" Margin="0,20,0,0">
@@ -189,7 +208,7 @@
                         Style="{StaticResource NavButtonStyle}"
                         Tag="PhieuXuat">
                         <StackPanel Orientation="Horizontal">
-                            <fa:FontAwesome Margin="3,0,10,0" Icon="FileText" />
+                            <fa:FontAwesome Margin="3,0,11,0" Icon="FileText" />
                             <TextBlock Text="Phiếu xuất" />
                         </StackPanel>
                     </RadioButton>
@@ -219,7 +238,7 @@
                         Style="{StaticResource NavButtonStyle}"
                         Tag="ThamSo">
                         <StackPanel Orientation="Horizontal">
-                            <fa:FontAwesome Margin="5,0,8,0" Icon="Cog" />
+                            <fa:FontAwesome Margin="5,0,10,0" Icon="Cog" />
                             <TextBlock Text="Tham số" />
                         </StackPanel>
                     </RadioButton>
