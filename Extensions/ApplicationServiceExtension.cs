@@ -56,6 +56,9 @@ public static class ApplicationServiceExtensions
         services.AddTransient<Views.DashboardViews.DashboardPage>();
 
         services.AddTransient<Views.LoaiDaiLyViews.LoaiDaiLyPage>();
+        services.AddTransient<Views.LoaiDaiLyViews.ThemLoaiDaiLyWindow>();
+        services.AddTransient<Views.LoaiDaiLyViews.CapNhatLoaiDaiLyWindow>();
+        services.AddTransient<Views.LoaiDaiLyViews.TraCuuLoaiDaiLyWindow>();
 
         services.AddTransient<Views.QuanViews.QuanPage>();
         services.AddTransient<Views.QuanViews.ThemQuanWindow>();
@@ -89,6 +92,14 @@ public static class ApplicationServiceExtensions
         services.AddTransient<ViewModels.DashboardViewModels.DashboardPageViewModel>();
 
         services.AddTransient<ViewModels.LoaiDaiLyViewModels.LoaiDaiLyPageViewModel>();
+        services.AddTransient<ViewModels.LoaiDaiLyViewModels.ThemLoaiDaiLyViewModel>();
+        services.AddTransient<Func<int, ViewModels.LoaiDaiLyViewModels.CapNhatLoaiDaiLyViewModel>>(sp => loaiDaiLyId =>
+            new ViewModels.LoaiDaiLyViewModels.CapNhatLoaiDaiLyViewModel(
+                sp.GetRequiredService<ILoaiDaiLyService>(),
+                loaiDaiLyId
+            )
+        );
+        services.AddTransient<ViewModels.LoaiDaiLyViewModels.TraCuuLoaiDaiLyWindowViewModel>();
 
         services.AddTransient<ViewModels.QuanViewModels.QuanPageViewModel>();
         services.AddTransient<ViewModels.QuanViewModels.ThemQuanViewModel>();
@@ -115,6 +126,7 @@ public static class ApplicationServiceExtensions
         services.AddTransient<ViewModels.PhieuThuViewModels.TraCuuPhieuThuWindowViewModel>();
 
 
+        // PHIẾU XUẤT CỦA THÀNH
         services.AddTransient<ViewModels.PhieuXuatViewModels.PhieuXuatPageViewModel>();
         services.AddTransient<ViewModels.PhieuXuatViewModels.ThemPhieuXuatWindowViewModel>();
         services.AddTransient<Func<int, ViewModels.PhieuXuatViewModels.CapNhatPhieuXuatWindowViewModel>>(px => phieuXuatId =>

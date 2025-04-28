@@ -266,24 +266,76 @@ namespace QuanLyDaiLy.ViewModels.PhieuXuatViewModels
             }
         }
 
-        private void ThemMatHang()
+        // Cập nhật danh sách available cho tất cả các dòng
+        private void UpdateAvailableLists()
         {
-            if (_danhSachMatHang.Count != 0)
+            var selectedIds = DanhSachMatHangPhieuXuat.Select(r => r.SelectedMatHang.MaMatHang).ToHashSet();
+            foreach (var row in DanhSachMatHangPhieuXuat)
             {
-                SelectedMatHangPhieuXuat = null!;
-
-                var newItem = new DisplayMatHangPhieuXuat(_danhSachMatHang);
-                newItem.ThanhTienChanged += (s, e) => CalculateTongTien();
-
-                DanhSachMatHangPhieuXuat.Add(newItem);
-                _danhSachMatHangDaChon.Add(_danhSachMatHang.First());
-                _danhSachMatHang.RemoveAt(0);
-            }
-            else
-            {
-                MessageBox.Show("Đã nhập đầy đủ mặt hàng");
+                var own = row.SelectedMatHang;
+                var available = _danhSachMatHang
+                    .Where(m => !selectedIds.Contains(m.MaMatHang))
+                    .Concat(new[] { own })
+                    .ToList();
+                row.DanhSachMatHang = new ObservableCollection<MatHang>(available);
             }
         }
+
+        //private void ThemMatHang()
+        //{
+        //    if (_danhSachMatHang.Count != 0)
+        //    {
+        //        SelectedMatHangPhieuXuat = null!;
+
+        //        var newItem = new DisplayMatHangPhieuXuat(_danhSachMatHang);
+        //        newItem.ThanhTienChanged += (s, e) => CalculateTongTien();
+
+        //        DanhSachMatHangPhieuXuat.Add(newItem);
+        //        _danhSachMatHangDaChon.Add(_danhSachMatHang.First());
+        //        _danhSachMatHang.RemoveAt(0);
+        //    }
+        //    else
+        //    {
+        //        MessageBox.Show("Đã nhập đầy đủ mặt hàng");
+        //    }
+        //}
+
+        private void ThemMatHang()
+        {
+            var available = new List<MatHang>(_danhSachMatHang);
+            if (!available.Any())
+            {
+                MessageBox.Show("Đã nhập đầy đủ mặt hàng", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+            var newItem = new DisplayMatHangPhieuXuat(available);
+            newItem.ThanhTienChanged += (s, e) => CalculateTongTien();
+
+            DanhSachMatHangPhieuXuat.Add(newItem);
+            _danhSachMatHang.Remove(newItem.SelectedMatHang);
+            _danhSachMatHangDaChon.Add(newItem.SelectedMatHang);
+
+            UpdateAvailableLists();
+            CalculateTongTien();
+        }
+        //private void ThemMatHang()
+        //{
+        //    var available = new List<MatHang>(_danhSachMatHang);
+        //    if (available.Count == 0)
+        //    {
+        //        MessageBox.Show("Đã nhập đầy đủ mặt hàng", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+        //        return;
+        //    }
+
+        //    var newItem = new DisplayMatHangPhieuXuat(available, DanhSachMatHangPhieuXuat);
+        //    newItem.ThanhTienChanged += (s, e) => CalculateTongTien();
+
+        //    DanhSachMatHangPhieuXuat.Add(newItem);
+        //    _danhSachMatHangDaChon.Add(newItem.SelectedMatHang);
+        //    _danhSachMatHang.Remove(newItem.SelectedMatHang);
+
+        //    CalculateTongTien();
+        //}
 
         private void XoaMatHang()
         {
@@ -329,7 +381,7 @@ namespace QuanLyDaiLy.ViewModels.PhieuXuatViewModels
                 _danhSachMatHang = [.. (await _matHangService.GetAllMatHang())];
                 var listDaiLy = await _daiLyService.GetAllDaiLy();
                 DaiLies = [.. listDaiLy];
-                
+
 
                 DanhSachMatHangPhieuXuat.Clear();
 
@@ -344,12 +396,56 @@ namespace QuanLyDaiLy.ViewModels.PhieuXuatViewModels
                     });
                 }
 
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 MessageBox.Show($"Có lỗi xảy ra khi tải dữ liệu: {ex.Message}",
                     "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+
+        // Chỉ phần LoadDataAsync với sửa dòng Add
+        //private async Task LoadDataAsync()
+        //{
+        //    try
+        //    {
+        //        MaPhieuXuat = _maPhieuXuatPassed.ToString();
+        //        var existingPhieuXuat = await _phieuXuatService.GetPhieuXuatById(_maPhieuXuatPassed);
+        //        SelectedDaiLy = existingPhieuXuat.DaiLy;
+        //        NgayLap = existingPhieuXuat.NgayLapPhieu;
+        //        TongTien = existingPhieuXuat.TongTriGia;
+
+        //        // Lấy danh sách nguồn
+        //        _danhSachMatHang = new List<MatHang>(await _matHangService.GetAllMatHang());
+        //        var listDaiLy = await _daiLyService.GetAllDaiLy();
+        //        DaiLies = new ObservableCollection<DaiLy>(listDaiLy);
+
+        //        DanhSachMatHangPhieuXuat.Clear();
+        //        var listChiTietPhieuXuat = await _phieuXuatChiTietService.GetChiTietPhieuXuatByPhieuXuatId(_maPhieuXuatPassed);
+        //        foreach (var chiTiet in listChiTietPhieuXuat)
+        //        {
+        //            // Sử dụng constructor mới để chặn duplicate
+        //            var item = new DisplayMatHangPhieuXuat(_danhSachMatHang, DanhSachMatHangPhieuXuat)
+        //            {
+        //                SelectedMatHang = await _matHangService.GetMatHangById(chiTiet.MaMatHang),
+        //                SoLuongXuat = chiTiet.SoLuongXuat,
+        //                DonGiaXuat = chiTiet.DonGia
+        //            };
+        //            item.ThanhTienChanged += (s, e) => CalculateTongTien();
+
+        //            DanhSachMatHangPhieuXuat.Add(item);
+        //            // Cập nhật nguồn để loại ra mặt hàng đã load
+        //            _danhSachMatHang.Remove(item.SelectedMatHang);
+        //        }
+
+        //        CalculateTongTien();
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        MessageBox.Show($"Có lỗi xảy ra khi tải dữ liệu: {ex.Message}",
+        //            "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+        //    }
+        //}
 
         private async Task UpdateTien()
         {

@@ -290,23 +290,56 @@ namespace QuanLyDaiLy.ViewModels.PhieuXuatViewModels
             _ = LoadDataAsync();
         }
 
+        private void UpdateAvailableLists()
+        {
+            var selectedIds = DanhSachMatHangPhieuXuat.Select(r => r.SelectedMatHang.MaMatHang).ToHashSet();
+            foreach (var row in DanhSachMatHangPhieuXuat)
+            {
+                var own = row.SelectedMatHang;
+                var available = _danhSachMatHang
+                    .Where(m => !selectedIds.Contains(m.MaMatHang))
+                    .Concat(new[] { own })
+                    .ToList();
+                row.DanhSachMatHang = new ObservableCollection<MatHang>(available);
+            }
+        }
+
+        //private void ThemMatHang()
+        //{
+        //    if (_danhSachMatHang.Any())
+        //    {
+        //        SelectedMatHangPhieuXuat = null!;
+
+        //        var newItem = new DisplayMatHangPhieuXuat(_danhSachMatHang);
+        //        newItem.ThanhTienChanged += (s, e) => CalculateTongTien();
+
+        //        DanhSachMatHangPhieuXuat.Add(newItem);
+        //        _danhSachMatHangDaChon.Add(_danhSachMatHang.First());
+        //        _danhSachMatHang.RemoveAt(0);
+        //    }
+        //    else
+        //    {
+        //        MessageBox.Show("Đã nhập đầy đủ mặt hàng");
+        //    }
+        //}
+
         private void ThemMatHang()
         {
-            if (_danhSachMatHang.Any())
+            var available = new List<MatHang>(_danhSachMatHang);
+            if (!available.Any())
             {
-                SelectedMatHangPhieuXuat = null!;
-
-                var newItem = new DisplayMatHangPhieuXuat(_danhSachMatHang);
-                newItem.ThanhTienChanged += (s, e) => CalculateTongTien();
-
-                DanhSachMatHangPhieuXuat.Add(newItem);
-                _danhSachMatHangDaChon.Add(_danhSachMatHang.First());
-                _danhSachMatHang.RemoveAt(0);
+                MessageBox.Show("Đã nhập đầy đủ mặt hàng", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
             }
-            else
-            {
-                MessageBox.Show("Đã nhập đầy đủ mặt hàng");
-            }
+            var newItem = new DisplayMatHangPhieuXuat(available);
+            newItem.ThanhTienChanged += (s, e) => CalculateTongTien();
+
+            DanhSachMatHangPhieuXuat.Add(newItem);
+            _danhSachMatHang.Remove(newItem.SelectedMatHang);
+            _danhSachMatHangDaChon.Add(newItem.SelectedMatHang);
+
+            UpdateAvailableLists();
+            CalculateTongTien();
         }
 
         private void XoaMatHang()
@@ -342,9 +375,9 @@ namespace QuanLyDaiLy.ViewModels.PhieuXuatViewModels
         // Load data 
         private async Task LoadDataAsync()
         {
-            _danhSachMatHang = [.. (await _matHangService.GetAllMatHang())];
+            _danhSachMatHang = new List<MatHang>(await _matHangService.GetAllMatHang());
             var listDaiLy = await _daiLyService.GetAllDaiLy();
-            DaiLies = [.. listDaiLy];
+            DaiLies = new ObservableCollection<DaiLy>(listDaiLy);
             if (DaiLies.Count > 0)
             {
                 SelectedDaiLy = DaiLies.First();

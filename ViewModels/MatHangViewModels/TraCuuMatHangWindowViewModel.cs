@@ -151,7 +151,7 @@ namespace QuanLyDaiLy.ViewModels.MatHangViewModels
                 if (isFilterEmpty)
                 {
                     var result = MessageBox.Show(
-                        "Liệt tay hay sao mà không nhập thông tin tìm kiếm.\nBạn có chắc muốn tiếp tục tra cứu không?",
+                        "Bạn chưa nhập thông tin tìm kiếm mặt hàng.\nBạn có chắc muốn tiếp tục tra cứu không?",
                         "Xác nhận",
                         MessageBoxButton.YesNo,
                         MessageBoxImage.Question);
