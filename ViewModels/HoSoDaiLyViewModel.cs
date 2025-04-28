@@ -247,7 +247,7 @@ namespace QuanLyDaiLy.ViewModels
             if (quyDinhSoLuongDaiLyToiDa == true)
             {
                 var soLuongDaiLyToiDaTrongQuan = thamSo.SoLuongDaiLyToiDa;
-                var soLuongDaiLyTrongQuan = await _quanService.GetSoLuongDaiLyTrongQuan(SelectedQuan.MaQuan);
+                var soLuongDaiLyTrongQuan = (await _quanService.GetQuanById(SelectedQuan.MaQuan)).DsDaiLy.Count;
                 if (soLuongDaiLyTrongQuan >= soLuongDaiLyToiDaTrongQuan)
                 {
                     MessageBox.Show("Quận đã đạt số lượng đại lý tối đa!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
