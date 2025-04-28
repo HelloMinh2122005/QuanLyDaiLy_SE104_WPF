@@ -12,6 +12,7 @@ namespace QuanLyDaiLy.Models
         public long DonGia { get; set; } = 0;
         public long ThanhTien { get; set; } = 0;
 
+
         // Navigation properties
         public PhieuXuat PhieuXuat { get; set; } = null!;
         public MatHang MatHang { get; set; } = null!;
