@@ -374,7 +374,7 @@
                                 FontWeight="Normal"
                                 Foreground="White "
                                 IsReadOnly="True"
-                                Text="{Binding TienNo}"
+                                Text="{Binding SoDienThoai}"
                                 TextAlignment="Left">
                                 <TextBox.Resources>
                                     <Style TargetType="{x:Type Border}">
@@ -426,7 +426,7 @@
                                 FontWeight="Normal"
                                 Foreground="White "
                                 IsReadOnly="True"
-                                Text="{Binding TienNo}"
+                                Text="{Binding Email}"
                                 TextAlignment="Left">
                                 <TextBox.Resources>
                                     <Style TargetType="{x:Type Border}">
@@ -453,16 +453,16 @@
                                 FontStyle="Normal"
                                 FontWeight="Medium"
                                 Foreground="#000000"
-                                Text="Tên loại đại lý" />
+                                Text="Tên đại lý" />
                             <!--  Tên loại đại lý ComboBox  -->
                             <ComboBox
                                 Grid.Row="1"
-                                ItemsSource="{Binding LoaiDaiLies}"
-                                SelectedItem="{Binding SelectedLoaiDaiLy}"
+                                ItemsSource="{Binding DaiLies}"
+                                SelectedItem="{Binding SelectedDaiLy}"
                                 Style="{StaticResource StyledComboBox}">
                                 <ComboBox.ItemTemplate>
                                     <DataTemplate>
-                                        <TextBlock Text="{Binding TenLoaiDaiLy}" />
+                                        <TextBlock Text="{Binding TenDaiLy}" />
                                     </DataTemplate>
                                 </ComboBox.ItemTemplate>
                             </ComboBox>
@@ -517,7 +517,7 @@
                             FontWeight="Normal"
                             Foreground="White "
                             IsReadOnly="True"
-                            Text="{Binding TienNo}"
+                            Text="{Binding QuyDinhTienThuTienNo}"
                             TextAlignment="Left">
                             <TextBox.Resources>
                                 <Style TargetType="{x:Type Border}">
@@ -555,7 +555,7 @@
                             FontWeight="Normal"
                             Foreground="White "
                             IsReadOnly="True"
-                            Text="{Binding TienNo}"
+                            Text="{Binding NoDaiLy}"
                             TextAlignment="Left">
                             <TextBox.Resources>
                                 <Style TargetType="{x:Type Border}">
@@ -598,7 +598,7 @@
                             FontWeight="Normal"
                             Foreground="White "
                             IsReadOnly="True"
-                            Text="{Binding TienNo}"
+                            Text="{Binding DiaChi}"
                             TextAlignment="Left">
                             <TextBox.Resources>
                                 <Style TargetType="{x:Type Border}">
@@ -649,7 +649,7 @@
                             FontStyle="Normal"
                             FontWeight="Normal"
                             Foreground="#9A000000"
-                            SelectedDate="{Binding NgayTiepNhanFrom}">
+                            SelectedDate="{Binding NgayThuTien}">
 
                             <DatePicker.Resources>
                                 <Style TargetType="DatePickerTextBox">
@@ -791,7 +791,7 @@
                             FontStyle="Normal"
                             FontWeight="Normal"
                             Foreground="Black"
-                            Text="{Binding TenDaiLy}"
+                            Text="{Binding SoTienThu}"
                             TextAlignment="Left">
                             <TextBox.Resources>
                                 <Style TargetType="{x:Type Border}">
@@ -825,7 +825,7 @@
                     <Button
                         Width="250"
                         Background="#00AAFF"
-                        Command="{Binding TraCuuDaiLyCommand}"
+                        Command="{Binding LapPhieuThuTienCommand}"
                         Content="💰 Lập Phiếu thu tiền"
                         FontFamily="Roboto"
                         FontSize="19"

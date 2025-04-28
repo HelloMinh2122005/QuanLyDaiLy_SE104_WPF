@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using QuanLyDaiLy.ViewModels.PhieuThuViewModels;
 
 namespace QuanLyDaiLy.Views.PhieuThuViews
 {
@@ -19,9 +20,15 @@ namespace QuanLyDaiLy.Views.PhieuThuViews
     /// </summary>
     public partial class TraCuuPhieuThuTienWindow : Window
     {
-        public TraCuuPhieuThuTienWindow()
+        public TraCuuPhieuThuTienWindow(TraCuuPhieuThuWindowViewModel vm)
         {
             InitializeComponent();
+            DataContext = vm;
+        }
+
+        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
         }
     }
 }

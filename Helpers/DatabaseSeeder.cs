@@ -13,7 +13,7 @@ namespace QuanLyDaiLy.Helpers
             SeedLoaiDaiLy(modelBuilder);
             SeedDaiLy(modelBuilder);
             SeedMatHang(modelBuilder);
-            SeedPhieuXuat(modelBuilder);  
+            SeedPhieuXuat(modelBuilder);
             SeedChiTietPhieuXuat(modelBuilder);
             SeedPhieuThu(modelBuilder);
         }
@@ -21,7 +21,7 @@ namespace QuanLyDaiLy.Helpers
         private static void SeedThamSo(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<ThamSo>().HasData(
-                new ThamSo { Id = 1, SoLuongDaiLyToiDa = 4, QuyDinhTienThuTienNo = true }
+                new ThamSo { Id = 1, SoLuongDaiLyToiDa = 4, QuyDinhSoLuongDaiLyToiDa = true, QuyDinhTienThuTienNo = true }
             );
         }
 

@@ -39,7 +39,7 @@
 
         <Border
             Grid.Row="1"
-            HorizontalAlignment="Stretch"
+            Width="1400"
             Margin="20"
             VerticalAlignment="Stretch"
             Background="White"
@@ -139,7 +139,7 @@
                                 FontStyle="Normal"
                                 Foreground="#555555"
                                 LineHeight="20"
-                                Text="Mỗi Quận chỉ tiếp nhận tối đa 4 Đại lý" />
+                                Text="{Binding SoLuongDaiLyToiDa, StringFormat='Mỗi Quận chỉ tiếp nhận tối đa {0} Đại lý'}" />
                         </StackPanel>
                     </Border>
 
@@ -187,7 +187,7 @@
                         HorizontalAlignment="Center"
                         VerticalContentAlignment="Center"
                         Cursor="Hand"
-                        IsChecked="True">
+                        IsChecked="{Binding QuyDinhSoLuongDaiLyToiDa}">
                         <ToggleButton.Resources>
                             <Style TargetType="Border">
                                 <Setter Property="CornerRadius" Value="30" />
@@ -276,7 +276,7 @@
                         HorizontalAlignment="Center"
                         VerticalContentAlignment="Center"
                         Cursor="Hand"
-                        IsChecked="False">
+                        IsChecked="{Binding QuyDinhTienThuTienNo}">
                         <ToggleButton.Resources>
                             <Style TargetType="Border">
                                 <Setter Property="CornerRadius" Value="30" />
