@@ -709,7 +709,7 @@
 
                     <DataGridTextColumn
                         Width="*"
-                        Binding="{Binding DanhSachDaiLy.Count}"
+                        Binding="{Binding DsDaiLy.Count}"
                         Header="Số lượng đại lý">
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">

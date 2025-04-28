@@ -334,7 +334,7 @@
                     <Button
                         Width="250"
                         Background="#00AAFF"
-                        Command="{Binding TiepNhanQuanCommand}"
+                        Command="{Binding TiepNhanLoaiDaiLyCommand}"
                         Content="➕ Thêm Loại đại lý"
                         FontFamily="Roboto"
                         FontSize="19"
@@ -432,7 +432,7 @@
                     <Button
                         Width="250"
                         Background="#00AAFF"
-                        Command="{Binding QuanMoiCommand}"
+                        Command="{Binding LoaiDaiLyMoiCommand}"
                         Content="🔃 Loại đại lý mới"
                         FontFamily="Roboto"
                         FontSize="19"

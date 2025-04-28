@@ -8,6 +8,7 @@ using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Input;
 using Microsoft.Extensions.DependencyInjection;
+using QuanLyDaiLy.Views;
 
 namespace QuanLyDaiLy.ViewModels.QuanViewModels
 {
@@ -77,7 +78,7 @@ namespace QuanLyDaiLy.ViewModels.QuanViewModels
             MessageBox.Show("Tải lại danh sách thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
-        private void OpenSearchQuanWindow()
+/*        private void OpenSearchQuanWindow()
         {
             SelectedQuan = null!;
             
@@ -87,6 +88,26 @@ namespace QuanLyDaiLy.ViewModels.QuanViewModels
                 viewModel.DataChanged += async (sender, e) => await LoadData();
             }
             searchQuanWindow.Show();
+        }*/
+
+        private void OpenSearchQuanWindow()
+        {
+            SelectedQuan = null!;
+
+            var traCuuDaiLyWindow = _serviceProvider.GetRequiredService<TraCuuQuanWindow>();
+
+            if (traCuuDaiLyWindow.DataContext is TraCuuQuanWindowViewModel viewModel)
+            {
+                viewModel.SearchCompleted += (sender, searchResults) =>
+                {
+                    if (searchResults.Count > 0)
+                    {
+                        DanhSachQuan = searchResults;
+                    }
+                };
+            }
+
+            traCuuDaiLyWindow.Show();
         }
 
         // Open add window
@@ -145,11 +166,12 @@ namespace QuanLyDaiLy.ViewModels.QuanViewModels
 
             try
             {
-                var soLuongDaiLy = await _quanService.GetSoLuongDaiLyTrongQuan(SelectedQuan.MaQuan);
-                if (soLuongDaiLy > 0)
+                var soLuongDaiLyTrongQuan = SelectedQuan.DsDaiLy.Count;
+
+                if (soLuongDaiLyTrongQuan > 0)
                 {
                     var result = MessageBox.Show(
-                        $"Quận '{SelectedQuan.TenQuan}' đang chứa {soLuongDaiLy} đại lý. Bạn có chắc chắn muốn xóa quận này?",
+                        $"Quận '{SelectedQuan.TenQuan}' đang chứa {soLuongDaiLyTrongQuan} đại lý. Bạn có chắc chắn muốn xóa quận này?",
                         "Xác nhận xóa",
                         MessageBoxButton.YesNo,
                         MessageBoxImage.Question);
