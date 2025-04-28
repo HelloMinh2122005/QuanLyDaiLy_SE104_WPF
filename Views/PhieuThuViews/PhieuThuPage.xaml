@@ -369,7 +369,7 @@
                 </Border>
 
                 <!--  Sửa Button  -->
-                <Border
+                <!--<Border
                     Width="185"
                     Height="40"
                     Margin="10,0,0,0"
@@ -470,7 +470,7 @@
                             </Style>
                         </Button.Style>
                     </Button>
-                </Border>
+                </Border>-->
 
                 <!--  Xóa Button  -->
                 <Border

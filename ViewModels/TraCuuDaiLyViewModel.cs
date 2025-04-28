@@ -32,16 +32,10 @@ namespace QuanLyDaiLy.ViewModels
             TraCuuDaiLyCommand = new RelayCommand(async () => await SearchDaiLy());
             CloseCommand = new RelayCommand(CloseWindow);
 
-            // Set default date ranges for searches
-            NgayTiepNhanFrom = DateTime.Now.AddMonths(-6);
-            NgayTiepNhanTo = DateTime.Now;
-            NgayLapPhieuXuatFrom = DateTime.Now.AddMonths(-3);
-            NgayLapPhieuXuatTo = DateTime.Now;
-
             _ = LoadDataAsync();
         }
 
-        // Properties for binding
+        #region
         private string _maDaiLy = string.Empty;
         public string MaDaiLy
         {
@@ -144,7 +138,7 @@ namespace QuanLyDaiLy.ViewModels
         }
 
         // Date range properties
-        private DateTime _ngayTiepNhanFrom;
+        private DateTime _ngayTiepNhanFrom = DateTime.MinValue;
         public DateTime NgayTiepNhanFrom
         {
             get => _ngayTiepNhanFrom;
@@ -155,7 +149,7 @@ namespace QuanLyDaiLy.ViewModels
             }
         }
 
-        private DateTime _ngayTiepNhanTo;
+        private DateTime _ngayTiepNhanTo = DateTime.Now;
         public DateTime NgayTiepNhanTo
         {
             get => _ngayTiepNhanTo;
@@ -235,7 +229,7 @@ namespace QuanLyDaiLy.ViewModels
             }
         }
 
-        private DateTime _ngayLapPhieuXuatFrom;
+        private DateTime _ngayLapPhieuXuatFrom = DateTime.MinValue;
         public DateTime NgayLapPhieuXuatFrom
         {
             get => _ngayLapPhieuXuatFrom;
@@ -246,7 +240,7 @@ namespace QuanLyDaiLy.ViewModels
             }
         }
 
-        private DateTime _ngayLapPhieuXuatTo;
+        private DateTime _ngayLapPhieuXuatTo = DateTime.Now;
         public DateTime NgayLapPhieuXuatTo
         {
             get => _ngayLapPhieuXuatTo;
@@ -450,6 +444,7 @@ namespace QuanLyDaiLy.ViewModels
                 OnPropertyChanged();
             }
         }
+        #endregion
 
         // Commands
         public ICommand TraCuuDaiLyCommand { get; }
@@ -507,13 +502,73 @@ namespace QuanLyDaiLy.ViewModels
                 {
                     filteredResults = [.. filteredResults.Where(d => d.Email.Contains(Email))];
                 }
-                if (SelectedLoaiDaiLy.MaLoaiDaiLy != 0)
+                if (!string.IsNullOrEmpty(SelectedLoaiDaiLy.TenLoaiDaiLy))
                 {
                     filteredResults = [.. filteredResults.Where(d => d.MaLoaiDaiLy == SelectedLoaiDaiLy.MaLoaiDaiLy)];
                 }
-                if (SelectedQuan.MaQuan != 0)
+                if (!string.IsNullOrEmpty(SelectedQuan.TenQuan))
                 {
                     filteredResults = [.. filteredResults.Where(d => d.MaQuan == SelectedQuan.MaQuan)];
+                }
+                // Tìm kiếm theo ngày tiếp nhận (từ - đến)
+                if (NgayTiepNhanFrom != DateTime.MinValue && NgayTiepNhanTo != DateTime.MinValue)
+                {
+                    filteredResults = [.. filteredResults.Where(d => d.NgayTiepNhan >= NgayTiepNhanFrom && d.NgayTiepNhan <= NgayTiepNhanTo)];
+                }
+                // Tìm kiếm theo tiền nợ (từ - đến)
+                if (NoDaiLyFrom != 0 || NoDaiLyTo != long.MaxValue)
+                {
+                    filteredResults = [.. filteredResults.Where(d => d.TienNo >= NoDaiLyFrom && d.TienNo <= NoDaiLyTo)];
+                }
+                // Tìm kiếm theo nợ tối đa (từ - đến)
+                if (NoTheoToiDaLoaiDaiLyFrom != 0 || NoTheoToiDaLoaiDaiLyTo != int.MaxValue)
+                {
+                    filteredResults = [.. filteredResults.Where(d => d.LoaiDaiLy.NoToiDa >= NoTheoToiDaLoaiDaiLyFrom && d.LoaiDaiLy.NoToiDa <= NoTheoToiDaLoaiDaiLyTo)];
+                }
+                // Tìm kiếm theo mã phiếu xuất (từ - đến)
+                if (MaPhieuXuatFrom != 0 || MaPhieuXuatTo != int.MaxValue)
+                {
+                    filteredResults = [.. filteredResults.Where(d => d.DsPhieuXuat.Any(p => p.MaPhieuXuat >= MaPhieuXuatFrom && p.MaPhieuXuat <= MaPhieuXuatTo))];
+                }
+                // Tìm kiếm theo ngày lập phiếu xuất (từ - đến)
+                if (NgayLapPhieuXuatFrom != DateTime.MinValue && NgayLapPhieuXuatTo != DateTime.MinValue)
+                {
+                    filteredResults = [.. filteredResults.Where(d => d.DsPhieuXuat.Any(p => p.NgayLapPhieu >= NgayLapPhieuXuatFrom && p.NgayLapPhieu <= NgayLapPhieuXuatTo))];
+                }
+                // Tìm kiếm theo tổng giá trị phiếu xuất (từ - đến)
+                if (TongGiaTriPhieuXuatFrom != 0 || TongGiaTriPhieuXuatTo != long.MaxValue)
+                {
+                    filteredResults = [.. filteredResults.Where(d => d.DsPhieuXuat.Any(p => p.TongTriGia >= TongGiaTriPhieuXuatFrom && p.TongTriGia <= TongGiaTriPhieuXuatTo))];
+                }
+                // Tìm kiếm theo mặt hàng xuất
+                if (SelectedMatHangXuat.MaMatHang != 0)
+                {
+                    filteredResults = [.. filteredResults.Where(d => d.DsPhieuXuat.Any(p => p.DsChiTietPhieuXuat.Any(ct => ct.MatHang.MaMatHang == SelectedMatHangXuat.MaMatHang)))];
+                }
+                // Tìm kiếm theo đơn vị tính
+                if (SelectedDonViTinh.MaDonViTinh != 0)
+                {
+                    filteredResults = [.. filteredResults.Where(d => d.DsPhieuXuat.Any(p => p.DsChiTietPhieuXuat.Any(ct => ct.MatHang.MaDonViTinh == SelectedDonViTinh.MaDonViTinh)))];
+                }
+                // Tìm kiếm theo số lượng xuất (từ - đến)
+                if (SoLuongXuatCuaMatHangXuatFrom != 0 || SoLuongXuatCuaMatHangXuatTo != int.MaxValue)
+                {
+                    filteredResults = [.. filteredResults.Where(d => d.DsPhieuXuat.Any(p => p.DsChiTietPhieuXuat.Any(ct => ct.SoLuongXuat >= SoLuongXuatCuaMatHangXuatFrom && ct.SoLuongXuat <= SoLuongXuatCuaMatHangXuatTo)))];
+                }
+                // Tìm kiếm theo đơn giá xuất (từ - đến)
+                if (DonGiaXuatCuaMatHangXuatFrom != 0 || DonGiaXuatCuaMatHangXuatTo != long.MaxValue)
+                {
+                    filteredResults = [.. filteredResults.Where(d => d.DsPhieuXuat.Any(p => p.DsChiTietPhieuXuat.Any(ct => ct.DonGia >= DonGiaXuatCuaMatHangXuatFrom && ct.DonGia <= DonGiaXuatCuaMatHangXuatTo)))];
+                }
+                // Tìm kiếm theo thành tiền xuất (từ - đến)
+                if (ThanhTienCuaMatHangXuatFrom != 0 || ThanhTienCuaMatHangXuatTo != long.MaxValue)
+                {
+                    filteredResults = [.. filteredResults.Where(d => d.DsPhieuXuat.Any(p => p.DsChiTietPhieuXuat.Any(ct => ct.ThanhTien >= ThanhTienCuaMatHangXuatFrom && ct.ThanhTien <= ThanhTienCuaMatHangXuatTo)))];
+                }
+                // Tìm kiếm theo số lượng tồn (từ - đến)
+                if (SoLuongTonCuaMatHangXuatFrom != 0 || SoLuongTonCuaMatHangXuatTo != int.MaxValue)
+                {
+                    filteredResults = [.. filteredResults.Where(d => d.DsPhieuXuat.Any(p => p.DsChiTietPhieuXuat.Any(ct => ct.MatHang.SoLuongTon >= SoLuongTonCuaMatHangXuatFrom && ct.MatHang.SoLuongTon <= SoLuongTonCuaMatHangXuatTo)))];
                 }
 
                 SearchResults = [.. filteredResults];
