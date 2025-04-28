@@ -2013,9 +2013,10 @@
                                         </lvc:Axis.Separator>
                                     </lvc:Axis>
                                 </lvc:CartesianChart.AxisX>
-
+                                <!-- đã sửa chỗ này-->
                                 <lvc:CartesianChart.AxisY>
                                     <lvc:Axis
+                                        MinValue="0" 
                                         FontFamily="Nunito"
                                         FontSize="14"
                                         LabelFormatter="{Binding CurrencyFormatter}">

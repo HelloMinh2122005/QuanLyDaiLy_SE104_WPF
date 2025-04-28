@@ -211,17 +211,25 @@ namespace QuanLyDaiLy.ViewModels.DashboardViewModels
             // Lấy tháng/năm đang chọn
             int selectedMonth = GetSelectedMonthNumber(_pieChartMonth); // ví dụ từ "Tháng 4" => 4
             int selectedYear = _pieChartYear;
+            var endDate = new DateTime(selectedYear, selectedMonth,
+                DateTime.DaysInMonth(selectedYear, selectedMonth));
 
 
-
+            // 2. Lấy toàn bộ loại đại lý
             var listLoaiDaiLy = await _loaiDaiLyService.GetAllLoaiDaiLy();
-            var daiLyCounts = await _daiLyService.GetCountsGroupedByLoaiAsync(selectedMonth, selectedYear); // lấy count
+
+            // 3. Lấy toàn bộ đại lý từ khi tạo app
+            var allDaiLy = await _daiLyService.GetAllDaiLy();
+
+            // 4. Lọc đại lý có NgayTiepNhan <= endDate và nhóm theo loại
+            var daiLyCounts = allDaiLy
+                .Where(d => d.NgayTiepNhan <= endDate)
+                .GroupBy(d => d.MaLoaiDaiLy)
+                .ToDictionary(g => g.Key, g => g.Count());
 
 
-            // Đếm số lượng đại lý theo loại
-
+            // 5. Xây SeriesCollection cho PieChart
             DaiLyDistributionSeries = new SeriesCollection();
-
             foreach (var loai in listLoaiDaiLy)
             {
                 daiLyCounts.TryGetValue(loai.MaLoaiDaiLy, out int count);
@@ -232,12 +240,12 @@ namespace QuanLyDaiLy.ViewModels.DashboardViewModels
                     Values = new ChartValues<double> { count },
                     DataLabels = true,
                     LabelPoint = point => $"{point.Participation:P1}",
-                    Fill = RandomColorBrush(loai.MaLoaiDaiLy) // Hoặc bạn dùng theo màu riêng
+                    Fill = RandomColorBrush(loai.MaLoaiDaiLy)
                 });
-
-                OnPropertyChanged(nameof(DaiLyDistributionSeries));
-
             }
+
+            // 6. Notify UI
+            OnPropertyChanged(nameof(DaiLyDistributionSeries));
 
         }
 
@@ -337,6 +345,7 @@ namespace QuanLyDaiLy.ViewModels.DashboardViewModels
                     double tongThu = tongThuTheoDaiLy.ContainsKey(daiLy) ? tongThuTheoDaiLy[daiLy] : 0;
                     return new { daiLy.TenDaiLy, TienNo = tongXuat - tongThu };
                 })
+                .Where(d => d.TienNo >= 0)
                 .OrderByDescending(d => d.TienNo)
                 .Take(10)
                 .ToList();
@@ -479,16 +488,27 @@ namespace QuanLyDaiLy.ViewModels.DashboardViewModels
         private async Task UpdatePieChart()
         {
             // Lấy tháng/năm đang chọn
-            int selectedMonth = GetSelectedMonthNumber(PieChartMonth); // ví dụ: "Tháng 4" => 4
-            int selectedYear = PieChartYear;
+            int selectedMonth = GetSelectedMonthNumber(_pieChartMonth); // ví dụ từ "Tháng 4" => 4
+            int selectedYear = _pieChartYear;
+            var endDate = new DateTime(selectedYear, selectedMonth,
+                DateTime.DaysInMonth(selectedYear, selectedMonth));
 
-            // Lấy danh sách loại đại lý và số lượng từng loại trong tháng/năm
+
+            // 2. Lấy toàn bộ loại đại lý
             var listLoaiDaiLy = await _loaiDaiLyService.GetAllLoaiDaiLy();
-            var daiLyCounts = await _daiLyService.GetCountsGroupedByLoaiAsync(selectedMonth, selectedYear);
 
-            // Xoá và cập nhật lại dữ liệu cho biểu đồ
+            // 3. Lấy toàn bộ đại lý từ khi tạo app
+            var allDaiLy = await _daiLyService.GetAllDaiLy();
+
+            // 4. Lọc đại lý có NgayTiepNhan <= endDate và nhóm theo loại
+            var daiLyCounts = allDaiLy
+                .Where(d => d.NgayTiepNhan <= endDate)
+                .GroupBy(d => d.MaLoaiDaiLy)
+                .ToDictionary(g => g.Key, g => g.Count());
+
+
+            // 5. Xây SeriesCollection cho PieChart
             DaiLyDistributionSeries = new SeriesCollection();
-
             foreach (var loai in listLoaiDaiLy)
             {
                 daiLyCounts.TryGetValue(loai.MaLoaiDaiLy, out int count);
@@ -499,10 +519,11 @@ namespace QuanLyDaiLy.ViewModels.DashboardViewModels
                     Values = new ChartValues<double> { count },
                     DataLabels = true,
                     LabelPoint = point => $"{point.Participation:P1}",
-                    Fill = RandomColorBrush(loai.MaLoaiDaiLy) // Hoặc màu cố định
+                    Fill = RandomColorBrush(loai.MaLoaiDaiLy)
                 });
             }
 
+            // 6. Notify UI
             OnPropertyChanged(nameof(DaiLyDistributionSeries));
         }
 
@@ -601,6 +622,7 @@ namespace QuanLyDaiLy.ViewModels.DashboardViewModels
                     double tongThu = tongThuTheoDaiLy.ContainsKey(daiLy) ? tongThuTheoDaiLy[daiLy] : 0;
                     return new { daiLy.TenDaiLy, TienNo = tongXuat - tongThu };
                 })
+                .Where(d => d.TienNo >= 0)
                 .OrderByDescending(d => d.TienNo)
                 .Take(10)
                 .ToList();

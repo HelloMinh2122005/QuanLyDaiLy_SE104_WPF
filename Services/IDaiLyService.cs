@@ -11,7 +11,6 @@ namespace QuanLyDaiLy.Services
         Task DeleteDaiLy(int id);
         Task<DaiLy> GetDaiLyByTenDaiLy(string tenDaiLy);
         Task<int> GenerateAvailableId();
-        Task<Dictionary<int, int>> GetCountsGroupedByLoaiAsync(int month,int year);
         Task<List<DaiLy>> GetDaiLysByIdsAsync(IEnumerable<int> ids);
         Task<int> GetTotalDaiLyUpToMonthYear(int month, int year);
     }
