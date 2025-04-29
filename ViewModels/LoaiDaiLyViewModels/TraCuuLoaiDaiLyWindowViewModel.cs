@@ -1,68 +1,94 @@
 ﻿using QuanLyDaiLy.Commands;
 using QuanLyDaiLy.Models;
 using QuanLyDaiLy.Services;
-using QuanLyDaiLy.Views.QuanViews;
+using QuanLyDaiLy.Views.LoaiDaiLyViews;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Text;
+using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows;
-using System.Collections.ObjectModel;
-using System.DirectoryServices;
 
-namespace QuanLyDaiLy.ViewModels.QuanViewModels
+namespace QuanLyDaiLy.ViewModels.LoaiDaiLyViewModels
 {
-    public class TraCuuQuanWindowViewModel : INotifyPropertyChanged
+    public class TraCuuLoaiDaiLyWindowViewModel : INotifyPropertyChanged
     {
-        private readonly IQuanService _quanService;
+        private readonly ILoaiDaiLyService _loaiDaiLyService;
 
-        public TraCuuQuanWindowViewModel(IQuanService quanService)
+        public TraCuuLoaiDaiLyWindowViewModel(ILoaiDaiLyService loaiDaiLyService)
         {
-            _quanService = quanService;
+            _loaiDaiLyService = loaiDaiLyService;
 
             // Initialize commands
             CloseCommand = new RelayCommand(CloseWindow);
-            TraCuuQuanCommand = new RelayCommand(async () => await TraCuuQuan());
+            TraCuuLoaiDaiLyCommand = new RelayCommand(async () => await TraCuuLoaiDaiLy());
 
             _ = LoadDataAsync();
         }
 
         // Properties for binding
-        private string _maQuan = string.Empty;
-        public string MaQuan
+        private string _maLoaiDaiLy = string.Empty;
+        public string MaLoaiDaiLy
         {
-            get => _maQuan;
+            get => _maLoaiDaiLy;
             set
             {
-                _maQuan = value;
+                _maLoaiDaiLy = value;
                 OnPropertyChanged();
             }
         }
 
-        private string _tenQuan = string.Empty;
-        public string TenQuan
+        private string _tenLoaiDaiLy = string.Empty;
+        public string TenLoaiDaiLy
         {
-            get => _tenQuan;
+            get => _tenLoaiDaiLy;
             set
             {
-                _tenQuan = value;
+                _tenLoaiDaiLy = value;
                 OnPropertyChanged();
             }
         }
 
-        private ObservableCollection<Quan> _quans = [];
-        public ObservableCollection<Quan> Quans
+        private string _noDaiLyFrom = string.Empty;
+        public string NoDaiLyFrom
         {
-            get => _quans;
+            get => _noDaiLyFrom;
             set
             {
-                _quans = value;
+                _noDaiLyFrom = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private string _noDaiLyTo = string.Empty;
+        public string NoDaiLyTo
+        {
+            get => _noDaiLyTo;
+            set
+            {
+                _noDaiLyTo = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private ObservableCollection<LoaiDaiLy> _loaiDaiLies = [];
+        public ObservableCollection<LoaiDaiLy> LoaiDaiLies
+        {
+            get => _loaiDaiLies;
+            set
+            {
+                _loaiDaiLies = value;
                 OnPropertyChanged();
             }
         }
 
         // Search Results
-        private ObservableCollection<Quan> _searchResults = [];
-        public ObservableCollection<Quan> SearchResults
+        private ObservableCollection<LoaiDaiLy> _searchResults = [];
+        public ObservableCollection<LoaiDaiLy> SearchResults
         {
             get => _searchResults;
             set
@@ -74,22 +100,22 @@ namespace QuanLyDaiLy.ViewModels.QuanViewModels
 
         // Commands
         public ICommand CloseCommand { get; }
-        public ICommand TraCuuQuanCommand { get; }
+        public ICommand TraCuuLoaiDaiLyCommand { get; }
 
         private void CloseWindow()
         {
             DataChanged?.Invoke(this, EventArgs.Empty);
-            Application.Current.Windows.OfType<TraCuuQuanWindow>().FirstOrDefault()?.Close();
+            Application.Current.Windows.OfType<TraCuuLoaiDaiLyWindow>().FirstOrDefault()?.Close();
         }
 
         private async Task LoadDataAsync()
         {
             try
             {
-                var listQuan = await _quanService.GetAllQuan();
+                var listLoaiDaiLy = await _loaiDaiLyService.GetAllLoaiDaiLy();
 
-                Quans.Clear();
-                Quans = [.. listQuan];
+                LoaiDaiLies.Clear();
+                LoaiDaiLies = [.. listLoaiDaiLy];
             }
             catch (Exception ex)
             {
@@ -97,23 +123,38 @@ namespace QuanLyDaiLy.ViewModels.QuanViewModels
             }
         }
 
-        private async Task TraCuuQuan()
+        private async Task TraCuuLoaiDaiLy()
         {
             try
             {
-                var quans = await _quanService.GetAllQuan();
+                var loaiDaiLies = await _loaiDaiLyService.GetAllLoaiDaiLy();
 
-                ObservableCollection<Quan> filteredResults = [.. quans];
+                ObservableCollection<LoaiDaiLy> filteredResults = [.. loaiDaiLies];
 
-                if (!string.IsNullOrEmpty(MaQuan))
+                if (!string.IsNullOrEmpty(MaLoaiDaiLy))
                 {
-                    filteredResults = [.. filteredResults.Where(d => d.MaQuan.ToString().Contains(MaQuan))];
+                    filteredResults = [.. filteredResults.Where(d => d.MaLoaiDaiLy.ToString().Contains(MaLoaiDaiLy))];
                 }
-                if (!string.IsNullOrEmpty(TenQuan))
+                if (!string.IsNullOrEmpty(TenLoaiDaiLy))
                 {
-                    var ten = RemoveDiacritics(TenQuan.Trim().ToLower());
-                    filteredResults = [.. filteredResults.Where(d => RemoveDiacritics(d.TenQuan.ToLower()).Contains(ten))];
+                    var ten = RemoveDiacritics(TenLoaiDaiLy.Trim().ToLower());
+                    filteredResults = [.. filteredResults.Where(d => RemoveDiacritics(d.TenLoaiDaiLy.ToLower()).Contains(ten))];
                 }
+                if (!string.IsNullOrEmpty(NoDaiLyFrom))
+                {
+                    if (int.TryParse(NoDaiLyFrom, out int noFrom))
+                    {
+                        filteredResults = [.. filteredResults.Where(d => d.NoToiDa >= noFrom)];
+                    }
+                }
+                if (!string.IsNullOrEmpty(NoDaiLyTo))
+                {
+                    if (int.TryParse(NoDaiLyTo, out int noTo))
+                    {
+                        filteredResults = [.. filteredResults.Where(d => d.NoToiDa <= noTo)];
+                    }
+                }
+
 
                 SearchResults = [.. filteredResults];
 
@@ -132,7 +173,7 @@ namespace QuanLyDaiLy.ViewModels.QuanViewModels
             }
         }
 
-        public event EventHandler<ObservableCollection<Quan>>? SearchCompleted;
+        public event EventHandler<ObservableCollection<LoaiDaiLy>>? SearchCompleted;
 
         private void ApplySearchResults()
         {

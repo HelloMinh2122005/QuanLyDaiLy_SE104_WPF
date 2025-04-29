@@ -389,15 +389,17 @@
                         Background="#E6F1FD"
                         CornerRadius="10">
                         <Grid Margin="20">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="114*"/>
+                                <ColumnDefinition Width="181*"/>
+                            </Grid.ColumnDefinitions>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="5*" />
                                 <RowDefinition Height="5*" />
                             </Grid.RowDefinitions>
 
                             <Grid
-                                Grid.Row="0"
-                                HorizontalAlignment="Stretch"
-                                VerticalAlignment="Stretch">
+                                Grid.Row="0" Grid.ColumnSpan="2">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="9*" />
                                     <ColumnDefinition Width="1*" />
@@ -515,7 +517,7 @@
                                 </Button>
                             </Grid>
 
-                            <Grid Grid.Row="1">
+                            <Grid Grid.Row="1" Grid.ColumnSpan="2">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="65*" />
                                     <ColumnDefinition Width="35*" />
@@ -528,7 +530,7 @@
                                     FontFamily="Iter"
                                     FontSize="30"
                                     FontWeight="SemiBold"
-                                    Text="8,265" />
+                                    Text="{Binding WidgetSoLuongDaiLy}" />
 
                                 <StackPanel
                                     Grid.Column="1"
@@ -540,14 +542,37 @@
                                         FontSize="20"
                                         FontWeight="Regular"
                                         LineHeight="16"
-                                        Text="-10%" />
+                                        Text="{Binding WidgetSoLuongDaiLyDeltaText}" />
+                                    <Image 
+                                         Width="20"
+                                         Height="20"
+                                         Margin="5,0,0,0"
+                                         VerticalAlignment="Center">
+                                        <Image.Style>
+                                                                               <Style TargetType="Image">
+                                                                                   <!-- Mặc định là mũi tên lên -->
+                                                                                   <Setter Property="Source"
+                                        Value="pack://application:,,,/QuanLyDaiLy;component/Resources/up.png"/>
+                                                                                   <Style.Triggers>
+                                                                                       <!-- Nếu WidgetPhiXuatIsUp == False thì chuyển sang mũi tên xuống -->
+                                        <DataTrigger Binding="{Binding WidgetSoLuongDaiLyIsUp}"
+                                                 Value="False">
+                                                                                           <Setter Property="Source"
+                                                Value="pack://application:,,,/QuanLyDaiLy;component/Resources/image-removebg-preview.png"/>
+                                                                                       </DataTrigger>
+                                                                                   </Style.Triggers>
+                                                                               </Style>
+                                        </Image.Style>
+                                    </Image>
+                                    <!--
                                     <Image
                                         Width="20"
                                         Height="20"
                                         Margin="5,0,0,0"
                                         VerticalAlignment="Center"
                                         Source="pack://application:,,,/QuanLyDaiLy;component/Resources/image-removebg-preview.png" />
-                                </StackPanel>
+                                -->
+                                    </StackPanel>
                             </Grid>
                         </Grid>
                     </Border>
@@ -577,7 +602,7 @@
                                     FontSize="25"
                                     FontWeight="Regular"
                                     LineHeight="1"
-                                    Text="Doanh thu tháng" />
+                                    Text="Doanh thu" />
                                 <Button
                                     Grid.Column="1"
                                     Width="30"
@@ -695,26 +720,13 @@
                                     FontFamily="Iter"
                                     FontSize="30"
                                     FontWeight="SemiBold"
-                                    Text="345,778,265đ" />
+                                    Text="{Binding WidgetDoanhThuThang}" />
 
                                 <StackPanel
                                     Grid.Column="1"
                                     HorizontalAlignment="Right"
                                     VerticalAlignment="Center"
-                                    Orientation="Horizontal">
-                                    <TextBlock
-                                        FontFamily="Font Family"
-                                        FontSize="20"
-                                        FontWeight="Regular"
-                                        LineHeight="16"
-                                        Text="0.03%" />
-                                    <Image
-                                        Width="20"
-                                        Height="20"
-                                        Margin="5,0,0,0"
-                                        VerticalAlignment="Center"
-                                        Source="pack://application:,,,/QuanLyDaiLy;component/Resources/up.png" />
-                                </StackPanel>
+                                    Orientation="Horizontal"/>
                             </Grid>
                         </Grid>
                     </Border>
@@ -862,7 +874,7 @@
                                     FontFamily="Iter"
                                     FontSize="30"
                                     FontWeight="SemiBold"
-                                    Text="500,000,000đ" />
+                                    Text="{Binding WidgetTongGiaTriPhieuXuat}" />
 
                                 <StackPanel
                                     Grid.Column="1"
@@ -874,13 +886,35 @@
                                         FontSize="20"
                                         FontWeight="Regular"
                                         LineHeight="16"
-                                        Text="0.03%" />
+                                        Text="{Binding WidgetPhieuXuatDeltaText}" />
+                                    <Image Width="20"
+                                        Height="20"
+                                        Margin="5,0,0,0"
+                                        VerticalAlignment="Center">
+                                                         <Image.Style>
+                                                             <Style TargetType="Image">
+                                                                 <!-- Mặc định là mũi tên lên -->
+                                                                 <Setter Property="Source"
+                                         Value="pack://application:,,,/QuanLyDaiLy;component/Resources/up.png"/>
+                                                                 <Style.Triggers>
+                                                                     <!-- Nếu WidgetPhiXuatIsUp == False thì chuyển sang mũi tên xuống -->
+                                                                     <DataTrigger Binding="{Binding WidgetPhieuXuatIsUp}"
+                                                  Value="False">
+                                                                         <Setter Property="Source"
+                                                 Value="pack://application:,,,/QuanLyDaiLy;component/Resources/image-removebg-preview.png"/>
+                                                                     </DataTrigger>
+                                                                 </Style.Triggers>
+                                                             </Style>
+                                                         </Image.Style>
+                                    </Image>
+                                    <!--
                                     <Image
                                         Width="20"
                                         Height="20"
                                         Margin="5,0,0,0"
                                         VerticalAlignment="Center"
                                         Source="pack://application:,,,/QuanLyDaiLy;component/Resources/up.png" />
+                                    -->
                                 </StackPanel>
                             </Grid>
                         </Grid>
@@ -1028,7 +1062,7 @@
                                     FontFamily="Iter"
                                     FontSize="30"
                                     FontWeight="SemiBold"
-                                    Text="845,778,265đ" />
+                                    Text="{Binding WidgetTongGiaTriPhieuThu}" />
 
                                 <StackPanel
                                     Grid.Column="1"
@@ -1040,14 +1074,37 @@
                                         FontSize="20"
                                         FontWeight="Regular"
                                         LineHeight="16"
-                                        Text="0.03%" />
+                                        Text="{Binding WidgetPhieuThuDeltaText}" />
+                                    <Image Width="20"
+                                           Height="20"
+                                           Margin="5,0,0,0"
+                                           VerticalAlignment="Center">
+                                       <Image.Style>
+                                               <Style TargetType="Image">
+                                                                                   <!-- Mặc định là mũi tên lên -->
+                                                                                   <Setter Property="Source"
+                                        Value="pack://application:,,,/QuanLyDaiLy;component/Resources/up.png"/>
+                                                                                   <Style.Triggers>
+                                                                                       <!-- Nếu WidgetPhiXuatIsUp == False thì chuyển sang mũi tên xuống -->
+                                                                                       <DataTrigger Binding="{Binding WidgetPhieuThuIsUp}"
+                                                 Value="False">
+                                                                                           <Setter Property="Source"
+                                                Value="pack://application:,,,/QuanLyDaiLy;component/Resources/image-removebg-preview.png"/>
+                                                                                       </DataTrigger>
+                                                                                   </Style.Triggers>
+                                               </Style>
+                                        </Image.Style>
+                                    </Image>
+
+                                    <!--
                                     <Image
                                         Width="20"
                                         Height="20"
                                         Margin="5,0,0,0"
                                         VerticalAlignment="Center"
                                         Source="pack://application:,,,/QuanLyDaiLy;component/Resources/up.png" />
-                                </StackPanel>
+                                -->
+                                    </StackPanel>
                             </Grid>
                         </Grid>
                     </Border>
@@ -1956,9 +2013,10 @@
                                         </lvc:Axis.Separator>
                                     </lvc:Axis>
                                 </lvc:CartesianChart.AxisX>
-
+                                <!-- đã sửa chỗ này-->
                                 <lvc:CartesianChart.AxisY>
                                     <lvc:Axis
+                                        MinValue="0" 
                                         FontFamily="Nunito"
                                         FontSize="14"
                                         LabelFormatter="{Binding CurrencyFormatter}">

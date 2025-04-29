@@ -124,6 +124,13 @@ namespace QuanLyDaiLy.ViewModels.PhieuXuatViewModels
 
         private async Task ExecuteDeletePhieuXuat()
         {
+            if (SelectedPhieuXuat == null!)
+            {
+                MessageBox.Show("Vui lòng chọn phiếu xuất để xoá!", "Thông báo", MessageBoxButton.OK,
+                    MessageBoxImage.Information);
+                return;
+            }
+
             if (SelectedPhieuXuat != null)
             {
                 var result = MessageBox.Show("Bạn có chắc chắn muốn xóa phiếu xuất này?", "Xác nhận", MessageBoxButton.YesNo, MessageBoxImage.Warning);

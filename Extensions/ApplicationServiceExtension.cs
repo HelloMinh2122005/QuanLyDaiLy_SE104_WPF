@@ -38,7 +38,8 @@ public static class ApplicationServiceExtensions
                 sp.GetRequiredService<IDaiLyService>(),
                 sp.GetRequiredService<IQuanService>(),
                 sp.GetRequiredService<ILoaiDaiLyService>(),
-                dailyId
+                dailyId,
+                sp.GetRequiredService<IThamSoService>()
             )
         );
         services.AddSingleton<Func<string, int, BaoCaoDoanhSoViewModel>>(sp => (month, year) =>
@@ -66,6 +67,9 @@ public static class ApplicationServiceExtensions
         services.AddTransient<Views.DashboardViews.DashboardPage>();
 
         services.AddTransient<Views.LoaiDaiLyViews.LoaiDaiLyPage>();
+        services.AddTransient<Views.LoaiDaiLyViews.ThemLoaiDaiLyWindow>();
+        services.AddTransient<Views.LoaiDaiLyViews.CapNhatLoaiDaiLyWindow>();
+        services.AddTransient<Views.LoaiDaiLyViews.TraCuuLoaiDaiLyWindow>();
 
         services.AddTransient<Views.QuanViews.QuanPage>();
         services.AddTransient<Views.QuanViews.ThemQuanWindow>();
@@ -77,6 +81,8 @@ public static class ApplicationServiceExtensions
         services.AddTransient<Views.MatHangViews.CapNhatMatHangWindow>();
 
         services.AddTransient<Views.PhieuThuViews.PhieuThuPage>();
+        services.AddTransient<Views.PhieuThuViews.ThemPhieuThuWindow>();
+        services.AddTransient<Views.PhieuThuViews.TraCuuPhieuThuTienWindow>();
 
         services.AddTransient<Views.PhieuXuatViews.PhieuXuatPage>();
         services.AddTransient<Views.PhieuXuatViews.ThemPhieuXuatWindow>();
@@ -97,6 +103,14 @@ public static class ApplicationServiceExtensions
         services.AddTransient<ViewModels.DashboardViewModels.DashboardPageViewModel>();
 
         services.AddTransient<ViewModels.LoaiDaiLyViewModels.LoaiDaiLyPageViewModel>();
+        services.AddTransient<ViewModels.LoaiDaiLyViewModels.ThemLoaiDaiLyViewModel>();
+        services.AddTransient<Func<int, ViewModels.LoaiDaiLyViewModels.CapNhatLoaiDaiLyViewModel>>(sp => loaiDaiLyId =>
+            new ViewModels.LoaiDaiLyViewModels.CapNhatLoaiDaiLyViewModel(
+                sp.GetRequiredService<ILoaiDaiLyService>(),
+                loaiDaiLyId
+            )
+        );
+        services.AddTransient<ViewModels.LoaiDaiLyViewModels.TraCuuLoaiDaiLyWindowViewModel>();
 
         services.AddTransient<ViewModels.QuanViewModels.QuanPageViewModel>();
         services.AddTransient<ViewModels.QuanViewModels.ThemQuanViewModel>();
@@ -119,10 +133,14 @@ public static class ApplicationServiceExtensions
         );
 
         services.AddTransient<ViewModels.PhieuThuViewModels.PhieuThuPageViewModel>();
+        services.AddTransient<ViewModels.PhieuThuViewModels.ThemPhieuThuWindowViewModel>();
+        services.AddTransient<ViewModels.PhieuThuViewModels.TraCuuPhieuThuWindowViewModel>();
 
+
+        // PHIẾU XUẤT CỦA THÀNH
         services.AddTransient<ViewModels.PhieuXuatViewModels.PhieuXuatPageViewModel>();
         services.AddTransient<ViewModels.PhieuXuatViewModels.ThemPhieuXuatWindowViewModel>();
-        services.AddTransient<Func<int, ViewModels.PhieuXuatViewModels.CapNhatPhieuXuatWindowViewModel>>(px => phieuXuatId => 
+        services.AddTransient<Func<int, ViewModels.PhieuXuatViewModels.CapNhatPhieuXuatWindowViewModel>>(px => phieuXuatId =>
             new ViewModels.PhieuXuatViewModels.CapNhatPhieuXuatWindowViewModel(
                 px.GetRequiredService<IPhieuXuatService>(),
                 px.GetRequiredService<IChiTietPhieuXuatService>(),
@@ -136,7 +154,7 @@ public static class ApplicationServiceExtensions
 
         services.AddTransient<ViewModels.DonViTinhViewModels.DonViTinhPageViewModel>();
         services.AddTransient<ViewModels.DonViTinhViewModels.ThemDonViTinhPageViewModel>();
-        services.AddTransient<Func<int, ViewModels.DonViTinhViewModels.CapNhatDonViTinhPageViewModel> >(dvt => dvtID =>
+        services.AddTransient<Func<int, ViewModels.DonViTinhViewModels.CapNhatDonViTinhPageViewModel>>(dvt => dvtID =>
             new ViewModels.DonViTinhViewModels.CapNhatDonViTinhPageViewModel(
                 dvt.GetRequiredService<IDonViTinhService>(),
                 dvtID
@@ -150,5 +168,5 @@ public static class ApplicationServiceExtensions
         services.AddTransient<ViewModels.BaoCaoViewModels.BaoCaoDoanhSoViewModel>();
 
         return services;
-    }   
+    }
 }

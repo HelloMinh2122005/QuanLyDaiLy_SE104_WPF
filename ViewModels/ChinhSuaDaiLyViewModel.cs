@@ -5,6 +5,7 @@ using QuanLyDaiLy.Views;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Input;
 
@@ -16,17 +17,21 @@ namespace QuanLyDaiLy.ViewModels
         private readonly IQuanService _quanService;
         private readonly ILoaiDaiLyService _loaiDaiLyService;
         private readonly int _daiLyId;
+        private readonly IThamSoService _thamSoService;
 
         public ChinhSuaDaiLyViewModel(
             IDaiLyService daiLyService,
             IQuanService quanService,
             ILoaiDaiLyService loaiDaiLyService,
-            int dailyId
-        ) {
+            int dailyId,
+            IThamSoService thamSoService
+        )
+        {
             _daiLyService = daiLyService;
             _quanService = quanService;
             _loaiDaiLyService = loaiDaiLyService;
             _daiLyId = dailyId;
+            _thamSoService = thamSoService;
 
             CloseWindowCommand = new RelayCommand(CloseWindow);
             CapNhatDaiLyCommand = new RelayCommand(async () => await CapNhatDaiLy());
@@ -36,7 +41,7 @@ namespace QuanLyDaiLy.ViewModels
 
         public event EventHandler? DataChanged;
 
-        // Properties for binding
+        #region Binding Properties
         private string _maDaiLy = string.Empty;
         public string MaDaiLy
         {
@@ -146,6 +151,7 @@ namespace QuanLyDaiLy.ViewModels
                 OnPropertyChanged();
             }
         }
+        #endregion
 
         // Commands
         public ICommand CloseWindowCommand { get; }
@@ -184,7 +190,6 @@ namespace QuanLyDaiLy.ViewModels
             }
 
         }
-        
 
         private void CloseWindow()
         {
@@ -199,7 +204,47 @@ namespace QuanLyDaiLy.ViewModels
                 MessageBox.Show("Tên đại lý không được để trống!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
-
+            // Check SDT
+            if (string.IsNullOrWhiteSpace(SoDienThoai))
+            {
+                MessageBox.Show("Số điện thoại không được để trống.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+            else if (!SoDienThoai.All(char.IsDigit) || !(SoDienThoai.Length == 10 || SoDienThoai.Length == 11) || !SoDienThoai.StartsWith("0"))
+            {
+                MessageBox.Show("Số điện thoại không hợp lệ.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+            // Check email
+            string emailPattern = @"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$";
+            Regex regex = new Regex(emailPattern);
+            if (string.IsNullOrWhiteSpace(Email))
+            {
+                MessageBox.Show("Email không được để trống.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+            else if (char.IsDigit(Email[0]))
+            {
+                MessageBox.Show("Email không được bắt đầu bằng số.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+            else if (!regex.IsMatch(Email))
+            {
+                MessageBox.Show("Email không hợp lệ.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+            int atIndex = Email.IndexOf('@');
+            string localPart = Email.Substring(0, atIndex);
+            if (localPart.Contains("."))
+            {
+                MessageBox.Show("Email không được có dấu chấm trong phần trước '@'.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+            if (string.IsNullOrWhiteSpace(DiaChi))
+            {
+                MessageBox.Show("Địa chỉ không được để trống.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
             if (string.IsNullOrEmpty(SelectedLoaiDaiLy.TenLoaiDaiLy) || string.IsNullOrEmpty(SelectedQuan.TenQuan))
             {
                 MessageBox.Show("Vui lòng chọn loại đại lý và quận!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -208,6 +253,19 @@ namespace QuanLyDaiLy.ViewModels
 
             try
             {
+                var thamSo = await _thamSoService.GetThamSo();
+                var quyDinhSoLuongDaiLyToiDa = thamSo.QuyDinhSoLuongDaiLyToiDa;
+                if (quyDinhSoLuongDaiLyToiDa == true)
+                {
+                    var soLuongDaiLyToiDaTrongQuan = thamSo.SoLuongDaiLyToiDa;
+                    var soLuongDaiLyTrongQuan = (await _quanService.GetQuanById(SelectedQuan.MaQuan)).DsDaiLy.Count;
+                    if (soLuongDaiLyTrongQuan >= soLuongDaiLyToiDaTrongQuan)
+                    {
+                        MessageBox.Show("Quận đã đạt số lượng đại lý tối đa!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                        return;
+                    }
+                }
+
                 var existingDaiLy = await _daiLyService.GetDaiLyById(_daiLyId);
                 existingDaiLy.TenDaiLy = TenDaiLy;
                 existingDaiLy.DienThoai = SoDienThoai;
@@ -221,7 +279,8 @@ namespace QuanLyDaiLy.ViewModels
 
                 await _daiLyService.UpdateDaiLy(existingDaiLy);
                 MessageBox.Show("Cập nhật đại lý thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "SHIT", MessageBoxButton.OK, MessageBoxImage.Error);
             }

@@ -21,7 +21,8 @@ namespace QuanLyDaiLy.ViewModels
             IDaiLyService dailyService,
             IServiceProvider serviceProvider,
             Func<int, ChinhSuaDaiLyViewModel> chinhSuaDaiLyFactory
-        ) {
+        )
+        {
             _dailyService = dailyService;
             _ = LoadData();
 
@@ -31,7 +32,7 @@ namespace QuanLyDaiLy.ViewModels
             SearchDaiLyCommand = new RelayCommand(OpenSearchDaiLyWindow);
             LoadDataCommand = new RelayCommand(async () => await LoadDataExecute());
             _serviceProvider = serviceProvider;
-            _chinhSuaDaiLyFactory = chinhSuaDaiLyFactory;  
+            _chinhSuaDaiLyFactory = chinhSuaDaiLyFactory;
         }
 
         private ObservableCollection<DaiLy> _danhSachDaiLy = [];

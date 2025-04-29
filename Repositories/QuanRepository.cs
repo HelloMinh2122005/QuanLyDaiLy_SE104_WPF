@@ -62,20 +62,6 @@ namespace QuanLyDaiLy.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task<int> GetSoLuongDaiLyTrongQuan(int id)
-        {
-            var quan = await _context.DsQuan
-                .Include(q => q.DsDaiLy)
-                .FirstOrDefaultAsync(q => q.MaQuan == id);
-
-            if (quan == null)
-            {
-                throw new Exception("Quan not found!");
-            }
-
-            return quan.DsDaiLy.Count;
-        }
-
         public async Task<int> GenerateAvailableId()
         {
             var quan = await _context.DsQuan.OrderByDescending(q => q.MaQuan).FirstOrDefaultAsync();

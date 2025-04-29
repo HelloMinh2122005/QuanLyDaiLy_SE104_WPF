@@ -81,11 +81,20 @@ namespace QuanLyDaiLy.ViewModels.DonViTinhViewModels
             MessageBox.Show("Tải lại danh sách thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
+
+        /// <summary>
+        /// PHẦN CỦA THÀNH CẦN SỬA
+        /// </summary>
         private void OpenSearchDonViTinhWindow()
         {
             SelectedDonViTinh = null!;
             MessageBox.Show("Tính năng tra cứu đơn vị tính đang được phát triển.", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
         }
+        /// <summary>
+        /// PHẦN CỦA THÀNH CẦN SỬA
+        /// </summary>
+        /// 
+
 
         private void OpenAddDonViTinhWindow()
         {
@@ -108,7 +117,7 @@ namespace QuanLyDaiLy.ViewModels.DonViTinhViewModels
 
         private void OpenEditDonViTinhWindow()
         {
-            if (string.IsNullOrEmpty(SelectedDonViTinh.TenDonViTinh))
+            if (SelectedDonViTinh == null || string.IsNullOrEmpty(SelectedDonViTinh.TenDonViTinh))
             {
                 MessageBox.Show("Vui lòng chọn đơn vị tính để chỉnh sửa!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
@@ -135,7 +144,7 @@ namespace QuanLyDaiLy.ViewModels.DonViTinhViewModels
 
         private async Task DeleteDonViTinhAsync()
         {
-            if (string.IsNullOrEmpty(SelectedDonViTinh.TenDonViTinh))
+            if (SelectedDonViTinh == null || string.IsNullOrEmpty(SelectedDonViTinh.TenDonViTinh))
             {
                 MessageBox.Show("Vui lòng chọn đơn vị tính để xóa!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
                 return;

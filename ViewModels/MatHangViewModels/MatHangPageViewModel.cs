@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using QuanLyDaiLy.Commands;
 using QuanLyDaiLy.Models;
 using QuanLyDaiLy.Services;
+using QuanLyDaiLy.Views;
 using QuanLyDaiLy.Views.MatHangViews;
 
 namespace QuanLyDaiLy.ViewModels.MatHangViewModels
@@ -58,6 +59,40 @@ namespace QuanLyDaiLy.ViewModels.MatHangViewModels
             }
         }
 
+        private Visibility _previousButtonVisibility = Visibility.Collapsed;
+        public Visibility PreviousButtonVisibility
+        {
+            get => _previousButtonVisibility;
+            set
+            {
+                _previousButtonVisibility = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private Visibility _nextButtonVisibility = Visibility.Visible;
+        public Visibility NextButtonVisibility
+        {
+            get => _nextButtonVisibility;
+            set
+            {
+                _nextButtonVisibility = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private Style _buttonStyleFirst;
+        public Style ButtonStyleFirst
+        {
+            get => _buttonStyleFirst;
+            set
+            {
+                _buttonStyleFirst = value;
+                OnPropertyChanged();
+            }
+        }
+
+
         // Commands
         public ICommand SearchMatHangCommand { get; }
         public ICommand AddMatHangCommand { get; }
@@ -82,7 +117,21 @@ namespace QuanLyDaiLy.ViewModels.MatHangViewModels
         private void OpenSearchMatHangWindow()
         {
             SelectedMatHang = null!;
-            MessageBox.Show("Tính năng tra cứu mặt hàng đang được phát triển.", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+
+            var traCuuMatHangWindow = _serviceProvider.GetRequiredService<TraCuuMatHangWindow>();
+
+            if (traCuuMatHangWindow.DataContext is TraCuuMatHangWindowViewModel viewModel)
+            {
+                viewModel.SearchCompleted += (sender, searchResults) =>
+                {
+                    if (searchResults.Count > 0)
+                    {
+                        DanhSachMatHang = searchResults;
+                    }
+                };
+            }
+
+            traCuuMatHangWindow.Show();
         }
 
         private void OpenAddMatHangWindow()
