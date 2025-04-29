@@ -19,18 +19,20 @@ namespace QuanLyDaiLy.ViewModels.BaoCaoViewModels
         private readonly IDaiLyService _daiLyService;
         private readonly IPhieuXuatService _phieuXuatService;
         private readonly IPhieuThuService _phieuThuService;
-
+        private readonly Func<string, int, BaoCaoDoanhSoViewModel> _monthYearDoanhSoFactory;
         public BaoCaoChiTietViewModel(
             IServiceProvider serviceProvider,
             IDaiLyService daiLyService,
             IPhieuXuatService phieuXuatService,
-            IPhieuThuService phieuThuService
+            IPhieuThuService phieuThuService,
+            Func<string, int, BaoCaoDoanhSoViewModel> monthYearDoanhSoFactory
             )
         {
             _daiLyService = daiLyService;
             _serviceProvider = serviceProvider;
             _phieuXuatService = phieuXuatService;
             _phieuThuService = phieuThuService;
+            _monthYearDoanhSoFactory = monthYearDoanhSoFactory;
 
             DoanhSoCommand = new RelayCommand(OpenDoanhSoWindow);
             CongNoCommand = new RelayCommand(OpenCongNoWindow);
@@ -133,10 +135,12 @@ namespace QuanLyDaiLy.ViewModels.BaoCaoViewModels
         // Commands 
         public ICommand DoanhSoCommand { get; }
         public ICommand CongNoCommand { get; }
-
+        public event EventHandler? DataChanged;
         private void OpenDoanhSoWindow()
         {
-            var doanhSoWindow = _serviceProvider.GetRequiredService<BaoCaoDoanhSoWindow>();
+            var viewModel = _monthYearDoanhSoFactory(SelectedDoanhSoMonth, SelectedDoanhSoYear);
+            viewModel.DataChanged += async (sender, e) => await InitializeDoanhSoData();
+            var doanhSoWindow = new BaoCaoDoanhSoWindow(viewModel);
             doanhSoWindow?.Show();
         }
 
