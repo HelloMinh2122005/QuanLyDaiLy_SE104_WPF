@@ -399,6 +399,7 @@
                         VerticalAlignment="Center"
                         Orientation="Horizontal">
                         <TextBlock
+                            
                             HorizontalAlignment="Left"
                             VerticalAlignment="Center"
                             FontFamily="Nunito"
@@ -407,6 +408,7 @@
                             Foreground="#000000"
                             Text="Tổng doanh số trong tháng của tất cả Đại lý:   " />
                         <TextBox
+                            Text="{Binding TotalDoanhSo}"
                             Width="250"
                             Height="40"
                             Padding="10,0,0,0"
@@ -441,6 +443,7 @@
                             FontSize="16"
                             FontStyle="Normal"
                             FontWeight="Medium"
+                            Command="{Binding ExportToPDFCommand}"
                             Foreground="#FFFFFF">
                             <Button.Style>
                                 <Style TargetType="Button">
@@ -548,6 +551,7 @@
                             CanUserDeleteRows="False"
                             GridLinesVisibility="Horizontal"
                             HeadersVisibility="Column"
+                            ItemsSource="{Binding BaoCaoDoanhSoList}"
                             IsReadOnly="False"
                             RowHeight="60"
                             ScrollViewer.VerticalScrollBarVisibility="Auto">
@@ -639,6 +643,7 @@
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
                                             <Border
+                                              
                                                 Width="150"
                                                 Padding="10,5"
                                                 HorizontalAlignment="Center"
@@ -647,6 +652,7 @@
                                                 BorderThickness="1"
                                                 CornerRadius="10">
                                                 <TextBlock
+                                                    Text="{Binding TenDaiLy}"
                                                     HorizontalAlignment="Center"
                                                     VerticalAlignment="Center"
                                                     FontFamily="Open Sans"
@@ -683,6 +689,7 @@
                                                 BorderThickness="1"
                                                 CornerRadius="10">
                                                 <TextBlock
+                                                    Text="{Binding SoLuongPhieuXuat}"
                                                     HorizontalAlignment="Center"
                                                     VerticalAlignment="Center"
                                                     FontFamily="Open Sans"
@@ -719,6 +726,7 @@
                                                 BorderThickness="1"
                                                 CornerRadius="10">
                                                 <TextBlock
+                                                    Text="{Binding TongGiaTriGiaoDich}"
                                                     HorizontalAlignment="Center"
                                                     VerticalAlignment="Center"
                                                     FontFamily="Open Sans"
@@ -755,6 +763,7 @@
                                                 BorderThickness="1"
                                                 CornerRadius="10">
                                                 <TextBlock
+                                                    Text="{Binding TiLe}"
                                                     HorizontalAlignment="Center"
                                                     VerticalAlignment="Center"
                                                     FontFamily="Open Sans"

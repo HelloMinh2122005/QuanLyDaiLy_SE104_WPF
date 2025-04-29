@@ -4,6 +4,7 @@ using QuanLyDaiLy.Helpers;
 using QuanLyDaiLy.Repositories;
 using QuanLyDaiLy.Services;
 using QuanLyDaiLy.ViewModels;
+using QuanLyDaiLy.ViewModels.BaoCaoViewModels;
 using QuanLyDaiLy.Views;
 
 namespace QuanLyDaiLy.Extensions;
@@ -40,6 +41,16 @@ public static class ApplicationServiceExtensions
                 dailyId
             )
         );
+        services.AddSingleton<Func<string, int, BaoCaoDoanhSoViewModel>>(sp => (month, year) =>
+        {
+            var daiLyService = sp.GetRequiredService<IDaiLyService>();
+            var phieuXuatService = sp.GetRequiredService<IPhieuXuatService>();
+
+            var vm = new BaoCaoDoanhSoViewModel(month, year, daiLyService, phieuXuatService);
+            return vm;
+        });
+
+
         services.AddTransient<TraCuuDaiLyViewModel>();
 
         // Register Views
