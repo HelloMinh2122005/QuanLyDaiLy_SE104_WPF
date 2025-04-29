@@ -159,28 +159,46 @@
                 VerticalAlignment="Stretch"
                 Orientation="Horizontal">
                 <Button
+                    Command="{Binding PreviousPageCommand}"
                     Content="← Trang trước"
-                    Style="{StaticResource BackForwardButtonStyle}"
-                    Visibility="Visible" />
-                <Border
-                    Width="1"
-                    Margin="4,0"
-                    Background="#E0E0E0"
-                    Visibility="Visible" />
-                <Button Content="1" Style="{StaticResource PageButtonUnSelectedStyle}" />
-                <Button Content="2" Style="{StaticResource PageButtonSelectedStyle}" />
-                <Button Content="3" Style="{StaticResource PageButtonUnSelectedStyle}" />
-                <Button Content="4" Style="{StaticResource PageButtonUnSelectedStyle}" />
-                <Button Content="5" Style="{StaticResource PageButtonUnSelectedStyle}" />
-                <Button Content="6" Style="{StaticResource PageButtonUnSelectedStyle}" />
+                    Style="{StaticResource BackForwardButtonStyle}" />
                 <Border
                     Width="1"
                     Margin="4,0"
                     Background="#E0E0E0" />
                 <Button
+                    Command="{Binding PageSelectionCommand}"
+                    CommandParameter="{Binding ButtonParamFirst}"
+                    Content="{Binding ButtonContentFirst}"
+                    Style="{Binding ButtonStyleFirst}" />
+                <Button
+                    Command="{Binding PageSelectionCommand}"
+                    CommandParameter="{Binding ButtonParamSecond}"
+                    Content="{Binding ButtonContentSecond}"
+                    Style="{Binding ButtonStyleSecond}" />
+                <Button
+                    Command="{Binding PageSelectionCommand}"
+                    CommandParameter="{Binding ButtonParamThird}"
+                    Content="{Binding ButtonContentThird}"
+                    Style="{Binding ButtonStyleThird}" />
+                <Button
+                    Command="{Binding PageSelectionCommand}"
+                    CommandParameter="{Binding ButtonParamForth}"
+                    Content="{Binding ButtonContentForth}"
+                    Style="{Binding ButtonStyleForth}" />
+                <Button
+                    Command="{Binding PageSelectionCommand}"
+                    CommandParameter="{Binding ButtonParamFith}"
+                    Content="{Binding ButtonContentFith}"
+                    Style="{Binding ButtonStyleFith}" />
+                <Border
+                    Width="1"
+                    Margin="4,0"
+                    Background="#E0E0E0" />
+                <Button
+                    Command="{Binding NextPageCommand}"
                     Content="Trang sau →"
-                    Style="{StaticResource BackForwardButtonStyle}"
-                    Visibility="Visible" />
+                    Style="{StaticResource BackForwardButtonStyle}" />
             </StackPanel>
         </Border>
     </Grid>

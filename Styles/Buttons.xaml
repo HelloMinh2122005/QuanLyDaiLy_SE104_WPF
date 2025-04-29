@@ -555,4 +555,8 @@
         </Setter>
     </Style>
 
+    <Style x:Key="CollapsedButton" TargetType="Button">
+        <Setter Property="Visibility" Value="Collapsed" />
+    </Style>
+
 </ResourceDictionary>

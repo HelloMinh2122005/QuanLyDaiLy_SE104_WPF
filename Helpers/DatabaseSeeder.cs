@@ -995,7 +995,708 @@ namespace QuanLyDaiLy.Helpers
                     TenMatHang = "Bánh pía",
                     MaDonViTinh = 2,
                     SoLuongTon = 7160
-                }
+                },
+// 101-200: Adding 100 more MatHang items
+new
+{
+    MaMatHang = 101,
+    TenMatHang = "Bánh tráng",
+    MaDonViTinh = 2,
+    SoLuongTon = 8523
+},
+new
+{
+    MaMatHang = 102,
+    TenMatHang = "Nước mắm Nam Ngư",
+    MaDonViTinh = 5,
+    SoLuongTon = 7256
+},
+new
+{
+    MaMatHang = 103,
+    TenMatHang = "Mì Hảo Hảo",
+    MaDonViTinh = 3,
+    SoLuongTon = 9145
+},
+new
+{
+    MaMatHang = 104,
+    TenMatHang = "Bột bánh xèo",
+    MaDonViTinh = 1,
+    SoLuongTon = 5678
+},
+new
+{
+    MaMatHang = 105,
+    TenMatHang = "Nước cốt dừa",
+    MaDonViTinh = 5,
+    SoLuongTon = 6745
+},
+new
+{
+    MaMatHang = 106,
+    TenMatHang = "Sữa đặc",
+    MaDonViTinh = 5,
+    SoLuongTon = 7853
+},
+new
+{
+    MaMatHang = 107,
+    TenMatHang = "Sữa chua",
+    MaDonViTinh = 2,
+    SoLuongTon = 6234
+},
+new
+{
+    MaMatHang = 108,
+    TenMatHang = "Trà xanh",
+    MaDonViTinh = 1,
+    SoLuongTon = 5432
+},
+new
+{
+    MaMatHang = 109,
+    TenMatHang = "Trà đen",
+    MaDonViTinh = 1,
+    SoLuongTon = 4532
+},
+new
+{
+    MaMatHang = 110,
+    TenMatHang = "Trà hoa cúc",
+    MaDonViTinh = 1,
+    SoLuongTon = 3782
+},
+new
+{
+    MaMatHang = 111,
+    TenMatHang = "Cà phê hạt",
+    MaDonViTinh = 1,
+    SoLuongTon = 7832
+},
+new
+{
+    MaMatHang = 112,
+    TenMatHang = "Cà phê hòa tan",
+    MaDonViTinh = 2,
+    SoLuongTon = 6743
+},
+new
+{
+    MaMatHang = 113,
+    TenMatHang = "Bắp đông lạnh",
+    MaDonViTinh = 1,
+    SoLuongTon = 5742
+},
+new
+{
+    MaMatHang = 114,
+    TenMatHang = "Đậu Hà Lan đông lạnh",
+    MaDonViTinh = 1,
+    SoLuongTon = 4583
+},
+new
+{
+    MaMatHang = 115,
+    TenMatHang = "Cá viên",
+    MaDonViTinh = 1,
+    SoLuongTon = 7654
+},
+new
+{
+    MaMatHang = 116,
+    TenMatHang = "Chả giò",
+    MaDonViTinh = 1,
+    SoLuongTon = 6543
+},
+new
+{
+    MaMatHang = 117,
+    TenMatHang = "Sốt mayonnaise",
+    MaDonViTinh = 5,
+    SoLuongTon = 5432
+},
+new
+{
+    MaMatHang = 118,
+    TenMatHang = "Dầu hào",
+    MaDonViTinh = 5,
+    SoLuongTon = 6321
+},
+new
+{
+    MaMatHang = 119,
+    TenMatHang = "Nước cốt me",
+    MaDonViTinh = 5,
+    SoLuongTon = 4567
+},
+new
+{
+    MaMatHang = 120,
+    TenMatHang = "Bánh gạo",
+    MaDonViTinh = 2,
+    SoLuongTon = 7654
+},
+new
+{
+    MaMatHang = 121,
+    TenMatHang = "Xúc xích",
+    MaDonViTinh = 2,
+    SoLuongTon = 6543
+},
+new
+{
+    MaMatHang = 122,
+    TenMatHang = "Ruốc thịt",
+    MaDonViTinh = 1,
+    SoLuongTon = 5432
+},
+new
+{
+    MaMatHang = 123,
+    TenMatHang = "Chà bông gà",
+    MaDonViTinh = 1,
+    SoLuongTon = 4321
+},
+new
+{
+    MaMatHang = 124,
+    TenMatHang = "Khô mực",
+    MaDonViTinh = 1,
+    SoLuongTon = 3456
+},
+new
+{
+    MaMatHang = 125,
+    TenMatHang = "Khô cá dứa",
+    MaDonViTinh = 1,
+    SoLuongTon = 5678
+},
+new
+{
+    MaMatHang = 126,
+    TenMatHang = "Hạt nêm",
+    MaDonViTinh = 1,
+    SoLuongTon = 7654
+},
+new
+{
+    MaMatHang = 127,
+    TenMatHang = "Bột nở",
+    MaDonViTinh = 1,
+    SoLuongTon = 6543
+},
+new
+{
+    MaMatHang = 128,
+    TenMatHang = "Bột baking soda",
+    MaDonViTinh = 1,
+    SoLuongTon = 5432
+},
+new
+{
+    MaMatHang = 129,
+    TenMatHang = "Bột mì đa dụng",
+    MaDonViTinh = 1,
+    SoLuongTon = 7654
+},
+new
+{
+    MaMatHang = 130,
+    TenMatHang = "Bột năng",
+    MaDonViTinh = 1,
+    SoLuongTon = 6543
+},
+new
+{
+    MaMatHang = 131,
+    TenMatHang = "Bột gạo",
+    MaDonViTinh = 1,
+    SoLuongTon = 5432
+},
+new
+{
+    MaMatHang = 132,
+    TenMatHang = "Đường phèn",
+    MaDonViTinh = 1,
+    SoLuongTon = 4321
+},
+new
+{
+    MaMatHang = 133,
+    TenMatHang = "Đường nâu",
+    MaDonViTinh = 1,
+    SoLuongTon = 3456
+},
+new
+{
+    MaMatHang = 134,
+    TenMatHang = "Đường phổi",
+    MaDonViTinh = 1,
+    SoLuongTon = 5678
+},
+new
+{
+    MaMatHang = 135,
+    TenMatHang = "Mật ong rừng",
+    MaDonViTinh = 5,
+    SoLuongTon = 4567
+},
+new
+{
+    MaMatHang = 136,
+    TenMatHang = "Đường phổi",
+    MaDonViTinh = 1,
+    SoLuongTon = 7654
+},
+new
+{
+    MaMatHang = 137,
+    TenMatHang = "Muối hạt",
+    MaDonViTinh = 1,
+    SoLuongTon = 8765
+},
+new
+{
+    MaMatHang = 138,
+    TenMatHang = "Muối tinh",
+    MaDonViTinh = 1,
+    SoLuongTon = 7654
+},
+new
+{
+    MaMatHang = 139,
+    TenMatHang = "Muối hầm",
+    MaDonViTinh = 1,
+    SoLuongTon = 6543
+},
+new
+{
+    MaMatHang = 140,
+    TenMatHang = "Tiêu đen",
+    MaDonViTinh = 1,
+    SoLuongTon = 5432
+},
+new
+{
+    MaMatHang = 141,
+    TenMatHang = "Tiêu trắng",
+    MaDonViTinh = 1,
+    SoLuongTon = 4321
+},
+new
+{
+    MaMatHang = 142,
+    TenMatHang = "Tiêu xanh",
+    MaDonViTinh = 1,
+    SoLuongTon = 3456
+},
+new
+{
+    MaMatHang = 143,
+    TenMatHang = "Ớt bột",
+    MaDonViTinh = 1,
+    SoLuongTon = 5678
+},
+new
+{
+    MaMatHang = 144,
+    TenMatHang = "Nghệ bột",
+    MaDonViTinh = 1,
+    SoLuongTon = 4567
+},
+new
+{
+    MaMatHang = 145,
+    TenMatHang = "Đinh hương",
+    MaDonViTinh = 1,
+    SoLuongTon = 3456
+},
+new
+{
+    MaMatHang = 146,
+    TenMatHang = "Quế",
+    MaDonViTinh = 1,
+    SoLuongTon = 5678
+},
+new
+{
+    MaMatHang = 147,
+    TenMatHang = "Thảo quả",
+    MaDonViTinh = 1,
+    SoLuongTon = 4567
+},
+new
+{
+    MaMatHang = 148,
+    TenMatHang = "Hoa hồi",
+    MaDonViTinh = 1,
+    SoLuongTon = 3456
+},
+new
+{
+    MaMatHang = 149,
+    TenMatHang = "Sa nhân",
+    MaDonViTinh = 1,
+    SoLuongTon = 5678
+},
+new
+{
+    MaMatHang = 150,
+    TenMatHang = "Hạt mùi",
+    MaDonViTinh = 1,
+    SoLuongTon = 6543
+},
+new
+{
+    MaMatHang = 151,
+    TenMatHang = "Lá chanh",
+    MaDonViTinh = 1,
+    SoLuongTon = 4321
+},
+new
+{
+    MaMatHang = 152,
+    TenMatHang = "Lá quế",
+    MaDonViTinh = 1,
+    SoLuongTon = 3456
+},
+new
+{
+    MaMatHang = 153,
+    TenMatHang = "Rau húng quế",
+    MaDonViTinh = 1,
+    SoLuongTon = 5678
+},
+new
+{
+    MaMatHang = 154,
+    TenMatHang = "Húng lủi",
+    MaDonViTinh = 1,
+    SoLuongTon = 4567
+},
+new
+{
+    MaMatHang = 155,
+    TenMatHang = "Bột cà ri",
+    MaDonViTinh = 1,
+    SoLuongTon = 3456
+},
+new
+{
+    MaMatHang = 156,
+    TenMatHang = "Bột ngũ vị hương",
+    MaDonViTinh = 1,
+    SoLuongTon = 6789
+},
+new
+{
+    MaMatHang = 157,
+    TenMatHang = "Xốt sriracha",
+    MaDonViTinh = 5,
+    SoLuongTon = 5678
+},
+new
+{
+    MaMatHang = 158,
+    TenMatHang = "Xốt teriyaki",
+    MaDonViTinh = 5,
+    SoLuongTon = 4567
+},
+new
+{
+    MaMatHang = 159,
+    TenMatHang = "Xốt oyster",
+    MaDonViTinh = 5,
+    SoLuongTon = 6543
+},
+new
+{
+    MaMatHang = 160,
+    TenMatHang = "Xốt cà chua",
+    MaDonViTinh = 5,
+    SoLuongTon = 7654
+},
+new
+{
+    MaMatHang = 161,
+    TenMatHang = "Xốt mè rang",
+    MaDonViTinh = 5,
+    SoLuongTon = 5432
+},
+new
+{
+    MaMatHang = 162,
+    TenMatHang = "Dầu cá",
+    MaDonViTinh = 5,
+    SoLuongTon = 6543
+},
+new
+{
+    MaMatHang = 163,
+    TenMatHang = "Mỡ heo",
+    MaDonViTinh = 1,
+    SoLuongTon = 7654
+},
+new
+{
+    MaMatHang = 164,
+    TenMatHang = "Bơ thực vật",
+    MaDonViTinh = 1,
+    SoLuongTon = 8765
+},
+new
+{
+    MaMatHang = 165,
+    TenMatHang = "Bơ động vật",
+    MaDonViTinh = 1,
+    SoLuongTon = 5432
+},
+new
+{
+    MaMatHang = 166,
+    TenMatHang = "Phô mai miếng",
+    MaDonViTinh = 2,
+    SoLuongTon = 6543
+},
+new
+{
+    MaMatHang = 167,
+    TenMatHang = "Phô mai phết",
+    MaDonViTinh = 2,
+    SoLuongTon = 7654
+},
+new
+{
+    MaMatHang = 168,
+    TenMatHang = "Phô mai bột",
+    MaDonViTinh = 1,
+    SoLuongTon = 5432
+},
+new
+{
+    MaMatHang = 169,
+    TenMatHang = "Dưa chua",
+    MaDonViTinh = 5,
+    SoLuongTon = 4321
+},
+new
+{
+    MaMatHang = 170,
+    TenMatHang = "Dưa muối",
+    MaDonViTinh = 1,
+    SoLuongTon = 6543
+},
+new
+{
+    MaMatHang = 171,
+    TenMatHang = "Kim chi",
+    MaDonViTinh = 1,
+    SoLuongTon = 5432
+},
+new
+{
+    MaMatHang = 172,
+    TenMatHang = "Cải chua",
+    MaDonViTinh = 1,
+    SoLuongTon = 6543
+},
+new
+{
+    MaMatHang = 173,
+    TenMatHang = "Rau kinh giới",
+    MaDonViTinh = 1,
+    SoLuongTon = 7654
+},
+new
+{
+    MaMatHang = 174,
+    TenMatHang = "Rau diếp cá",
+    MaDonViTinh = 1,
+    SoLuongTon = 5432
+},
+new
+{
+    MaMatHang = 175,
+    TenMatHang = "Rau tía tô",
+    MaDonViTinh = 1,
+    SoLuongTon = 6543
+},
+new
+{
+    MaMatHang = 176,
+    TenMatHang = "Rau đay",
+    MaDonViTinh = 1,
+    SoLuongTon = 7654
+},
+new
+{
+    MaMatHang = 177,
+    TenMatHang = "Rau mồng tơi",
+    MaDonViTinh = 1,
+    SoLuongTon = 6543
+},
+new
+{
+    MaMatHang = 178,
+    TenMatHang = "Rau ngót",
+    MaDonViTinh = 1,
+    SoLuongTon = 5432
+},
+new
+{
+    MaMatHang = 179,
+    TenMatHang = "Bí xanh",
+    MaDonViTinh = 1,
+    SoLuongTon = 7654
+},
+new
+{
+    MaMatHang = 180,
+    TenMatHang = "Mướp đắng",
+    MaDonViTinh = 1,
+    SoLuongTon = 6543
+},
+new
+{
+    MaMatHang = 181,
+    TenMatHang = "Mướp hương",
+    MaDonViTinh = 1,
+    SoLuongTon = 5432
+},
+new
+{
+    MaMatHang = 182,
+    TenMatHang = "Giá đỗ",
+    MaDonViTinh = 1,
+    SoLuongTon = 4321
+},
+new
+{
+    MaMatHang = 183,
+    TenMatHang = "Đậu phụ",
+    MaDonViTinh = 2,
+    SoLuongTon = 6543
+},
+new
+{
+    MaMatHang = 184,
+    TenMatHang = "Đậu nành",
+    MaDonViTinh = 1,
+    SoLuongTon = 7654
+},
+new
+{
+    MaMatHang = 185,
+    TenMatHang = "Đậu xanh",
+    MaDonViTinh = 1,
+    SoLuongTon = 8765
+},
+new
+{
+    MaMatHang = 186,
+    TenMatHang = "Đậu đen",
+    MaDonViTinh = 1,
+    SoLuongTon = 7654
+},
+new
+{
+    MaMatHang = 187,
+    TenMatHang = "Đậu đỏ",
+    MaDonViTinh = 1,
+    SoLuongTon = 6543
+},
+new
+{
+    MaMatHang = 188,
+    TenMatHang = "Hành lá",
+    MaDonViTinh = 1,
+    SoLuongTon = 5432
+},
+new
+{
+    MaMatHang = 189,
+    TenMatHang = "Hành tím",
+    MaDonViTinh = 1,
+    SoLuongTon = 6543
+},
+new
+{
+    MaMatHang = 190,
+    TenMatHang = "Ngò rí",
+    MaDonViTinh = 1,
+    SoLuongTon = 4321
+},
+new
+{
+    MaMatHang = 191,
+    TenMatHang = "Ngò gai",
+    MaDonViTinh = 1,
+    SoLuongTon = 5432
+},
+new
+{
+    MaMatHang = 192,
+    TenMatHang = "Nấm hương",
+    MaDonViTinh = 1,
+    SoLuongTon = 6543
+},
+new
+{
+    MaMatHang = 193,
+    TenMatHang = "Nấm đùi gà",
+    MaDonViTinh = 1,
+    SoLuongTon = 5432
+},
+new
+{
+    MaMatHang = 194,
+    TenMatHang = "Nấm kim châm",
+    MaDonViTinh = 1,
+    SoLuongTon = 4321
+},
+new
+{
+    MaMatHang = 195,
+    TenMatHang = "Nấm linh chi",
+    MaDonViTinh = 1,
+    SoLuongTon = 3456
+},
+new
+{
+    MaMatHang = 196,
+    TenMatHang = "Hạt sen",
+    MaDonViTinh = 1,
+    SoLuongTon = 6789
+},
+new
+{
+    MaMatHang = 197,
+    TenMatHang = "Hạt chia",
+    MaDonViTinh = 1,
+    SoLuongTon = 5678
+},
+new
+{
+    MaMatHang = 198,
+    TenMatHang = "Hạt é",
+    MaDonViTinh = 1,
+    SoLuongTon = 4567
+},
+new
+{
+    MaMatHang = 199,
+    TenMatHang = "Hạt óc chó",
+    MaDonViTinh = 1,
+    SoLuongTon = 3456
+},
+new
+{
+    MaMatHang = 200,
+    TenMatHang = "Yến mạch",
+    MaDonViTinh = 1,
+    SoLuongTon = 6543
+}
 
             );
         }
