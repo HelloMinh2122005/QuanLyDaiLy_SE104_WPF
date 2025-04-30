@@ -16,10 +16,7 @@ namespace QuanLyDaiLy.ViewModels.MatHangViewModels
         private readonly IServiceProvider _serviceProvider;
         private readonly Func<int, CapNhatMatHangWindowViewModel> _capNhatMatHangFactory;
 
-        // Total number of pages
         private int TotalPages = 0;
-
-        // Number of page buttons to display
         private const int VisibleButtons = 5;
 
         public MatHangPageViewModel(
@@ -33,7 +30,7 @@ namespace QuanLyDaiLy.ViewModels.MatHangViewModels
             _capNhatMatHangFactory = capNhatMatHangFactory;
 
             PageSelectionCommand = new RelayCommand<string>(SelectPage);
-            SearchMatHangCommand = new RelayCommand(OpenSearchMatHangWindow);
+            SearchMatHangCommand = new AsyncRelayCommand(OpenSearchMatHangWindow);
             AddMatHangCommand = new RelayCommand(OpenAddMatHangWindow);
             EditMatHangCommand = new RelayCommand(OpenEditMatHangWindow);
             DeleteMatHangCommand = new RelayCommand(ExecuteDeleteMatHang);
@@ -133,6 +130,12 @@ namespace QuanLyDaiLy.ViewModels.MatHangViewModels
             set => SetProperty(ref _buttonParamFith, value);
         }
 
+        private ObservableCollection<MatHang> _filteredMatHangs = [];
+        public ObservableCollection<MatHang> FilteredMatHangs
+        {
+            get => _filteredMatHangs;
+            set => SetProperty(ref _filteredMatHangs, value);
+        }
 
         private ObservableCollection<MatHang> _danhSachMatHang = [];
         public ObservableCollection<MatHang> DanhSachMatHang
@@ -256,98 +259,192 @@ namespace QuanLyDaiLy.ViewModels.MatHangViewModels
 
         private async Task UpdatePagination()
         {
-            if (!int.TryParse(CurrentPage, out int currentPage))
-                return;
-
-            var unselectedStyle = Application.Current.Resources["PageButtonUnSelectedStyle"] as Style ?? new Style();
-            var selectedStyle = Application.Current.Resources["PageButtonSelectedStyle"] as Style ?? new Style();
-            var collapsedStyle = Application.Current.Resources["CollapsedButton"] as Style ?? new Style();
-
-            var buttonStyles = new Style[VisibleButtons] {
-                unselectedStyle, unselectedStyle, unselectedStyle,
-                unselectedStyle, unselectedStyle
-            };
-
-            string[] buttonContents = new string[VisibleButtons];
-            string[] buttonParams = new string[VisibleButtons];
-
-            int startPage = 1;
-
-            if (TotalPages <= VisibleButtons)
+            if (FilteredMatHangs.Count == 0)
             {
-                for (int i = 0; i < VisibleButtons; i++)
-                {
-                    int pageNum = i + 1;
-                    buttonContents[i] = buttonParams[i] = pageNum.ToString();
+                if (!int.TryParse(CurrentPage, out int currentPage))
+                    return;
 
-                    if (pageNum > TotalPages)
-                        buttonStyles[i] = collapsedStyle;
-                    else if (pageNum == currentPage)
-                        buttonStyles[i] = selectedStyle;
-                }
-            }
-            else 
-            {
-                if (currentPage <= 2)
+                var unselectedStyle = Application.Current.Resources["PageButtonUnSelectedStyle"] as Style ?? new Style();
+                var selectedStyle = Application.Current.Resources["PageButtonSelectedStyle"] as Style ?? new Style();
+                var collapsedStyle = Application.Current.Resources["CollapsedButton"] as Style ?? new Style();
+
+                var buttonStyles = new Style[VisibleButtons] {
+                    unselectedStyle, unselectedStyle, unselectedStyle,
+                    unselectedStyle, unselectedStyle
+                };
+
+                string[] buttonContents = new string[VisibleButtons];
+                string[] buttonParams = new string[VisibleButtons];
+
+                int startPage = 1;
+
+                if (TotalPages <= VisibleButtons)
                 {
                     for (int i = 0; i < VisibleButtons; i++)
                     {
-                        buttonContents[i] = buttonParams[i] = (i + 1).ToString();
-                    }
-
-                    buttonStyles[currentPage - 1] = selectedStyle;
-                }
-                else if (currentPage >= TotalPages - 2)
-                {
-                    startPage = TotalPages - 4;
-                    for (int i = 0; i < VisibleButtons; i++)
-                    {
-                        int pageNum = startPage + i;
+                        int pageNum = i + 1;
                         buttonContents[i] = buttonParams[i] = pageNum.ToString();
-                    }
 
-                    int selectedIndex = currentPage - startPage;
-                    buttonStyles[selectedIndex] = selectedStyle;
+                        if (pageNum > TotalPages)
+                            buttonStyles[i] = collapsedStyle;
+                        else if (pageNum == currentPage)
+                            buttonStyles[i] = selectedStyle;
+                    }
                 }
                 else
                 {
-                    startPage = currentPage - 1;
+                    if (currentPage <= 2)
+                    {
+                        for (int i = 0; i < VisibleButtons; i++)
+                        {
+                            buttonContents[i] = buttonParams[i] = (i + 1).ToString();
+                        }
+
+                        buttonStyles[currentPage - 1] = selectedStyle;
+                    }
+                    else if (currentPage >= TotalPages - 2)
+                    {
+                        startPage = TotalPages - 4;
+                        for (int i = 0; i < VisibleButtons; i++)
+                        {
+                            int pageNum = startPage + i;
+                            buttonContents[i] = buttonParams[i] = pageNum.ToString();
+                        }
+
+                        int selectedIndex = currentPage - startPage;
+                        buttonStyles[selectedIndex] = selectedStyle;
+                    }
+                    else
+                    {
+                        startPage = currentPage - 1;
+                        for (int i = 0; i < VisibleButtons; i++)
+                        {
+                            int pageNum = startPage + i;
+                            buttonContents[i] = buttonParams[i] = pageNum.ToString();
+                        }
+
+                        buttonStyles[1] = selectedStyle;
+                    }
+                }
+
+                ButtonContentFirst = buttonContents[0];
+                ButtonParamFirst = buttonParams[0];
+                ButtonStyleFirst = buttonStyles[0];
+
+                ButtonContentSecond = buttonContents[1];
+                ButtonParamSecond = buttonParams[1];
+                ButtonStyleSecond = buttonStyles[1];
+
+                ButtonContentThird = buttonContents[2];
+                ButtonParamThird = buttonParams[2];
+                ButtonStyleThird = buttonStyles[2];
+
+                ButtonContentForth = buttonContents[3];
+                ButtonParamForth = buttonParams[3];
+                ButtonStyleForth = buttonStyles[3];
+
+                ButtonContentFith = buttonContents[4];
+                ButtonParamFith = buttonParams[4];
+                ButtonStyleFith = buttonStyles[4];
+
+                var items = await _matHangService.GetMatHangPage(currentPage - 1);
+                DanhSachMatHang.Clear();
+                DanhSachMatHang = [.. items];
+            }
+            else
+            {
+                if (!int.TryParse(CurrentPage, out int currentPage))
+                    return;
+
+                var unselectedStyle = Application.Current.Resources["PageButtonUnSelectedStyle"] as Style ?? new Style();
+                var selectedStyle = Application.Current.Resources["PageButtonSelectedStyle"] as Style ?? new Style();
+                var collapsedStyle = Application.Current.Resources["CollapsedButton"] as Style ?? new Style();
+
+                var buttonStyles = new Style[VisibleButtons] {
+                    unselectedStyle, unselectedStyle, unselectedStyle,
+                    unselectedStyle, unselectedStyle
+                };
+
+                string[] buttonContents = new string[VisibleButtons];
+                string[] buttonParams = new string[VisibleButtons];
+
+                int startPage = 1;
+
+                if (TotalPages <= VisibleButtons)
+                {
                     for (int i = 0; i < VisibleButtons; i++)
                     {
-                        int pageNum = startPage + i;
+                        int pageNum = i + 1;
                         buttonContents[i] = buttonParams[i] = pageNum.ToString();
+
+                        if (pageNum > TotalPages)
+                            buttonStyles[i] = collapsedStyle;
+                        else if (pageNum == currentPage)
+                            buttonStyles[i] = selectedStyle;
                     }
-
-                    buttonStyles[1] = selectedStyle;
                 }
+                else
+                {
+                    if (currentPage <= 2)
+                    {
+                        for (int i = 0; i < VisibleButtons; i++)
+                        {
+                            buttonContents[i] = buttonParams[i] = (i + 1).ToString();
+                        }
+
+                        buttonStyles[currentPage - 1] = selectedStyle;
+                    }
+                    else if (currentPage >= TotalPages - 2)
+                    {
+                        startPage = TotalPages - 4;
+                        for (int i = 0; i < VisibleButtons; i++)
+                        {
+                            int pageNum = startPage + i;
+                            buttonContents[i] = buttonParams[i] = pageNum.ToString();
+                        }
+
+                        int selectedIndex = currentPage - startPage;
+                        buttonStyles[selectedIndex] = selectedStyle;
+                    }
+                    else
+                    {
+                        startPage = currentPage - 1;
+                        for (int i = 0; i < VisibleButtons; i++)
+                        {
+                            int pageNum = startPage + i;
+                            buttonContents[i] = buttonParams[i] = pageNum.ToString();
+                        }
+
+                        buttonStyles[1] = selectedStyle;
+                    }
+                }
+
+                ButtonContentFirst = buttonContents[0];
+                ButtonParamFirst = buttonParams[0];
+                ButtonStyleFirst = buttonStyles[0];
+
+                ButtonContentSecond = buttonContents[1];
+                ButtonParamSecond = buttonParams[1];
+                ButtonStyleSecond = buttonStyles[1];
+
+                ButtonContentThird = buttonContents[2];
+                ButtonParamThird = buttonParams[2];
+                ButtonStyleThird = buttonStyles[2];
+
+                ButtonContentForth = buttonContents[3];
+                ButtonParamForth = buttonParams[3];
+                ButtonStyleForth = buttonStyles[3];
+
+                ButtonContentFith = buttonContents[4];
+                ButtonParamFith = buttonParams[4];
+                ButtonStyleFith = buttonStyles[4];
+
+                DanhSachMatHang.Clear();
+                DanhSachMatHang = [.. FilteredMatHangs.Skip((int.Parse(CurrentPage) - 1) * 20).Take(20)];
             }
-
-            ButtonContentFirst = buttonContents[0];
-            ButtonParamFirst = buttonParams[0];
-            ButtonStyleFirst = buttonStyles[0];
-
-            ButtonContentSecond = buttonContents[1];
-            ButtonParamSecond = buttonParams[1];
-            ButtonStyleSecond = buttonStyles[1];
-
-            ButtonContentThird = buttonContents[2];
-            ButtonParamThird = buttonParams[2];
-            ButtonStyleThird = buttonStyles[2];
-
-            ButtonContentForth = buttonContents[3];
-            ButtonParamForth = buttonParams[3];
-            ButtonStyleForth = buttonStyles[3];
-
-            ButtonContentFith = buttonContents[4];
-            ButtonParamFith = buttonParams[4];
-            ButtonStyleFith = buttonStyles[4];
-
-            var items = await _matHangService.GetMatHangPage(currentPage - 1);
-            DanhSachMatHang.Clear();
-            DanhSachMatHang = [.. items];
         }
 
-        private void OpenSearchMatHangWindow()
+        private async Task OpenSearchMatHangWindow()
         {
             SelectedMatHang = null!;
 
@@ -355,12 +452,20 @@ namespace QuanLyDaiLy.ViewModels.MatHangViewModels
 
             if (traCuuMatHangWindow.DataContext is TraCuuMatHangWindowViewModel viewModel)
             {
-                viewModel.SearchCompleted += (sender, searchResults) =>
+                viewModel.SearchCompleted += async (sender, searchResults) =>
                 {
                     if (searchResults.Count > 0)
                     {
-                        DanhSachMatHang = searchResults;
+                        FilteredMatHangs = searchResults;
+                        TotalPages = (int)Math.Ceiling((double)FilteredMatHangs.Count / 20);
                     }
+                    else
+                    {
+                        FilteredMatHangs.Clear();
+                        TotalPages = await _matHangService.GetTotalPages();
+                    }
+                    CurrentPage = "1";
+                    _ = UpdatePagination();
                 };
             }
 
