@@ -125,13 +125,7 @@ public static class ApplicationServiceExtensions
 
         services.AddTransient<ViewModels.MatHangViewModels.MatHangPageViewModel>();
         services.AddTransient<ViewModels.MatHangViewModels.ThemMatHangWindowViewModel>();
-        services.AddTransient<Func<int, ViewModels.MatHangViewModels.CapNhatMatHangWindowViewModel>>(sp => matHangId =>
-            new ViewModels.MatHangViewModels.CapNhatMatHangWindowViewModel(
-                sp.GetRequiredService<IMatHangService>(),
-                sp.GetRequiredService<IDonViTinhService>(),
-                matHangId
-            )
-        );
+        services.AddTransient<ViewModels.MatHangViewModels.CapNhatMatHangWindowViewModel>();
         services.AddTransient<ViewModels.MatHangViewModels.TraCuuMatHangWindowViewModel>();
 
         services.AddTransient<ViewModels.PhieuThuViewModels.PhieuThuPageViewModel>();

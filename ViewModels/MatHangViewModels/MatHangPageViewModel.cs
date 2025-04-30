@@ -12,11 +12,13 @@ using QuanLyDaiLy.Views.MatHangViews;
 
 namespace QuanLyDaiLy.ViewModels.MatHangViewModels
 {
-    public partial class MatHangPageViewModel : ObservableObject, IRecipient<SearchCompletedMessage<MatHang>>
+    public partial class MatHangPageViewModel : 
+        ObservableObject, 
+        IRecipient<SearchCompletedMessage<MatHang>>, 
+        IRecipient<DataReloadMessage>
     {
         private readonly IMatHangService _matHangService;
         private readonly IServiceProvider _serviceProvider;
-        private readonly Func<int, CapNhatMatHangWindowViewModel> _capNhatMatHangFactory;
 
         private int TotalPages = 0;
         private const int VisibleButtons = 5;
@@ -26,18 +28,16 @@ namespace QuanLyDaiLy.ViewModels.MatHangViewModels
 
         public MatHangPageViewModel(
             IMatHangService matHangService,
-            IServiceProvider serviceProvider,
-            Func<int, CapNhatMatHangWindowViewModel> capNhatMatHangFactory
+            IServiceProvider serviceProvider
         )
         {
             _matHangService = matHangService;
             _serviceProvider = serviceProvider;
-            _capNhatMatHangFactory = capNhatMatHangFactory;
 
             // Only keep the parameterized command that can't use RelayCommand attribute
             PageSelectionCommand = new RelayCommand<string>(SelectPage);
 
-            WeakReferenceMessenger.Default.Register(this);
+            WeakReferenceMessenger.Default.RegisterAll(this);
 
             _ = LoadDataAsync();
         }
@@ -57,6 +57,11 @@ namespace QuanLyDaiLy.ViewModels.MatHangViewModels
             }
             CurrentPage = "1";
             _ = UpdatePagination();
+        }
+
+        public void Receive(DataReloadMessage message)
+        {
+            _ = LoadDataAsync();
         }
 
         // Binding properties
@@ -221,7 +226,6 @@ namespace QuanLyDaiLy.ViewModels.MatHangViewModels
 
             if (TotalPages <= VisibleButtons)
             {
-                // Simple case: not enough pages to need complex pagination
                 for (int i = 0; i < VisibleButtons; i++)
                 {
                     int pageNum = i + 1;
@@ -332,10 +336,6 @@ namespace QuanLyDaiLy.ViewModels.MatHangViewModels
             try
             {
                 var addMatHangWindow = _serviceProvider.GetRequiredService<ThemMatHangWindow>();
-                if (addMatHangWindow.DataContext is ThemMatHangWindowViewModel viewModel)
-                {
-                    viewModel.DataChanged += async (sender, e) => await LoadDataAsync();
-                }
                 addMatHangWindow.Show();
             }
             catch (Exception ex)
@@ -356,11 +356,9 @@ namespace QuanLyDaiLy.ViewModels.MatHangViewModels
 
             try
             {
-                var viewmodel = _capNhatMatHangFactory(SelectedMatHang.MaMatHang);
-                viewmodel.DataChanged += async (sender, e) => await LoadDataAsync();
-
-                var window = new CapNhatMatHangWindow(viewmodel);
+                var window = _serviceProvider.GetRequiredService<CapNhatMatHangWindow>();
                 window.Show();
+                WeakReferenceMessenger.Default.Send(new SelectedIdMessage(SelectedMatHang.MaMatHang));
             }
             catch (Exception ex)
             {
