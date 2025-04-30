@@ -36,12 +36,12 @@ namespace QuanLyDaiLy.ViewModels.BaoCaoViewModels
             _daiLyService = daiLyService;
             _phieuXuatService = phieuXuatService;
 
-            MonthOptions = new ObservableCollection<string>
-            {
+            MonthOptions = 
+            [
                 "Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4",
                 "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8",
                 "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"
-            };
+            ];
 
             int currentYear = DateTime.Now.Year;
             YearOptions = new ObservableCollection<int>();

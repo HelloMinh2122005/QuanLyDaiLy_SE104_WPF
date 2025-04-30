@@ -3,14 +3,16 @@ using System.Windows;
 using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Extensions.DependencyInjection;
+using QuanLyDaiLy.Messages;
 using QuanLyDaiLy.Models;
 using QuanLyDaiLy.Services;
 using QuanLyDaiLy.Views.MatHangViews;
 
 namespace QuanLyDaiLy.ViewModels.MatHangViewModels
 {
-    public class MatHangPageViewModel : ObservableObject
+    public partial class MatHangPageViewModel : ObservableObject, IRecipient<SearchCompletedMessage<MatHang>>
     {
         private readonly IMatHangService _matHangService;
         private readonly IServiceProvider _serviceProvider;
@@ -32,16 +34,29 @@ namespace QuanLyDaiLy.ViewModels.MatHangViewModels
             _serviceProvider = serviceProvider;
             _capNhatMatHangFactory = capNhatMatHangFactory;
 
+            // Only keep the parameterized command that can't use RelayCommand attribute
             PageSelectionCommand = new RelayCommand<string>(SelectPage);
-            SearchMatHangCommand = new AsyncRelayCommand(OpenSearchMatHangWindow);
-            AddMatHangCommand = new RelayCommand(OpenAddMatHangWindow);
-            EditMatHangCommand = new RelayCommand(OpenEditMatHangWindow);
-            DeleteMatHangCommand = new RelayCommand(ExecuteDeleteMatHang);
-            LoadDataCommand = new AsyncRelayCommand(LoadDataExecute);
-            NextPageCommand = new RelayCommand(GoToNextPage, CanGoToNextPage);
-            PreviousPageCommand = new RelayCommand(GoToPreviousPage, CanGoToPreviousPage);
+
+            WeakReferenceMessenger.Default.Register(this);
 
             _ = LoadDataAsync();
+        }
+
+        public void Receive(SearchCompletedMessage<MatHang> message)
+        {
+            var searchResults = message.Value;
+
+            if (searchResults.Count > 0)
+            {
+                FilteredMatHangs = searchResults;
+                TotalPages = (int)Math.Ceiling((double)FilteredMatHangs.Count / ItemsPerPage);
+            }
+            else
+            {
+                _ = LoadDataAsync();
+            }
+            CurrentPage = "1";
+            _ = UpdatePagination();
         }
 
         // Binding properties
@@ -56,148 +71,70 @@ namespace QuanLyDaiLy.ViewModels.MatHangViewModels
                 _ = UpdatePagination();
 
                 // Update command can-execute state
-                (NextPageCommand as RelayCommand)?.NotifyCanExecuteChanged();
-                (PreviousPageCommand as RelayCommand)?.NotifyCanExecuteChanged();
+                (GoToNextPageCommand as RelayCommand)?.NotifyCanExecuteChanged();
+                (GoToPreviousPageCommand as RelayCommand)?.NotifyCanExecuteChanged();
             }
         }
 
+
         // Page button content properties
+        [ObservableProperty]
         private string _buttonContentFirst = "1";
-        public string ButtonContentFirst
-        {
-            get => _buttonContentFirst;
-            set => SetProperty(ref _buttonContentFirst, value);
-        }
 
+        [ObservableProperty]
         private string _buttonContentSecond = "2";
-        public string ButtonContentSecond
-        {
-            get => _buttonContentSecond;
-            set => SetProperty(ref _buttonContentSecond, value);
-        }
 
+        [ObservableProperty]
         private string _buttonContentThird = "3";
-        public string ButtonContentThird
-        {
-            get => _buttonContentThird;
-            set => SetProperty(ref _buttonContentThird, value);
-        }
 
+        [ObservableProperty]
         private string _buttonContentForth = "4";
-        public string ButtonContentForth
-        {
-            get => _buttonContentForth;
-            set => SetProperty(ref _buttonContentForth, value);
-        }
 
+        [ObservableProperty]
         private string _buttonContentFith = "5";
-        public string ButtonContentFith
-        {
-            get => _buttonContentFith;
-            set => SetProperty(ref _buttonContentFith, value);
-        }
 
         // Page button command parameter properties
+        [ObservableProperty]
         private string _buttonParamFirst = "1";
-        public string ButtonParamFirst
-        {
-            get => _buttonParamFirst;
-            set => SetProperty(ref _buttonParamFirst, value);
-        }
 
+        [ObservableProperty]
         private string _buttonParamSecond = "2";
-        public string ButtonParamSecond
-        {
-            get => _buttonParamSecond;
-            set => SetProperty(ref _buttonParamSecond, value);
-        }
 
+        [ObservableProperty]
         private string _buttonParamThird = "3";
-        public string ButtonParamThird
-        {
-            get => _buttonParamThird;
-            set => SetProperty(ref _buttonParamThird, value);
-        }
 
+        [ObservableProperty]
         private string _buttonParamForth = "4";
-        public string ButtonParamForth
-        {
-            get => _buttonParamForth;
-            set => SetProperty(ref _buttonParamForth, value);
-        }
 
+        [ObservableProperty]
         private string _buttonParamFith = "5";
-        public string ButtonParamFith
-        {
-            get => _buttonParamFith;
-            set => SetProperty(ref _buttonParamFith, value);
-        }
 
+        [ObservableProperty]
         private ObservableCollection<MatHang> _filteredMatHangs = [];
-        public ObservableCollection<MatHang> FilteredMatHangs
-        {
-            get => _filteredMatHangs;
-            set => SetProperty(ref _filteredMatHangs, value);
-        }
 
+        [ObservableProperty]
         private ObservableCollection<MatHang> _danhSachMatHang = [];
-        public ObservableCollection<MatHang> DanhSachMatHang
-        {
-            get => _danhSachMatHang;
-            set => SetProperty(ref _danhSachMatHang, value);
-        }
 
+        [ObservableProperty]
         private MatHang _selectedMatHang = null!;
-        public MatHang SelectedMatHang
-        {
-            get => _selectedMatHang;
-            set => SetProperty(ref _selectedMatHang, value);
-        }
 
+        [ObservableProperty]
         private Style _buttonStyleFirst;
-        public Style ButtonStyleFirst
-        {
-            get => _buttonStyleFirst;
-            set => SetProperty(ref _buttonStyleFirst, value);
-        }
 
+        [ObservableProperty]
         private Style _buttonStyleSecond;
-        public Style ButtonStyleSecond
-        {
-            get => _buttonStyleSecond;
-            set => SetProperty(ref _buttonStyleSecond, value);
-        }
 
+        [ObservableProperty]
         private Style _buttonStyleThird;
-        public Style ButtonStyleThird
-        {
-            get => _buttonStyleThird;
-            set => SetProperty(ref _buttonStyleThird, value);
-        }
 
+        [ObservableProperty]
         private Style _buttonStyleForth;
-        public Style ButtonStyleForth
-        {
-            get => _buttonStyleForth;
-            set => SetProperty(ref _buttonStyleForth, value);
-        }
 
+        [ObservableProperty]
         private Style _buttonStyleFith;
-        public Style ButtonStyleFith
-        {
-            get => _buttonStyleFith;
-            set => SetProperty(ref _buttonStyleFith, value);
-        }
 
-        // Commands
-        public ICommand SearchMatHangCommand { get; }
-        public ICommand AddMatHangCommand { get; }
-        public ICommand EditMatHangCommand { get; }
-        public ICommand DeleteMatHangCommand { get; }
-        public ICommand LoadDataCommand { get; }
+        // Keep the RelayCommand<string> as it requires a parameter
         public ICommand PageSelectionCommand { get; }
-        public ICommand NextPageCommand { get; }
-        public ICommand PreviousPageCommand { get; }
 
         // Methods
         private async Task LoadDataAsync()
@@ -246,6 +183,7 @@ namespace QuanLyDaiLy.ViewModels.MatHangViewModels
 
         private bool CanGoToPreviousPage() => int.TryParse(CurrentPage, out int current) && current > 1;
 
+        [RelayCommand(CanExecute = nameof(CanGoToNextPage))]
         private void GoToNextPage()
         {
             if (int.TryParse(CurrentPage, out int current) && current < TotalPages)
@@ -254,6 +192,7 @@ namespace QuanLyDaiLy.ViewModels.MatHangViewModels
             }
         }
 
+        [RelayCommand(CanExecute = nameof(CanGoToPreviousPage))]
         private void GoToPreviousPage()
         {
             if (int.TryParse(CurrentPage, out int current) && current > 1)
@@ -378,35 +317,17 @@ namespace QuanLyDaiLy.ViewModels.MatHangViewModels
             }
         }
 
-        private async Task OpenSearchMatHangWindow()
+        [RelayCommand]
+        private async Task SearchMatHang()
         {
             SelectedMatHang = null!;
 
             var traCuuMatHangWindow = _serviceProvider.GetRequiredService<TraCuuMatHangWindow>();
-
-            if (traCuuMatHangWindow.DataContext is TraCuuMatHangWindowViewModel viewModel)
-            {
-                viewModel.SearchCompleted += async (sender, searchResults) =>
-                {
-                    if (searchResults.Count > 0)
-                    {
-                        FilteredMatHangs = searchResults;
-                        TotalPages = (int)Math.Ceiling((double)FilteredMatHangs.Count / ItemsPerPage);
-                    }
-                    else
-                    {
-                        FilteredMatHangs.Clear();
-                        TotalPages = await _matHangService.GetTotalPages();
-                    }
-                    CurrentPage = "1";
-                    _ = UpdatePagination();
-                };
-            }
-
             traCuuMatHangWindow.Show();
         }
 
-        private void OpenAddMatHangWindow()
+        [RelayCommand]
+        private void AddMatHang()
         {
             try
             {
@@ -424,7 +345,8 @@ namespace QuanLyDaiLy.ViewModels.MatHangViewModels
             SelectedMatHang = null!;
         }
 
-        private void OpenEditMatHangWindow()
+        [RelayCommand]
+        private void EditMatHang()
         {
             if (SelectedMatHang == null || string.IsNullOrEmpty(SelectedMatHang.TenMatHang))
             {
@@ -446,12 +368,13 @@ namespace QuanLyDaiLy.ViewModels.MatHangViewModels
             }
         }
 
-        private void ExecuteDeleteMatHang()
+        [RelayCommand]
+        private void DeleteMatHang()
         {
-            _ = DeleteMatHang();
+            _ = DeleteMatHangAsync();
         }
 
-        private async Task DeleteMatHang()
+        private async Task DeleteMatHangAsync()
         {
             if (SelectedMatHang == null)
             {
@@ -480,7 +403,8 @@ namespace QuanLyDaiLy.ViewModels.MatHangViewModels
             }
         }
 
-        private async Task LoadDataExecute()
+        [RelayCommand]
+        private async Task LoadData()
         {
             SelectedMatHang = null!;
             await LoadDataAsync();
