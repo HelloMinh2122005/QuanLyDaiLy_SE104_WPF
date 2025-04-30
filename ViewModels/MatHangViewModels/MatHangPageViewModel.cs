@@ -33,14 +33,11 @@ namespace QuanLyDaiLy.ViewModels.MatHangViewModels
             _capNhatMatHangFactory = capNhatMatHangFactory;
 
             PageSelectionCommand = new RelayCommand<string>(SelectPage);
-
             SearchMatHangCommand = new RelayCommand(OpenSearchMatHangWindow);
             AddMatHangCommand = new RelayCommand(OpenAddMatHangWindow);
             EditMatHangCommand = new RelayCommand(OpenEditMatHangWindow);
             DeleteMatHangCommand = new RelayCommand(ExecuteDeleteMatHang);
             LoadDataCommand = new AsyncRelayCommand(LoadDataExecute);
-
-            // Next/Previous page commands
             NextPageCommand = new RelayCommand(GoToNextPage, CanGoToNextPage);
             PreviousPageCommand = new RelayCommand(GoToPreviousPage, CanGoToPreviousPage);
 
@@ -262,55 +259,44 @@ namespace QuanLyDaiLy.ViewModels.MatHangViewModels
             if (!int.TryParse(CurrentPage, out int currentPage))
                 return;
 
-            // Cache application resources for better performance
             var unselectedStyle = Application.Current.Resources["PageButtonUnSelectedStyle"] as Style ?? new Style();
             var selectedStyle = Application.Current.Resources["PageButtonSelectedStyle"] as Style ?? new Style();
             var collapsedStyle = Application.Current.Resources["CollapsedButton"] as Style ?? new Style();
 
-            // Initialize all button styles to unselected
             var buttonStyles = new Style[VisibleButtons] {
                 unselectedStyle, unselectedStyle, unselectedStyle,
                 unselectedStyle, unselectedStyle
             };
 
-            // Calculate page numbers for buttons
             string[] buttonContents = new string[VisibleButtons];
             string[] buttonParams = new string[VisibleButtons];
 
-            // Calculate start page depending on total pages available
             int startPage = 1;
 
             if (TotalPages <= VisibleButtons)
             {
-                // Simple case: when we have <= 5 pages, just number them 1 through 5
                 for (int i = 0; i < VisibleButtons; i++)
                 {
                     int pageNum = i + 1;
                     buttonContents[i] = buttonParams[i] = pageNum.ToString();
 
-                    // Hide buttons beyond total pages
                     if (pageNum > TotalPages)
                         buttonStyles[i] = collapsedStyle;
-                    // Set selected style for current page
                     else if (pageNum == currentPage)
                         buttonStyles[i] = selectedStyle;
                 }
             }
-            else // More than 5 pages
+            else 
             {
-                // Special cases for first two pages to show pages 1-5
                 if (currentPage <= 2)
                 {
-                    startPage = 1;
                     for (int i = 0; i < VisibleButtons; i++)
                     {
                         buttonContents[i] = buttonParams[i] = (i + 1).ToString();
                     }
 
-                    // Set the selected style for current page (1 or 2)
                     buttonStyles[currentPage - 1] = selectedStyle;
                 }
-                // Special cases for last few pages to show the last 5 pages
                 else if (currentPage >= TotalPages - 2)
                 {
                     startPage = TotalPages - 4;
@@ -320,11 +306,9 @@ namespace QuanLyDaiLy.ViewModels.MatHangViewModels
                         buttonContents[i] = buttonParams[i] = pageNum.ToString();
                     }
 
-                    // Set selected style
                     int selectedIndex = currentPage - startPage;
                     buttonStyles[selectedIndex] = selectedStyle;
                 }
-                // Default sliding window: current page is in the middle
                 else
                 {
                     startPage = currentPage - 1;
@@ -334,12 +318,10 @@ namespace QuanLyDaiLy.ViewModels.MatHangViewModels
                         buttonContents[i] = buttonParams[i] = pageNum.ToString();
                     }
 
-                    // Current page is always the second button in this case
                     buttonStyles[1] = selectedStyle;
                 }
             }
 
-            // Apply calculated values to properties
             ButtonContentFirst = buttonContents[0];
             ButtonParamFirst = buttonParams[0];
             ButtonStyleFirst = buttonStyles[0];
@@ -360,12 +342,10 @@ namespace QuanLyDaiLy.ViewModels.MatHangViewModels
             ButtonParamFith = buttonParams[4];
             ButtonStyleFith = buttonStyles[4];
 
-            // Update the data - fetch only once
             var items = await _matHangService.GetMatHangPage(currentPage - 1);
             DanhSachMatHang.Clear();
             DanhSachMatHang = [.. items];
         }
-
 
         private void OpenSearchMatHangWindow()
         {
