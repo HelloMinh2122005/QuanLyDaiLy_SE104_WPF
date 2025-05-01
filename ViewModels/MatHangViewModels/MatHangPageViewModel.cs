@@ -50,13 +50,14 @@ namespace QuanLyDaiLy.ViewModels.MatHangViewModels
             {
                 FilteredMatHangs = searchResults;
                 TotalPages = (int)Math.Ceiling((double)FilteredMatHangs.Count / ItemsPerPage);
+                CurrentPage = "1";
+                _ = UpdatePagination();
             }
             else
             {
                 _ = LoadDataAsync();
             }
-            CurrentPage = "1";
-            _ = UpdatePagination();
+            
         }
 
         public void Receive(DataReloadMessage message)
@@ -367,12 +368,7 @@ namespace QuanLyDaiLy.ViewModels.MatHangViewModels
         }
 
         [RelayCommand]
-        private void DeleteMatHang()
-        {
-            _ = DeleteMatHangAsync();
-        }
-
-        private async Task DeleteMatHangAsync()
+        private async Task DeleteMatHang()
         {
             if (SelectedMatHang == null)
             {
