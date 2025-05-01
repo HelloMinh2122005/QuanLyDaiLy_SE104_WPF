@@ -36,14 +36,5 @@
         <Setter Property="BorderBrush" Value="#E0E0E0" />
         <Setter Property="BorderThickness" Value="1" />
         <Setter Property="CornerRadius" Value="5" />
-        <Setter Property="Effect">
-            <Setter.Value>
-                <DropShadowEffect
-                    BlurRadius="8"
-                    Opacity="0.2"
-                    ShadowDepth="3"
-                    Color="#AAAAAA" />
-            </Setter.Value>
-        </Setter>
     </Style>
 </ResourceDictionary>

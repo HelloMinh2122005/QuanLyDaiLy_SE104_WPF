@@ -3,24 +3,14 @@
     <!--  Page Header TextBlock Style  -->
     <Style x:Key="PageHeaderTextBlockStyle" TargetType="TextBlock">
         <Setter Property="FontFamily" Value="Nunito" />
-        <Setter Property="FontSize" Value="60" />
+        <Setter Property="FontSize" Value="50" />
         <Setter Property="FontStyle" Value="Normal" />
         <Setter Property="FontWeight" Value="Bold" />
         <Setter Property="Foreground" Value="#333333" />
         <Setter Property="LineHeight" Value="50" />
         <Setter Property="Margin" Value="20,10,0,0" />
         <Setter Property="HorizontalAlignment" Value="Left" />
-        <Setter Property="VerticalAlignment" Value="Center" />
-        <Setter Property="Effect">
-            <Setter.Value>
-                <DropShadowEffect
-                    BlurRadius="3"
-                    Direction="330"
-                    Opacity="0.3"
-                    ShadowDepth="1"
-                    Color="#CCCCCC" />
-            </Setter.Value>
-        </Setter>
+        <Setter Property="VerticalAlignment" Value="Top" />
     </Style>
 
     <!--  Window Header TextBlock Style  -->
