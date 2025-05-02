@@ -228,8 +228,15 @@
                             <Button
                                 Margin="20,0,0,0"
                                 Command="{Binding SearchDaiLyCommand}"
-                                Content="🔍 Tra cứu đại lý"
-                                Style="{StaticResource PrimaryButtonStyle}" />
+                                Style="{StaticResource PrimaryButtonStyle}">
+                                <StackPanel Orientation="Horizontal">
+                                    <fa:FontAwesome
+                                        Margin="0,0,8,0"
+                                        VerticalAlignment="Center"
+                                        Icon="Search" />
+                                    <TextBlock VerticalAlignment="Center" Text="Tra cứu đại lý" />
+                                </StackPanel>
+                            </Button>
                             <Button
                                 Width="50"
                                 Margin="10,0,0,0"
