@@ -403,6 +403,7 @@
                             Background="#00AAFF"
                             Content="Lập báo cáo công nợ"
                             FontFamily="Roboto"
+                            Command="{Binding ExportToPDFCommand}"
                             FontSize="16"
                             FontStyle="Normal"
                             FontWeight="Medium"
@@ -511,6 +512,7 @@
                             BorderThickness="0"
                             CanUserAddRows="False"
                             CanUserDeleteRows="False"
+                            ItemsSource="{Binding BaoCaoCongNoList}"
                             GridLinesVisibility="Horizontal"
                             HeadersVisibility="Column"
                             IsReadOnly="False"
@@ -575,10 +577,8 @@
                                 <DataGridTextColumn
                                     Width="Auto"
                                     Header="STT"
+                                    Binding="{Binding STT}"
                                     IsReadOnly="True">
-                                    <DataGridTextColumn.Binding>
-                                        <Binding Converter="{StaticResource RowToIndexConverter}" RelativeSource="{RelativeSource AncestorType=DataGridRow}" />
-                                    </DataGridTextColumn.Binding>
                                     <DataGridTextColumn.ElementStyle>
                                         <Style TargetType="TextBlock">
                                             <Setter Property="FontFamily" Value="Open Sans" />
@@ -597,6 +597,7 @@
                                     </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
 
+
                                 <DataGridTemplateColumn
                                     Width="250"
                                     Header="TÊN ĐẠI LÝ"
@@ -612,6 +613,7 @@
                                                 BorderThickness="1"
                                                 CornerRadius="10">
                                                 <TextBlock
+                                                    Text="{Binding TenDaiLy}"
                                                     HorizontalAlignment="Center"
                                                     VerticalAlignment="Center"
                                                     FontFamily="Open Sans"
@@ -648,6 +650,7 @@
                                                 BorderThickness="1"
                                                 CornerRadius="10">
                                                 <TextBlock
+                                                    Text="{Binding NoDauThang}"
                                                     HorizontalAlignment="Center"
                                                     VerticalAlignment="Center"
                                                     FontFamily="Open Sans"
@@ -684,6 +687,7 @@
                                                 BorderThickness="1"
                                                 CornerRadius="10">
                                                 <TextBlock
+                                                    Text="{Binding GiaTriGiaoDich}"
                                                     HorizontalAlignment="Center"
                                                     VerticalAlignment="Center"
                                                     FontFamily="Open Sans"
@@ -720,6 +724,7 @@
                                                 BorderThickness="1"
                                                 CornerRadius="10">
                                                 <TextBlock
+                                                    Text="{Binding NoCuoiThang}"
                                                     HorizontalAlignment="Center"
                                                     VerticalAlignment="Center"
                                                     FontFamily="Open Sans"

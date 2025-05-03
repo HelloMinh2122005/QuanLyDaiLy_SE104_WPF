@@ -51,6 +51,17 @@ public static class ApplicationServiceExtensions
             return vm;
         });
 
+        services.AddSingleton<Func<string, int, BaoCaoCongNoViewModel>>(sp => (month, year) =>
+        {
+            var daiLyService = sp.GetRequiredService<IDaiLyService>();
+            var phieuXuatService = sp.GetRequiredService<IPhieuXuatService>();
+            var phieuThuService = sp.GetRequiredService<IPhieuThuService>();
+
+            var vm = new BaoCaoCongNoViewModel(month, year, daiLyService, phieuXuatService, phieuThuService);
+            return vm;
+        });
+
+
 
         services.AddTransient<TraCuuDaiLyViewModel>();
 
