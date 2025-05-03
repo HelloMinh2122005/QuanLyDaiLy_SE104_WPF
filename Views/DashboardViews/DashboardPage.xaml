@@ -1329,10 +1329,9 @@
                                             FontFamily="Nunito"
                                             FontSize="14"
                                             LabelFormatter="{Binding CurrencyFormatter}"
-                                            MaxValue="40000000"
                                             MinValue="0">
                                             <lvc:Axis.Separator>
-                                                <lvc:Separator Step="5000000" />
+                                                <lvc:Separator Step="{Binding YAxisStepLineChart}" />
                                             </lvc:Axis.Separator>
                                             <lvc:Axis.Sections>
                                                 <lvc:AxisSection
@@ -1787,9 +1786,10 @@
                                         <lvc:Axis
                                             FontFamily="Nunito"
                                             FontSize="14"
-                                            LabelFormatter="{Binding CurrencyFormatter}">
+                                            LabelFormatter="{Binding CurrencyFormatter}"
+                                            MinValue="0">
                                             <lvc:Axis.Separator>
-                                                <lvc:Separator Step="10000000" />
+                                                <lvc:Separator Step="{Binding YAxisStepColumnChart}" />
                                             </lvc:Axis.Separator>
                                         </lvc:Axis>
                                     </lvc:CartesianChart.AxisY>
@@ -2017,7 +2017,7 @@
                                             LabelFormatter="{Binding CurrencyFormatter}"
                                             MinValue="0">
                                             <lvc:Axis.Separator>
-                                                <lvc:Separator Step="10000000" />
+                                                <lvc:Separator Step="{Binding YAxisStepDebtColumnChart}" />
                                             </lvc:Axis.Separator>
                                         </lvc:Axis>
                                     </lvc:CartesianChart.AxisY>

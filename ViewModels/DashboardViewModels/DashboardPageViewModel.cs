@@ -84,7 +84,7 @@ namespace QuanLyDaiLy.ViewModels.DashboardViewModels
             _phieuThuService = phieuThuService;
 
 
-            InitializeMonthYearOptions();
+            _ = InitializeMonthYearOptions();
             _ = InitializeLineChart();
             _ = InitializePieChart();
             _ = InitializeColumnChart();
@@ -101,86 +101,82 @@ namespace QuanLyDaiLy.ViewModels.DashboardViewModels
             int currentYear = _revenueChartYear;
             int lastYear = currentYear - 1;
 
-
-            // Vietnamese month names
+            // 2. Khởi tạo labels & formatter
             MonthLabels = new[]
             {
-                "Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4",
-                "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8",
-                "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"
+                "Tháng 1","Tháng 2","Tháng 3","Tháng 4",
+                "Tháng 5","Tháng 6","Tháng 7","Tháng 8",
+                "Tháng 9","Tháng 10","Tháng 11","Tháng 12"
             };
-
-            // Currency formatter for Vietnamese Dong
             CurrencyFormatter = value => value.ToString("N0") + " đ";
 
-            // 2. Lấy tất cả các phiếu thu
-            var allPhieuThu = await _phieuThuService.GetPhieuThuByCurrentYearAndLastYear(currentYear, lastYear);
+            // 3. Lấy dữ liệu
+            var allPhieuThu = await _phieuThuService
+                .GetPhieuThuByCurrentYearAndLastYear(currentYear, lastYear);
 
-            // 3. Tính tổng SoTienThu theo tháng của năm hiện tại và năm trước
-            var thisYearData = new double[12];  // Lưu tổng SoTienThu của từng tháng trong năm hiện tại
-            var lastYearData = new double[12];  // Lưu tổng SoTienThu của từng tháng trong năm trước
-
-            foreach (var phieuThu in allPhieuThu)
+            // 4. Tính tổng theo tháng
+            var thisYearData = new double[12];
+            var lastYearData = new double[12];
+            foreach (var p in allPhieuThu)
             {
-                int month = phieuThu.NgayThuTien.Month;
-                int year = phieuThu.NgayThuTien.Year;
-
-                // Tính tổng SoTienThu cho năm hiện tại
-                if (year == currentYear)
-                {
-                    thisYearData[month - 1] += phieuThu.SoTienThu;
-                }
-                // Tính tổng SoTienThu cho năm trước
-                if (year == lastYear)
-                {
-                    lastYearData[month - 1] += phieuThu.SoTienThu;
-                }
+                int m = p.NgayThuTien.Month;
+                if (p.NgayThuTien.Year == currentYear) thisYearData[m - 1] += p.SoTienThu;
+                else if (p.NgayThuTien.Year == lastYear) lastYearData[m - 1] += p.SoTienThu;
             }
 
-
-            // Nếu năm hiện tại không có dữ liệu cho một số tháng, gán giá trị 0 cho các tháng đó
-            for (int i = 0; i < 12; i++)
+            // 5. Tính bước trục Y: chia đều thành 5 đoạn
+            double maxThis = thisYearData.Any() ? thisYearData.Max() : 0;
+            double maxLast = lastYearData.Any() ? lastYearData.Max() : 0;
+            double maxAll = Math.Max(maxThis, maxLast);
+            double rawStep = maxAll / 5.0;
+            if (rawStep <= 0)
             {
-                if (thisYearData[i] == 0)
-                {
-                    thisYearData[i] = 0;  // Đảm bảo tháng không có dữ liệu sẽ có giá trị 0
-                }
+                // không có dữ liệu ⇒ mặc định 1 triệu
+                YAxisStepLineChart = 1_000_000;
             }
+            else
+            {
+                // xác định bậc lớn nhất, ví dụ rawStep=4.68e6 ⇒ magnitude=1e6
+                double magnitude = Math.Pow(10, Math.Floor(Math.Log10(rawStep)));
+                // làm tròn lên thành niceStep = ceil(rawStep/magnitude)*magnitude
+                double niceStep = Math.Ceiling(rawStep / magnitude) * magnitude;
+                YAxisStepLineChart = niceStep;
+            }
+            OnPropertyChanged(nameof(YAxisStepLineChart));
 
-            // 6. Cập nhật dữ liệu cho biểu đồ
+            // 6. Khởi tạo series
             SpendingSeries = new SeriesCollection
             {
                 new LineSeries
                 {
-                    Title = currentYear.ToString(),
-                    Values = new ChartValues<double>(thisYearData),
-                    PointGeometry = DefaultGeometries.Circle,
-                    PointGeometrySize = 12,  // Kích thước điểm
-                    LineSmoothness = 0,      // Đường thẳng cho năm hiện tại
-                    Stroke = System.Windows.Media.Brushes.Gray,
-                    Fill = System.Windows.Media.Brushes.Transparent,
-                    DataLabels = false,  // Tắt nhãn dữ liệu trên đường thẳng
-                    LabelPoint = point => point.Y.ToString("N0") + " đ",  // Định dạng tooltip
-                    StrokeThickness = 3  // Độ dày đường thẳng
+                    Title            = currentYear.ToString(),
+                    Values           = new ChartValues<double>(thisYearData),
+                    PointGeometry    = DefaultGeometries.Circle,
+                    PointGeometrySize= 12,
+                    LineSmoothness   = 0,
+                    Stroke           = Brushes.Gray,
+                    Fill             = Brushes.Transparent,
+                    DataLabels       = false,
+                    LabelPoint       = pt => pt.Y.ToString("N0") + " đ",
+                    StrokeThickness  = 3
                 },
                 new LineSeries
                 {
-                    Title = lastYear.ToString(),
-                    Values = new ChartValues<double>(lastYearData),
-                    PointGeometry = DefaultGeometries.Square,
-                    PointGeometrySize = 12,  // Kích thước điểm
-                    LineSmoothness = 1,      // Đường cong cho năm trước
-                    Stroke = System.Windows.Media.Brushes.DodgerBlue,
-                    Fill = System.Windows.Media.Brushes.Transparent,
-                    DataLabels = false,  // Tắt nhãn dữ liệu trên đường thẳng
-                    LabelPoint = point => point.Y.ToString("N0") + " đ",  // Định dạng tooltip
-                    StrokeThickness = 2  // Độ dày đường thẳng
+                    Title            = lastYear.ToString(),
+                    Values           = new ChartValues<double>(lastYearData),
+                    PointGeometry    = DefaultGeometries.Square,
+                    PointGeometrySize= 12,
+                    LineSmoothness   = 1,
+                    Stroke           = Brushes.DodgerBlue,
+                    Fill             = Brushes.Transparent,
+                    DataLabels       = false,
+                    LabelPoint       = pt => pt.Y.ToString("N0") + " đ",
+                    StrokeThickness  = 2
                 }
             };
-
-            // Cập nhật UI
             OnPropertyChanged(nameof(SpendingSeries));
         }
+
 
         // Hàm chuyển "Tháng 4" → 4
         private int GetSelectedMonthNumber(string monthText)
@@ -226,7 +222,6 @@ namespace QuanLyDaiLy.ViewModels.DashboardViewModels
                 .Where(d => d.NgayTiepNhan <= endDate)
                 .GroupBy(d => d.MaLoaiDaiLy)
                 .ToDictionary(g => g.Key, g => g.Count());
-
 
             // 5. Xây SeriesCollection cho PieChart
             DaiLyDistributionSeries = new SeriesCollection();
@@ -281,6 +276,21 @@ namespace QuanLyDaiLy.ViewModels.DashboardViewModels
                     dailyValues.Add(kv.Value);
                 }
             }
+
+            // 6. Tính bước trục Y (YAxisStepColumnChart) chia đều 5 đoạn và làm tròn “đẹp”
+            double maxValue = dailyValues.Any() ? dailyValues.Max() : 0;
+            double rawStep = maxValue / 5.0;
+            if (rawStep <= 0)
+            {
+                // Không có dữ liệu hoặc tất cả bằng 0 → dùng mặc định 1 triệu
+                YAxisStepColumnChart = 1_000_000;
+            }
+            else
+            {
+                double magnitude = Math.Pow(10, Math.Floor(Math.Log10(rawStep)));
+                YAxisStepColumnChart = Math.Ceiling(rawStep / magnitude) * magnitude;
+            }
+            OnPropertyChanged(nameof(YAxisStepColumnChart));
 
             // 6. Cập nhật nhãn X và notify
             TopDaiLyLabels = dailyNames.ToArray();
@@ -357,6 +367,20 @@ namespace QuanLyDaiLy.ViewModels.DashboardViewModels
             TopDebtDaiLyLabels = debtNames.ToArray();
             OnPropertyChanged(nameof(TopDebtDaiLyLabels));
 
+            // 8. Tính bước trục Y (YAxisStepDebtColumnChart)
+            double maxValue = debtValues.Any() ? debtValues.Max() : 0;
+            double rawStep = maxValue / 5.0;
+            if (rawStep <= 0)
+            {
+                YAxisStepDebtColumnChart = 1_000_000;
+            }
+            else
+            {
+                double magnitude = Math.Pow(10, Math.Floor(Math.Log10(rawStep)));
+                YAxisStepDebtColumnChart = Math.Ceiling(rawStep / magnitude) * magnitude;
+            }
+            OnPropertyChanged(nameof(YAxisStepDebtColumnChart));
+
             TopDebtDaiLySeries = new SeriesCollection
             {
                 new ColumnSeries
@@ -373,12 +397,16 @@ namespace QuanLyDaiLy.ViewModels.DashboardViewModels
             OnPropertyChanged(nameof(TopDebtDaiLySeries));
         }
 
-        private void InitializeMonthYearOptions()
+        private async Task InitializeMonthYearOptions()
         {
             // Get current date info
             var currentDate = DateTime.Now;
             var currentMonth = currentDate.Month;
             var currentYear = currentDate.Year;
+
+            // 1. Lấy ngày đầu tiên có đại lý
+            var earliest = await _daiLyService.GetEarliestDaiLyDateAsync();
+            int startYear = earliest?.Year ?? currentYear;
 
             // Setup month options (Vietnamese)
             MonthOptions =
@@ -390,9 +418,9 @@ namespace QuanLyDaiLy.ViewModels.DashboardViewModels
 
             // Setup year options (current year and 4 previous years)
             YearOptions = [];
-            for (int i = currentYear - 4; i <= currentYear; i++)
+            for (int y = startYear; y <= currentYear; y++)
             {
-                YearOptions.Add(i);
+                YearOptions.Add(y);
             }
 
             // Set default selections for all combo boxes
@@ -417,71 +445,79 @@ namespace QuanLyDaiLy.ViewModels.DashboardViewModels
             int currentYear = _revenueChartYear;
             int lastYear = currentYear - 1;
 
-            // 2. Lấy tất cả các phiếu thu mới (phiếu thu có thể đã được thay đổi)
-            var allPhieuThu = await _phieuThuService.GetPhieuThuByCurrentYearAndLastYear(currentYear, lastYear);
-
-            // 3. Tính tổng SoTienThu theo tháng của năm hiện tại và năm trước
-            var thisYearData = new double[12];  // Lưu tổng SoTienThu của từng tháng trong năm hiện tại
-            var lastYearData = new double[12];  // Lưu tổng SoTienThu của từng tháng trong năm trước
-
-            foreach (var phieuThu in allPhieuThu)
+            // 2. Khởi tạo labels & formatter
+            MonthLabels = new[]
             {
-                int month = phieuThu.NgayThuTien.Month;
-                int year = phieuThu.NgayThuTien.Year;
+                "Tháng 1","Tháng 2","Tháng 3","Tháng 4",
+                "Tháng 5","Tháng 6","Tháng 7","Tháng 8",
+                "Tháng 9","Tháng 10","Tháng 11","Tháng 12"
+            };
+            CurrencyFormatter = value => value.ToString("N0") + " đ";
 
-                // Tính tổng SoTienThu cho năm hiện tại
-                if (year == currentYear)
-                {
-                    thisYearData[month - 1] += phieuThu.SoTienThu;
-                }
-                // Tính tổng SoTienThu cho năm trước
-                if (year == lastYear)
-                {
-                    lastYearData[month - 1] += phieuThu.SoTienThu;
-                }
+            // 3. Lấy dữ liệu
+            var allPhieuThu = await _phieuThuService
+                .GetPhieuThuByCurrentYearAndLastYear(currentYear, lastYear);
+
+            // 4. Tính tổng theo tháng
+            var thisYearData = new double[12];
+            var lastYearData = new double[12];
+            foreach (var p in allPhieuThu)
+            {
+                int m = p.NgayThuTien.Month;
+                if (p.NgayThuTien.Year == currentYear) thisYearData[m - 1] += p.SoTienThu;
+                else if (p.NgayThuTien.Year == lastYear) lastYearData[m - 1] += p.SoTienThu;
             }
 
-            // 5. Nếu năm hiện tại thiếu dữ liệu cho các tháng, gán giá trị 0 cho các tháng đó
-            for (int i = 0; i < 12; i++)
+            // 5. Tính bước trục Y: chia đều thành 5 đoạn
+            double maxThis = thisYearData.Any() ? thisYearData.Max() : 0;
+            double maxLast = lastYearData.Any() ? lastYearData.Max() : 0;
+            double maxAll = Math.Max(maxThis, maxLast);
+            double rawStep = maxAll / 5.0;
+            if (rawStep <= 0)
             {
-                if (thisYearData[i] == 0)
-                {
-                    thisYearData[i] = 0;  // Đảm bảo tháng không có dữ liệu sẽ có giá trị 0
-                }
+                // không có dữ liệu ⇒ mặc định 1 triệu
+                YAxisStepLineChart = 1_000_000;
             }
+            else
+            {
+                // xác định bậc lớn nhất, ví dụ rawStep=4.68e6 ⇒ magnitude=1e6
+                double magnitude = Math.Pow(10, Math.Floor(Math.Log10(rawStep)));
+                // làm tròn lên thành niceStep = ceil(rawStep/magnitude)*magnitude
+                double niceStep = Math.Ceiling(rawStep / magnitude) * magnitude;
+                YAxisStepLineChart = niceStep;
+            }
+            OnPropertyChanged(nameof(YAxisStepLineChart));
 
-            // 6. Cập nhật dữ liệu cho biểu đồ
+            // 6. Khởi tạo series
             SpendingSeries = new SeriesCollection
             {
                 new LineSeries
                 {
-                    Title = currentYear.ToString(),
-                    Values = new ChartValues<double>(thisYearData),
-                    PointGeometry = DefaultGeometries.Circle,
-                    PointGeometrySize = 12,  // Kích thước điểm
-                    LineSmoothness = 0,      // Đường thẳng cho năm hiện tại
-                    Stroke = System.Windows.Media.Brushes.Gray,
-                    Fill = System.Windows.Media.Brushes.Transparent,
-                    DataLabels = false,  // Tắt nhãn dữ liệu trên đường thẳng
-                    LabelPoint = point => point.Y.ToString("N0") + " đ",  // Định dạng tooltip
-                    StrokeThickness = 3  // Độ dày đường thẳng
+                    Title            = currentYear.ToString(),
+                    Values           = new ChartValues<double>(thisYearData),
+                    PointGeometry    = DefaultGeometries.Circle,
+                    PointGeometrySize= 12,
+                    LineSmoothness   = 0,
+                    Stroke           = Brushes.Gray,
+                    Fill             = Brushes.Transparent,
+                    DataLabels       = false,
+                    LabelPoint       = pt => pt.Y.ToString("N0") + " đ",
+                    StrokeThickness  = 3
                 },
                 new LineSeries
                 {
-                    Title = lastYear.ToString(),
-                    Values = new ChartValues<double>(lastYearData),
-                    PointGeometry = DefaultGeometries.Square,
-                    PointGeometrySize = 12,  // Kích thước điểm
-                    LineSmoothness = 1,      // Đường cong cho năm trước
-                    Stroke = System.Windows.Media.Brushes.DodgerBlue,
-                    Fill = System.Windows.Media.Brushes.Transparent,
-                    DataLabels = false,  // Tắt nhãn dữ liệu trên đường thẳng
-                    LabelPoint = point => point.Y.ToString("N0") + " đ",  // Định dạng tooltip
-                    StrokeThickness = 2  // Độ dày đường thẳng
+                    Title            = lastYear.ToString(),
+                    Values           = new ChartValues<double>(lastYearData),
+                    PointGeometry    = DefaultGeometries.Square,
+                    PointGeometrySize= 12,
+                    LineSmoothness   = 1,
+                    Stroke           = Brushes.DodgerBlue,
+                    Fill             = Brushes.Transparent,
+                    DataLabels       = false,
+                    LabelPoint       = pt => pt.Y.ToString("N0") + " đ",
+                    StrokeThickness  = 2
                 }
             };
-
-            // 7. Cập nhật UI
             OnPropertyChanged(nameof(SpendingSeries));
         }
 
@@ -562,6 +598,21 @@ namespace QuanLyDaiLy.ViewModels.DashboardViewModels
                 }
             }
 
+            // 6. Tính bước trục Y (YAxisStepColumnChart) chia đều 5 đoạn và làm tròn “đẹp”
+            double maxValue = dailyValues.Any() ? dailyValues.Max() : 0;
+            double rawStep = maxValue / 5.0;
+            if (rawStep <= 0)
+            {
+                // Không có dữ liệu hoặc tất cả bằng 0 → dùng mặc định 1 triệu
+                YAxisStepColumnChart = 1_000_000;
+            }
+            else
+            {
+                double magnitude = Math.Pow(10, Math.Floor(Math.Log10(rawStep)));
+                YAxisStepColumnChart = Math.Ceiling(rawStep / magnitude) * magnitude;
+            }
+            OnPropertyChanged(nameof(YAxisStepColumnChart));
+
             // 6. Cập nhật nhãn trục X
             TopDaiLyLabels = dailyNames.ToArray();
             OnPropertyChanged(nameof(TopDaiLyLabels));
@@ -634,6 +685,21 @@ namespace QuanLyDaiLy.ViewModels.DashboardViewModels
             TopDebtDaiLyLabels = debtNames.ToArray();
             OnPropertyChanged(nameof(TopDebtDaiLyLabels));
 
+            // 8. Tính bước trục Y (YAxisStepDebtColumnChart)
+            double maxValue = debtValues.Any() ? debtValues.Max() : 0;
+            double rawStep = maxValue / 5.0;
+            if (rawStep <= 0)
+            {
+                YAxisStepDebtColumnChart = 1_000_000;
+            }
+            else
+            {
+                double magnitude = Math.Pow(10, Math.Floor(Math.Log10(rawStep)));
+                YAxisStepDebtColumnChart = Math.Ceiling(rawStep / magnitude) * magnitude;
+            }
+            OnPropertyChanged(nameof(YAxisStepDebtColumnChart));
+
+            // 9. Cập nhật series cho biểu đồ
             TopDebtDaiLySeries = new SeriesCollection
             {
                 new ColumnSeries
@@ -801,6 +867,50 @@ namespace QuanLyDaiLy.ViewModels.DashboardViewModels
         #endregion
 
         #region Binding Properties
+
+        private double _yAxisStepLineChart;
+        public double YAxisStepLineChart
+        {
+            get => _yAxisStepLineChart;
+            set 
+            {
+                if (_yAxisStepLineChart != value)
+                {
+                    _yAxisStepLineChart = value;
+                    OnPropertyChanged();
+                }    
+                    
+            }
+        }
+
+        private double _yAxisStepColumnChart;
+        public double YAxisStepColumnChart
+        {
+            get => _yAxisStepColumnChart;
+            set
+            {
+                if (_yAxisStepColumnChart != value)
+                {
+                    _yAxisStepColumnChart = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        private double _yAxisStepDebtColumnChart;
+        public double YAxisStepDebtColumnChart
+        {
+            get => _yAxisStepDebtColumnChart;
+            set
+            {
+                if (_yAxisStepDebtColumnChart != value)
+                {
+                    _yAxisStepDebtColumnChart = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
 
         private string _WidgetSoLuongDaiLyDeltaText = "0";
         public string WidgetSoLuongDaiLyDeltaText

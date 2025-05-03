@@ -13,5 +13,6 @@ namespace QuanLyDaiLy.Services
         Task<int> GenerateAvailableId();
         Task<List<DaiLy>> GetDaiLysByIdsAsync(IEnumerable<int> ids);
         Task<int> GetTotalDaiLyUpToMonthYear(int month, int year);
+        Task<DateTime?> GetEarliestDaiLyDateAsync();
     }
 }

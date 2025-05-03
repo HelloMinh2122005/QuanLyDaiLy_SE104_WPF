@@ -19,6 +19,12 @@ namespace QuanLyDaiLy.Repositories
             }
         }
 
+        // Trả về ngày tiếp nhận nhỏ nhất (đại lý đầu tiên)
+        public async Task<DateTime?> GetEarliestDaiLyDateAsync()
+        {
+            return await _context.DsDaiLy
+                .MinAsync(d => (DateTime?)d.NgayTiepNhan);
+        }
         public async Task AddDaiLy(DaiLy daiLy)
         {
             _context.DsDaiLy.Add(daiLy);
