@@ -20,12 +20,14 @@ namespace QuanLyDaiLy.ViewModels.BaoCaoViewModels
         private readonly IPhieuXuatService _phieuXuatService;
         private readonly IPhieuThuService _phieuThuService;
         private readonly Func<string, int, BaoCaoDoanhSoViewModel> _monthYearDoanhSoFactory;
+        private readonly Func<string, int, BaoCaoCongNoViewModel> _monthYearCongNoFactory;
         public BaoCaoChiTietViewModel(
             IServiceProvider serviceProvider,
             IDaiLyService daiLyService,
             IPhieuXuatService phieuXuatService,
             IPhieuThuService phieuThuService,
-            Func<string, int, BaoCaoDoanhSoViewModel> monthYearDoanhSoFactory
+            Func<string, int, BaoCaoDoanhSoViewModel> monthYearDoanhSoFactory,
+            Func<string, int, BaoCaoCongNoViewModel> monthYearCongNoFactory
             )
         {
             _daiLyService = daiLyService;
@@ -33,6 +35,7 @@ namespace QuanLyDaiLy.ViewModels.BaoCaoViewModels
             _phieuXuatService = phieuXuatService;
             _phieuThuService = phieuThuService;
             _monthYearDoanhSoFactory = monthYearDoanhSoFactory;
+            _monthYearCongNoFactory = monthYearCongNoFactory;
 
             DoanhSoCommand = new RelayCommand(OpenDoanhSoWindow);
             CongNoCommand = new RelayCommand(OpenCongNoWindow);
@@ -138,15 +141,17 @@ namespace QuanLyDaiLy.ViewModels.BaoCaoViewModels
         public event EventHandler? DataChanged;
         private void OpenDoanhSoWindow()
         {
-            var viewModel = _monthYearDoanhSoFactory(SelectedDoanhSoMonth, SelectedDoanhSoYear);
-            viewModel.DataChanged += async (sender, e) => await InitializeDoanhSoData();
-            var doanhSoWindow = new BaoCaoDoanhSoWindow(viewModel);
+            var viewModel_DoanhSo = _monthYearDoanhSoFactory(SelectedDoanhSoMonth, SelectedDoanhSoYear);
+            viewModel_DoanhSo.DataChanged += async (sender, e) => await InitializeDoanhSoData();
+            var doanhSoWindow = new BaoCaoDoanhSoWindow(viewModel_DoanhSo);
             doanhSoWindow?.Show();
         }
 
         private void OpenCongNoWindow()
         {
-            var congNoWindow = _serviceProvider.GetRequiredService<BaoCaoCongNoWindow>();
+            var viewModel_CongNow = _monthYearCongNoFactory(SelectedCongNoMonth, SelectedCongNoYear);
+            viewModel_CongNow.DataChanged += async (sender, e) => await InitializeCongNoData();
+            var congNoWindow = new BaoCaoCongNoWindow(viewModel_CongNow);
             congNoWindow?.Show();
         }
 

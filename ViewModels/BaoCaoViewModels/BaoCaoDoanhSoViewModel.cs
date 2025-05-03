@@ -239,8 +239,8 @@ namespace QuanLyDaiLy.ViewModels.BaoCaoViewModels
                         ws.Cells["A5"].Value = "STT";
                         ws.Cells["B5"].Value = "Tên Đại Lý";
                         ws.Cells["C5"].Value = "Số Lượng Phiếu Xuất";
-                        ws.Cells["D5"].Value = "Tổng Giá Trị Giao Dịch (VNĐ)";
-                        ws.Cells["E5"].Value = "Tỉ Lệ (%)";
+                        ws.Cells["D5"].Value = "Tổng Giá Trị Giao Dịch";
+                        ws.Cells["E5"].Value = "Tỉ Lệ";
 
                         ws.Cells["A5:E5"].Style.Font.Bold = true;
                         ws.Cells["A5:E5"].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
@@ -258,7 +258,8 @@ namespace QuanLyDaiLy.ViewModels.BaoCaoViewModels
                             ws.Cells[row, 5].Value = item.TiLe;
 
                             // Format số có cách 3 chữ số ở cột giá trị
-                            ws.Cells[row, 4].Style.Numberformat.Format = "#,##0";
+                            ws.Cells[row, 4].Style.Numberformat.Format = "#,##0\" VNĐ\"";
+                            ws.Cells[row, 5].Style.Numberformat.Format = "#,##0\" %\"";
 
                             row++;
                         }
@@ -269,7 +270,7 @@ namespace QuanLyDaiLy.ViewModels.BaoCaoViewModels
 
                         ws.Cells[row, 4].Value = TotalDoanhSo;
                         ws.Cells[row, 4].Style.Font.Bold = true;
-                        ws.Cells[row, 4].Style.Numberformat.Format = "#,##0";
+                        ws.Cells[row, 4].Style.Numberformat.Format = "#,##0\" VNĐ\"";
 
                         ws.Cells[row, 4, row, 5].Merge = true;
 
