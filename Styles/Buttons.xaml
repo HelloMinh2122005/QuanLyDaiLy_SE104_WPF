@@ -10,8 +10,8 @@
         <Setter Property="FontWeight" Value="Medium" />
         <Setter Property="Foreground" Value="#FFFFFF" />
         <Setter Property="Background" Value="#00AAFF" />
-        <Setter Property="Width" Value="170" />
-        <Setter Property="Height" Value="40" />
+        <Setter Property="Width" Value="190" />
+        <Setter Property="Height" Value="35" />
 
         <Setter Property="Template">
             <Setter.Value>
@@ -553,6 +553,10 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+    </Style>
+
+    <Style x:Key="CollapsedButton" TargetType="Button">
+        <Setter Property="Visibility" Value="Collapsed" />
     </Style>
 
 </ResourceDictionary>

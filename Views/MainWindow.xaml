@@ -6,156 +6,42 @@
     xmlns:fa="http://schemas.fontawesome.io/icons/"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="MainWindow"
-    Background="#FFFFFF"
+    d:DesignHeight="1536"
+    d:DesignWidth="1536"
+    Background="#F7F9FD"
     WindowState="Maximized"
     mc:Ignorable="d">
 
-    <Window.Resources>
-        <Style x:Key="NavButtonStyle" TargetType="RadioButton">
-            <Setter Property="Height" Value="50" />
-            <Setter Property="Margin" Value="5,2" />
-            <Setter Property="FontSize" Value="16" />
-            <Setter Property="Foreground" Value="#333333" />
-            <Setter Property="Background" Value="Transparent" />
-            <Setter Property="HorizontalContentAlignment" Value="Left" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="RadioButton">
-                        <Border
-                            x:Name="border"
-                            Padding="10,5"
-                            Background="{TemplateBinding Background}"
-                            CornerRadius="8">
-                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="Center" />
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsChecked" Value="True">
-                                <Setter TargetName="border" Property="Background" Value="#00AAFF" />
-                                <Setter Property="Foreground" Value="White" />
-                            </Trigger>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="border" Property="Background" Value="#E0F0FF" />
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-        <Style x:Key="ProfileButtonStyle" TargetType="Button">
-            <Setter Property="Height" Value="50" />
-            <Setter Property="Margin" Value="5,2" />
-            <Setter Property="FontSize" Value="16" />
-            <Setter Property="Foreground" Value="#333333" />
-            <Setter Property="Background" Value="Transparent" />
-            <Setter Property="HorizontalContentAlignment" Value="Left" />
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="Button">
-                        <Border
-                            x:Name="border"
-                            Padding="10,5"
-                            Background="{TemplateBinding Background}"
-                            CornerRadius="8">
-                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="Center" />
-                        </Border>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="border" Property="Background" Value="#E0F0FF" />
-                            </Trigger>
-                            <Trigger Property="IsPressed" Value="True">
-                                <Setter TargetName="border" Property="Background" Value="#00AAFF" />
-                                <Setter Property="Foreground" Value="White" />
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-    </Window.Resources>
-
     <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition x:Name="NavColumn" Width="65" />
-            <ColumnDefinition Width="328*" />
-            <ColumnDefinition Width="37*" />
-            <ColumnDefinition Width="365*" />
-        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
 
-        <!--  Navigation Rail/Drawer  -->
-        <Border
-            Grid.Column="0"
-            Margin="0,0,5,20"
-            Background="#F7F9FD"
-            BorderBrush="#E0E0E0"
-            BorderThickness="0,0,1,0"
-            CornerRadius="0,20,10,0">
-            <Border.Effect>
-                <DropShadowEffect
-                    BlurRadius="8"
-                    Direction="315"
-                    Opacity="0.15"
-                    ShadowDepth="3"
-                    Color="#333333" />
-            </Border.Effect>
-            <Grid
-                x:Name="NavigationRail"
-                Margin="0,0,0,10"
-                Background="#F7F9FD"
-                MouseEnter="NavigationRail_MouseEnter"
-                MouseLeave="NavigationRail_MouseLeave">
+        <Border Grid.Row="0" Style="{StaticResource AppHeaderBorderStyle}">
+            <Grid Style="{StaticResource AppHeaderGridStyle}">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
 
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-
-                <!--  Logo with Title  -->
-                <StackPanel
-                    Grid.Row="0"
-                    Margin="0,20,0,0"
-                    HorizontalAlignment="Left"
-                    Orientation="Horizontal">
-                    <Border
-                        MaxWidth="60"
-                        MaxHeight="60"
-                        Margin="0,0,0,8"
-                        Background="White"
-                        CornerRadius="90">
-                        <Image
-                            MaxWidth="70"
-                            MaxHeight="70"
-                            Source="pack://application:,,,/QuanLyDaiLy;component/Resources/uittogether-removebg-preview.png"
-                            Stretch="Uniform" />
+                <StackPanel Grid.Column="0" Style="{StaticResource AppHeaderContainerStyle}">
+                    <Border Style="{StaticResource AppLogoContainerStyle}">
+                        <Image Source="pack://application:,,,/QuanLyDaiLy;component/Resources/uittogether-removebg-preview.png" Style="{StaticResource AppLogoStyle}" />
                     </Border>
-                    <TextBlock
-                        HorizontalAlignment="Center"
-                        VerticalAlignment="Center"
-                        FontFamily="Nunito"
-                        FontSize="19"
-                        FontWeight="Bold"
-                        Foreground="#1976D2"
-                        Text=" UIT Together" />
+                    <TextBlock Style="{StaticResource AppTitleStyle}" Text="UIT Together" />
                 </StackPanel>
 
-
-                <StackPanel Grid.Row="1" Margin="0,20,0,0">
+                <StackPanel
+                    x:Name="StackPanelTabButton"
+                    Grid.Column="1"
+                    Style="{StaticResource AppHeaderRightContentStyle}"
+                    Visibility="Visible">
                     <RadioButton
                         Checked="RadioButton_Checked"
-                        GroupName="NavGroup"
+                        GroupName="TabGroup"
                         IsChecked="True"
-                        Style="{StaticResource NavButtonStyle}"
-                        Tag="Dashboard">
-                        <StackPanel Orientation="Horizontal">
-                            <fa:FontAwesome Margin="3,0,10,0" Icon="Dashboard" />
-                            <TextBlock Text="Bảng điều khiển" />
-                        </StackPanel>
-                    </RadioButton>
-                    <RadioButton
-                        Checked="RadioButton_Checked"
-                        GroupName="NavGroup"
-                        Style="{StaticResource NavButtonStyle}"
+                        Style="{StaticResource TabBarButtonStyle}"
                         Tag="DaiLy">
                         <StackPanel Orientation="Horizontal">
                             <fa:FontAwesome Margin="3,0,10,0" Icon="Home" />
@@ -164,8 +50,8 @@
                     </RadioButton>
                     <RadioButton
                         Checked="RadioButton_Checked"
-                        GroupName="NavGroup"
-                        Style="{StaticResource NavButtonStyle}"
+                        GroupName="TabGroup"
+                        Style="{StaticResource TabBarButtonStyle}"
                         Tag="LoaiDaiLy">
                         <StackPanel Orientation="Horizontal">
                             <fa:FontAwesome Margin="3,0,10,0" Icon="Tags" />
@@ -174,8 +60,8 @@
                     </RadioButton>
                     <RadioButton
                         Checked="RadioButton_Checked"
-                        GroupName="NavGroup"
-                        Style="{StaticResource NavButtonStyle}"
+                        GroupName="TabGroup"
+                        Style="{StaticResource TabBarButtonStyle}"
                         Tag="Quan">
                         <StackPanel Orientation="Horizontal">
                             <fa:FontAwesome Margin="7,0,15,0" Icon="MapMarker" />
@@ -184,8 +70,8 @@
                     </RadioButton>
                     <RadioButton
                         Checked="RadioButton_Checked"
-                        GroupName="NavGroup"
-                        Style="{StaticResource NavButtonStyle}"
+                        GroupName="TabGroup"
+                        Style="{StaticResource TabBarButtonStyle}"
                         Tag="MatHang">
                         <StackPanel Orientation="Horizontal">
                             <fa:FontAwesome Margin="3,0,10,0" Icon="Cubes" />
@@ -194,8 +80,8 @@
                     </RadioButton>
                     <RadioButton
                         Checked="RadioButton_Checked"
-                        GroupName="NavGroup"
-                        Style="{StaticResource NavButtonStyle}"
+                        GroupName="TabGroup"
+                        Style="{StaticResource TabBarButtonStyle}"
                         Tag="PhieuThu">
                         <StackPanel Orientation="Horizontal">
                             <fa:FontAwesome Margin="3,0,10,0" Icon="Money" />
@@ -204,8 +90,8 @@
                     </RadioButton>
                     <RadioButton
                         Checked="RadioButton_Checked"
-                        GroupName="NavGroup"
-                        Style="{StaticResource NavButtonStyle}"
+                        GroupName="TabGroup"
+                        Style="{StaticResource TabBarButtonStyle}"
                         Tag="PhieuXuat">
                         <StackPanel Orientation="Horizontal">
                             <fa:FontAwesome Margin="3,0,11,0" Icon="FileText" />
@@ -213,894 +99,323 @@
                         </StackPanel>
                     </RadioButton>
                     <RadioButton
+                        Margin="10,0,0,0"
                         Checked="RadioButton_Checked"
-                        GroupName="NavGroup"
-                        Style="{StaticResource NavButtonStyle}"
-                        Tag="BaoCao">
-                        <StackPanel Orientation="Horizontal">
-                            <fa:FontAwesome Margin="3,0,10,0" Icon="LineChart" />
-                            <TextBlock Text="Báo cáo chi tiết" />
-                        </StackPanel>
-                    </RadioButton>
-                    <RadioButton
-                        Checked="RadioButton_Checked"
-                        GroupName="NavGroup"
-                        Style="{StaticResource NavButtonStyle}"
+                        GroupName="TabGroup"
+                        Style="{StaticResource TabBarButtonStyle}"
                         Tag="DonViTinh">
                         <StackPanel Orientation="Horizontal">
                             <fa:FontAwesome Margin="3,0,10,0" Icon="BalanceScale" />
                             <TextBlock Text="Đơn vị tính" />
                         </StackPanel>
                     </RadioButton>
-                    <RadioButton
-                        Checked="RadioButton_Checked"
-                        GroupName="NavGroup"
-                        Style="{StaticResource NavButtonStyle}"
-                        Tag="ThamSo">
-                        <StackPanel Orientation="Horizontal">
-                            <fa:FontAwesome Margin="5,0,10,0" Icon="Cog" />
-                            <TextBlock Text="Tham số" />
-                        </StackPanel>
-                    </RadioButton>
                 </StackPanel>
-
-                <Border Grid.Row="2">
-                    <Button HorizontalAlignment="Stretch" Style="{StaticResource ProfileButtonStyle}">
-                        <StackPanel Orientation="Horizontal">
-                            <fa:FontAwesome Margin="4,0,9,0" Icon="User" />
-                            <TextBlock Text="Phan Đình Minh" />
-                        </StackPanel>
-                    </Button>
-                </Border>
             </Grid>
         </Border>
 
-        <Grid Grid.Column="1" Grid.ColumnSpan="3">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="15*" />
-                <RowDefinition Height="5*" />
-                <RowDefinition Height="80*" />
-            </Grid.RowDefinitions>
 
-            <TextBlock
-                Grid.Row="0"
-                Margin="20,10,0,0"
-                HorizontalAlignment="Left"
-                VerticalAlignment="Center"
-                FontFamily="Nunito"
-                FontSize="60"
-                FontStyle="Normal"
-                FontWeight="Bold"
-                Foreground="#333333"
-                LineHeight="50"
-                Text="Danh sách đại lý">
-                <TextBlock.Effect>
-                    <DropShadowEffect
-                        BlurRadius="3"
-                        Direction="330"
-                        Opacity="0.3"
-                        ShadowDepth="1"
-                        Color="#CCCCCC" />
-                </TextBlock.Effect>
-            </TextBlock>
+        <Grid
+            Grid.Row="1"
+            HorizontalAlignment="Stretch"
+            VerticalAlignment="Stretch">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition x:Name="NavColumn" Width="65" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
 
-            <Grid Grid.Row="1">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width=".5*" />
-                    <ColumnDefinition Width=".5*" />
-                </Grid.ColumnDefinitions>
+            <!--  Navigation Rail/Drawer  -->
+            <Border Grid.Column="0" Style="{StaticResource NavigationRailBorderStyle}">
+                <Grid
+                    x:Name="NavigationRail"
+                    MouseEnter="NavigationRail_MouseEnter"
+                    MouseLeave="NavigationRail_MouseLeave"
+                    Style="{StaticResource NavigationRailStyle}">
 
-                <StackPanel
-                    Grid.Column="0"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Center"
-                    Orientation="Horizontal">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
 
-                    <!--  Tra cứu đại lý Button  -->
-                    <Border
-                        Width="150"
-                        Height="40"
-                        Margin="20,0,0,0"
-                        CornerRadius="8">
-                        <Button
-                            Width="150"
-                            Height="40"
-                            Background="#00AAFF"
-                            Command="{Binding SearchDaiLyCommand}"
-                            Content="🔍 Tra cứu đại lý"
-                            FontFamily="Roboto"
-                            FontSize="16"
-                            FontStyle="Normal"
-                            FontWeight="Medium"
-                            Foreground="#FFFFFF">
-                            <Button.Style>
-                                <Style TargetType="Button">
-                                    <Setter Property="Template">
-                                        <Setter.Value>
-                                            <ControlTemplate TargetType="Button">
-                                                <Border
-                                                    x:Name="buttonBorder"
-                                                    Padding="8,5,8,4"
-                                                    Background="{TemplateBinding Background}"
-                                                    CornerRadius="8">
-                                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-                                                    <Border.Effect>
-                                                        <DropShadowEffect
-                                                            x:Name="shadowEffect"
-                                                            BlurRadius="0"
-                                                            Opacity="0"
-                                                            ShadowDepth="0"
-                                                            Color="#555555" />
-                                                    </Border.Effect>
-                                                </Border>
-                                                <ControlTemplate.Resources>
-                                                    <Storyboard x:Key="HoverOn">
-                                                        <ColorAnimation
-                                                            Storyboard.TargetName="buttonBorder"
-                                                            Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
-                                                            To="#0088CC"
-                                                            Duration="0:0:0.2" />
-                                                        <DoubleAnimation
-                                                            Storyboard.TargetName="shadowEffect"
-                                                            Storyboard.TargetProperty="BlurRadius"
-                                                            To="8"
-                                                            Duration="0:0:0.2" />
-                                                        <DoubleAnimation
-                                                            Storyboard.TargetName="shadowEffect"
-                                                            Storyboard.TargetProperty="Opacity"
-                                                            To="0.3"
-                                                            Duration="0:0:0.2" />
-                                                        <DoubleAnimation
-                                                            Storyboard.TargetName="shadowEffect"
-                                                            Storyboard.TargetProperty="ShadowDepth"
-                                                            To="4"
-                                                            Duration="0:0:0.2" />
-                                                    </Storyboard>
-                                                    <Storyboard x:Key="HoverOff">
-                                                        <ColorAnimation
-                                                            Storyboard.TargetName="buttonBorder"
-                                                            Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
-                                                            To="#00AAFF"
-                                                            Duration="0:0:0.2" />
-                                                        <DoubleAnimation
-                                                            Storyboard.TargetName="shadowEffect"
-                                                            Storyboard.TargetProperty="BlurRadius"
-                                                            To="0"
-                                                            Duration="0:0:0.2" />
-                                                        <DoubleAnimation
-                                                            Storyboard.TargetName="shadowEffect"
-                                                            Storyboard.TargetProperty="Opacity"
-                                                            To="0"
-                                                            Duration="0:0:0.2" />
-                                                        <DoubleAnimation
-                                                            Storyboard.TargetName="shadowEffect"
-                                                            Storyboard.TargetProperty="ShadowDepth"
-                                                            To="0"
-                                                            Duration="0:0:0.2" />
-                                                    </Storyboard>
-                                                </ControlTemplate.Resources>
-                                                <ControlTemplate.Triggers>
-                                                    <Trigger Property="IsMouseOver" Value="True">
-                                                        <Trigger.EnterActions>
-                                                            <BeginStoryboard Storyboard="{StaticResource HoverOn}" />
-                                                        </Trigger.EnterActions>
-                                                        <Trigger.ExitActions>
-                                                            <BeginStoryboard Storyboard="{StaticResource HoverOff}" />
-                                                        </Trigger.ExitActions>
-                                                    </Trigger>
-                                                    <Trigger Property="IsPressed" Value="True">
-                                                        <Setter TargetName="buttonBorder" Property="Background" Value="#006699" />
-                                                    </Trigger>
-                                                </ControlTemplate.Triggers>
-                                            </ControlTemplate>
-                                        </Setter.Value>
-                                    </Setter>
-                                </Style>
-                            </Button.Style>
+                    <StackPanel Grid.Row="1" Margin="0,20,0,0">
+                        <RadioButton
+                            Checked="RadioButton_Checked"
+                            GroupName="NavGroup"
+                            IsChecked="True"
+                            Style="{StaticResource NavigationButtonStyle}"
+                            Tag="Dashboard">
+                            <StackPanel Orientation="Horizontal">
+                                <fa:FontAwesome Margin="3,0,10,0" Icon="Dashboard" />
+                                <TextBlock Text="Bảng điều khiển" />
+                            </StackPanel>
+                        </RadioButton>
+                        <RadioButton
+                            Checked="RadioButton_Checked"
+                            GroupName="NavGroup"
+                            Style="{StaticResource NavigationButtonStyle}"
+                            Tag="DanhSach">
+                            <StackPanel Orientation="Horizontal">
+                                <fa:FontAwesome Margin="3,0,10,0" Icon="List" />
+                                <TextBlock Text="Danh sách" />
+                            </StackPanel>
+                        </RadioButton>
+                        <RadioButton
+                            Checked="RadioButton_Checked"
+                            GroupName="NavGroup"
+                            Style="{StaticResource NavigationButtonStyle}"
+                            Tag="BaoCao">
+                            <StackPanel Orientation="Horizontal">
+                                <fa:FontAwesome Margin="3,0,10,0" Icon="LineChart" />
+                                <TextBlock Text="Báo cáo chi tiết" />
+                            </StackPanel>
+                        </RadioButton>
+                        <RadioButton
+                            Checked="RadioButton_Checked"
+                            GroupName="NavGroup"
+                            Style="{StaticResource NavigationButtonStyle}"
+                            Tag="ThamSo">
+                            <StackPanel Orientation="Horizontal">
+                                <fa:FontAwesome Margin="5,0,10,0" Icon="Cog" />
+                                <TextBlock Text="Tham số" />
+                            </StackPanel>
+                        </RadioButton>
+                    </StackPanel>
+
+                    <Border Grid.Row="2">
+                        <Button HorizontalAlignment="Stretch" Style="{StaticResource NavigationProfileButtonStyle}">
+                            <StackPanel Orientation="Horizontal">
+                                <fa:FontAwesome Margin="4,0,9,0" Icon="User" />
+                                <TextBlock Text="Phan Đình Minh" />
+                            </StackPanel>
                         </Button>
                     </Border>
+                </Grid>
+            </Border>
 
-                    <Border
-                        Width="50"
-                        Height="40"
-                        Margin="10,0,0,0"
-                        CornerRadius="8">
-                        <Button
-                            Width="50"
-                            Height="40"
-                            Background="#00AAFF"
-                            Command="{Binding LoadDataCommand}"
-                            Content="🔃"
-                            FontFamily="Roboto"
-                            FontSize="16"
-                            FontStyle="Normal"
-                            FontWeight="Medium"
-                            Foreground="#FFFFFF">
-                            <Button.Style>
-                                <Style TargetType="Button">
-                                    <Setter Property="Template">
-                                        <Setter.Value>
-                                            <ControlTemplate TargetType="Button">
-                                                <Border
-                                                    x:Name="buttonBorder"
-                                                    Padding="8,5,8,4"
-                                                    Background="{TemplateBinding Background}"
-                                                    CornerRadius="8">
-                                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-                                                    <Border.Effect>
-                                                        <DropShadowEffect
-                                                            x:Name="shadowEffect"
-                                                            BlurRadius="0"
-                                                            Opacity="0"
-                                                            ShadowDepth="0"
-                                                            Color="#555555" />
-                                                    </Border.Effect>
-                                                </Border>
-                                                <ControlTemplate.Resources>
-                                                    <Storyboard x:Key="HoverOn">
-                                                        <ColorAnimation
-                                                            Storyboard.TargetName="buttonBorder"
-                                                            Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
-                                                            To="#0088CC"
-                                                            Duration="0:0:0.2" />
-                                                        <DoubleAnimation
-                                                            Storyboard.TargetName="shadowEffect"
-                                                            Storyboard.TargetProperty="BlurRadius"
-                                                            To="8"
-                                                            Duration="0:0:0.2" />
-                                                        <DoubleAnimation
-                                                            Storyboard.TargetName="shadowEffect"
-                                                            Storyboard.TargetProperty="Opacity"
-                                                            To="0.3"
-                                                            Duration="0:0:0.2" />
-                                                        <DoubleAnimation
-                                                            Storyboard.TargetName="shadowEffect"
-                                                            Storyboard.TargetProperty="ShadowDepth"
-                                                            To="4"
-                                                            Duration="0:0:0.2" />
-                                                    </Storyboard>
-                                                    <Storyboard x:Key="HoverOff">
-                                                        <ColorAnimation
-                                                            Storyboard.TargetName="buttonBorder"
-                                                            Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
-                                                            To="#00AAFF"
-                                                            Duration="0:0:0.2" />
-                                                        <DoubleAnimation
-                                                            Storyboard.TargetName="shadowEffect"
-                                                            Storyboard.TargetProperty="BlurRadius"
-                                                            To="0"
-                                                            Duration="0:0:0.2" />
-                                                        <DoubleAnimation
-                                                            Storyboard.TargetName="shadowEffect"
-                                                            Storyboard.TargetProperty="Opacity"
-                                                            To="0"
-                                                            Duration="0:0:0.2" />
-                                                        <DoubleAnimation
-                                                            Storyboard.TargetName="shadowEffect"
-                                                            Storyboard.TargetProperty="ShadowDepth"
-                                                            To="0"
-                                                            Duration="0:0:0.2" />
-                                                    </Storyboard>
-                                                </ControlTemplate.Resources>
-                                                <ControlTemplate.Triggers>
-                                                    <Trigger Property="IsMouseOver" Value="True">
-                                                        <Trigger.EnterActions>
-                                                            <BeginStoryboard Storyboard="{StaticResource HoverOn}" />
-                                                        </Trigger.EnterActions>
-                                                        <Trigger.ExitActions>
-                                                            <BeginStoryboard Storyboard="{StaticResource HoverOff}" />
-                                                        </Trigger.ExitActions>
-                                                    </Trigger>
-                                                    <Trigger Property="IsPressed" Value="True">
-                                                        <Setter TargetName="buttonBorder" Property="Background" Value="#006699" />
-                                                    </Trigger>
-                                                </ControlTemplate.Triggers>
-                                            </ControlTemplate>
-                                        </Setter.Value>
-                                    </Setter>
-                                </Style>
-                            </Button.Style>
-                        </Button>
-                    </Border>
-
-                </StackPanel>
-
-                <StackPanel
-                    Grid.Column="1"
-                    Margin="0,0,20,0"
-                    HorizontalAlignment="Right"
-                    VerticalAlignment="Center"
-                    Orientation="Horizontal">
-
-                    <Border
-                        Width="170"
-                        Height="40"
-                        Margin="10,0,0,0"
-                        CornerRadius="8">
-                        <Button
-                            Width="170"
-                            Height="40"
-                            Background="#00AAFF"
-                            Command="{Binding OpenHoSoDaiLyCommand}"
-                            Content="➕ Tiếp nhận đại lý"
-                            FontFamily="Roboto"
-                            FontSize="16"
-                            FontStyle="Normal"
-                            FontWeight="Medium"
-                            Foreground="#FFFFFF">
-                            <Button.Style>
-                                <Style TargetType="Button">
-                                    <Setter Property="Template">
-                                        <Setter.Value>
-                                            <ControlTemplate TargetType="Button">
-                                                <Border
-                                                    x:Name="buttonBorder"
-                                                    Padding="8,5,8,4"
-                                                    Background="{TemplateBinding Background}"
-                                                    CornerRadius="8">
-                                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-                                                    <Border.Effect>
-                                                        <DropShadowEffect
-                                                            x:Name="shadowEffect"
-                                                            BlurRadius="0"
-                                                            Opacity="0"
-                                                            ShadowDepth="0"
-                                                            Color="#555555" />
-                                                    </Border.Effect>
-                                                </Border>
-                                                <ControlTemplate.Resources>
-                                                    <Storyboard x:Key="HoverOn">
-                                                        <ColorAnimation
-                                                            Storyboard.TargetName="buttonBorder"
-                                                            Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
-                                                            To="#0088CC"
-                                                            Duration="0:0:0.2" />
-                                                        <DoubleAnimation
-                                                            Storyboard.TargetName="shadowEffect"
-                                                            Storyboard.TargetProperty="BlurRadius"
-                                                            To="8"
-                                                            Duration="0:0:0.2" />
-                                                        <DoubleAnimation
-                                                            Storyboard.TargetName="shadowEffect"
-                                                            Storyboard.TargetProperty="Opacity"
-                                                            To="0.3"
-                                                            Duration="0:0:0.2" />
-                                                        <DoubleAnimation
-                                                            Storyboard.TargetName="shadowEffect"
-                                                            Storyboard.TargetProperty="ShadowDepth"
-                                                            To="4"
-                                                            Duration="0:0:0.2" />
-                                                    </Storyboard>
-                                                    <Storyboard x:Key="HoverOff">
-                                                        <ColorAnimation
-                                                            Storyboard.TargetName="buttonBorder"
-                                                            Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
-                                                            To="#00AAFF"
-                                                            Duration="0:0:0.2" />
-                                                        <DoubleAnimation
-                                                            Storyboard.TargetName="shadowEffect"
-                                                            Storyboard.TargetProperty="BlurRadius"
-                                                            To="0"
-                                                            Duration="0:0:0.2" />
-                                                        <DoubleAnimation
-                                                            Storyboard.TargetName="shadowEffect"
-                                                            Storyboard.TargetProperty="Opacity"
-                                                            To="0"
-                                                            Duration="0:0:0.2" />
-                                                        <DoubleAnimation
-                                                            Storyboard.TargetName="shadowEffect"
-                                                            Storyboard.TargetProperty="ShadowDepth"
-                                                            To="0"
-                                                            Duration="0:0:0.2" />
-                                                    </Storyboard>
-                                                </ControlTemplate.Resources>
-                                                <ControlTemplate.Triggers>
-                                                    <Trigger Property="IsMouseOver" Value="True">
-                                                        <Trigger.EnterActions>
-                                                            <BeginStoryboard Storyboard="{StaticResource HoverOn}" />
-                                                        </Trigger.EnterActions>
-                                                        <Trigger.ExitActions>
-                                                            <BeginStoryboard Storyboard="{StaticResource HoverOff}" />
-                                                        </Trigger.ExitActions>
-                                                    </Trigger>
-                                                    <Trigger Property="IsPressed" Value="True">
-                                                        <Setter TargetName="buttonBorder" Property="Background" Value="#006699" />
-                                                    </Trigger>
-                                                </ControlTemplate.Triggers>
-                                            </ControlTemplate>
-                                        </Setter.Value>
-                                    </Setter>
-                                </Style>
-                            </Button.Style>
-                        </Button>
-                    </Border>
-
-                    <!--  Sửa Button  -->
-                    <Border
-                        Width="150"
-                        Height="40"
-                        Margin="10,0,0,0"
-                        CornerRadius="8">
-                        <Button
-                            Width="150"
-                            Height="40"
-                            Background="#00AAFF"
-                            Command="{Binding EditDaiLyCommand}"
-                            Content="✎ Cập nhật đại lý"
-                            FontFamily="Roboto"
-                            FontSize="16"
-                            FontStyle="Normal"
-                            FontWeight="Medium"
-                            Foreground="#FFFFFF">
-                            <Button.Style>
-                                <Style TargetType="Button">
-                                    <Setter Property="Template">
-                                        <Setter.Value>
-                                            <ControlTemplate TargetType="Button">
-                                                <Border
-                                                    x:Name="buttonBorder"
-                                                    Padding="8,5,8,4"
-                                                    Background="{TemplateBinding Background}"
-                                                    CornerRadius="8">
-                                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-                                                    <Border.Effect>
-                                                        <DropShadowEffect
-                                                            x:Name="shadowEffect"
-                                                            BlurRadius="0"
-                                                            Opacity="0"
-                                                            ShadowDepth="0"
-                                                            Color="#555555" />
-                                                    </Border.Effect>
-                                                </Border>
-                                                <ControlTemplate.Resources>
-                                                    <Storyboard x:Key="HoverOn">
-                                                        <ColorAnimation
-                                                            Storyboard.TargetName="buttonBorder"
-                                                            Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
-                                                            To="#0088CC"
-                                                            Duration="0:0:0.2" />
-                                                        <DoubleAnimation
-                                                            Storyboard.TargetName="shadowEffect"
-                                                            Storyboard.TargetProperty="BlurRadius"
-                                                            To="8"
-                                                            Duration="0:0:0.2" />
-                                                        <DoubleAnimation
-                                                            Storyboard.TargetName="shadowEffect"
-                                                            Storyboard.TargetProperty="Opacity"
-                                                            To="0.3"
-                                                            Duration="0:0:0.2" />
-                                                        <DoubleAnimation
-                                                            Storyboard.TargetName="shadowEffect"
-                                                            Storyboard.TargetProperty="ShadowDepth"
-                                                            To="4"
-                                                            Duration="0:0:0.2" />
-                                                    </Storyboard>
-                                                    <Storyboard x:Key="HoverOff">
-                                                        <ColorAnimation
-                                                            Storyboard.TargetName="buttonBorder"
-                                                            Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
-                                                            To="#00AAFF"
-                                                            Duration="0:0:0.2" />
-                                                        <DoubleAnimation
-                                                            Storyboard.TargetName="shadowEffect"
-                                                            Storyboard.TargetProperty="BlurRadius"
-                                                            To="0"
-                                                            Duration="0:0:0.2" />
-                                                        <DoubleAnimation
-                                                            Storyboard.TargetName="shadowEffect"
-                                                            Storyboard.TargetProperty="Opacity"
-                                                            To="0"
-                                                            Duration="0:0:0.2" />
-                                                        <DoubleAnimation
-                                                            Storyboard.TargetName="shadowEffect"
-                                                            Storyboard.TargetProperty="ShadowDepth"
-                                                            To="0"
-                                                            Duration="0:0:0.2" />
-                                                    </Storyboard>
-                                                </ControlTemplate.Resources>
-                                                <ControlTemplate.Triggers>
-                                                    <Trigger Property="IsMouseOver" Value="True">
-                                                        <Trigger.EnterActions>
-                                                            <BeginStoryboard Storyboard="{StaticResource HoverOn}" />
-                                                        </Trigger.EnterActions>
-                                                        <Trigger.ExitActions>
-                                                            <BeginStoryboard Storyboard="{StaticResource HoverOff}" />
-                                                        </Trigger.ExitActions>
-                                                    </Trigger>
-                                                    <Trigger Property="IsPressed" Value="True">
-                                                        <Setter TargetName="buttonBorder" Property="Background" Value="#006699" />
-                                                    </Trigger>
-                                                </ControlTemplate.Triggers>
-                                            </ControlTemplate>
-                                        </Setter.Value>
-                                    </Setter>
-                                </Style>
-                            </Button.Style>
-                        </Button>
-                    </Border>
-
-                    <!--  Xóa Button  -->
-                    <Border
-                        Width="130"
-                        Height="40"
-                        Margin="10,0,0,0"
-                        CornerRadius="8">
-                        <Button
-                            Width="130"
-                            Height="40"
-                            Background="#00AAFF"
-                            Command="{Binding DeleteDaiLyCommand}"
-                            Content="🗑 Xóa đại lý"
-                            FontFamily="Roboto"
-                            FontSize="16"
-                            FontStyle="Normal"
-                            FontWeight="Medium"
-                            Foreground="#FFFFFF">
-                            <Button.Style>
-                                <Style TargetType="Button">
-                                    <Setter Property="Template">
-                                        <Setter.Value>
-                                            <ControlTemplate TargetType="Button">
-                                                <Border
-                                                    x:Name="buttonBorder"
-                                                    Padding="8,5,8,4"
-                                                    Background="{TemplateBinding Background}"
-                                                    CornerRadius="8">
-                                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-                                                    <Border.Effect>
-                                                        <DropShadowEffect
-                                                            x:Name="shadowEffect"
-                                                            BlurRadius="0"
-                                                            Opacity="0"
-                                                            ShadowDepth="0"
-                                                            Color="#555555" />
-                                                    </Border.Effect>
-                                                </Border>
-                                                <ControlTemplate.Resources>
-                                                    <Storyboard x:Key="HoverOn">
-                                                        <ColorAnimation
-                                                            Storyboard.TargetName="buttonBorder"
-                                                            Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
-                                                            To="#D32F2F"
-                                                            Duration="0:0:0.2" />
-                                                        <DoubleAnimation
-                                                            Storyboard.TargetName="shadowEffect"
-                                                            Storyboard.TargetProperty="BlurRadius"
-                                                            To="8"
-                                                            Duration="0:0:0.2" />
-                                                        <DoubleAnimation
-                                                            Storyboard.TargetName="shadowEffect"
-                                                            Storyboard.TargetProperty="Opacity"
-                                                            To="0.3"
-                                                            Duration="0:0:0.2" />
-                                                        <DoubleAnimation
-                                                            Storyboard.TargetName="shadowEffect"
-                                                            Storyboard.TargetProperty="ShadowDepth"
-                                                            To="4"
-                                                            Duration="0:0:0.2" />
-                                                    </Storyboard>
-                                                    <Storyboard x:Key="HoverOff">
-                                                        <ColorAnimation
-                                                            Storyboard.TargetName="buttonBorder"
-                                                            Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
-                                                            To="#00AAFF"
-                                                            Duration="0:0:0.2" />
-                                                        <DoubleAnimation
-                                                            Storyboard.TargetName="shadowEffect"
-                                                            Storyboard.TargetProperty="BlurRadius"
-                                                            To="0"
-                                                            Duration="0:0:0.2" />
-                                                        <DoubleAnimation
-                                                            Storyboard.TargetName="shadowEffect"
-                                                            Storyboard.TargetProperty="Opacity"
-                                                            To="0"
-                                                            Duration="0:0:0.2" />
-                                                        <DoubleAnimation
-                                                            Storyboard.TargetName="shadowEffect"
-                                                            Storyboard.TargetProperty="ShadowDepth"
-                                                            To="0"
-                                                            Duration="0:0:0.2" />
-                                                    </Storyboard>
-                                                </ControlTemplate.Resources>
-                                                <ControlTemplate.Triggers>
-                                                    <Trigger Property="IsMouseOver" Value="True">
-                                                        <Trigger.EnterActions>
-                                                            <BeginStoryboard Storyboard="{StaticResource HoverOn}" />
-                                                        </Trigger.EnterActions>
-                                                        <Trigger.ExitActions>
-                                                            <BeginStoryboard Storyboard="{StaticResource HoverOff}" />
-                                                        </Trigger.ExitActions>
-                                                    </Trigger>
-                                                    <Trigger Property="IsPressed" Value="True">
-                                                        <Setter TargetName="buttonBorder" Property="Background" Value="#B71C1C" />
-                                                    </Trigger>
-                                                </ControlTemplate.Triggers>
-                                            </ControlTemplate>
-                                        </Setter.Value>
-                                    </Setter>
-                                </Style>
-                            </Button.Style>
-                        </Button>
-                    </Border>
-
-                </StackPanel>
-            </Grid>
 
             <Border
-                Grid.Row="2"
-                Margin="20"
-                Background="#F7F9FD"
-                BorderBrush="#E0E0E0"
-                BorderThickness="1"
-                CornerRadius="12">
-                <Border.Effect>
-                    <DropShadowEffect
-                        BlurRadius="10"
-                        Opacity="0.2"
-                        ShadowDepth="3"
-                        Color="Black" />
-                </Border.Effect>
-                <DataGrid
-                    AlternatingRowBackground="#F8F9FA"
-                    AutoGenerateColumns="False"
-                    Background="White"
-                    BorderThickness="0"
-                    CanUserAddRows="False"
-                    CanUserDeleteRows="False"
-                    GridLinesVisibility="Horizontal"
-                    HeadersVisibility="Column"
-                    IsReadOnly="True"
-                    ItemsSource="{Binding DanhSachDaiLy}"
-                    RowBackground="#FFFFFF"
-                    RowHeight="60"
-                    ScrollViewer.VerticalScrollBarVisibility="Auto"
-                    SelectedItem="{Binding SelectedDaiLy}">
-                    <DataGrid.Resources>
-                        <Style TargetType="DataGridCell">
-                            <Setter Property="BorderThickness" Value="0" />
-                            <Setter Property="FocusVisualStyle" Value="{x:Null}" />
-                            <Setter Property="Padding" Value="10,0" />
-                            <Setter Property="Template">
-                                <Setter.Value>
-                                    <ControlTemplate TargetType="DataGridCell">
-                                        <Border
-                                            Background="{TemplateBinding Background}"
-                                            BorderBrush="{TemplateBinding BorderBrush}"
-                                            BorderThickness="{TemplateBinding BorderThickness}"
-                                            SnapsToDevicePixels="True">
-                                            <ContentPresenter
-                                                HorizontalAlignment="Center"
-                                                VerticalAlignment="Center"
-                                                SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
-                                        </Border>
-                                    </ControlTemplate>
-                                </Setter.Value>
-                            </Setter>
-                        </Style>
-                    </DataGrid.Resources>
+                Grid.Column="1"
+                Margin="10"
+                HorizontalAlignment="Stretch"
+                VerticalAlignment="Stretch"
+                Background="White"
+                CornerRadius="10">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="15*" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="80*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
 
-                    <DataGrid.RowStyle>
-                        <Style TargetType="DataGridRow">
-                            <Setter Property="Background" Value="Transparent" />
-                            <Setter Property="BorderThickness" Value="0,0,0,1" />
-                            <Setter Property="BorderBrush" Value="#E0E0E0" />
-                            <Style.Triggers>
-                                <Trigger Property="IsMouseOver" Value="True">
-                                    <Setter Property="Background" Value="#F5F9FF" />
-                                </Trigger>
-                                <Trigger Property="IsSelected" Value="True">
-                                    <Setter Property="Background" Value="#00AAFF" />
-                                </Trigger>
-                            </Style.Triggers>
-                        </Style>
-                    </DataGrid.RowStyle>
+                    <TextBlock
+                        Grid.Row="0"
+                        Style="{StaticResource PageHeaderTextBlockStyle}"
+                        Text="Danh sách đại lý" />
 
-                    <DataGrid.ColumnHeaderStyle>
-                        <Style TargetType="DataGridColumnHeader">
-                            <Setter Property="Background" Value="#EAEEF5" />
-                            <Setter Property="FontFamily" Value="Open Sans" />
-                            <Setter Property="FontWeight" Value="SemiBold" />
-                            <Setter Property="FontSize" Value="22.5" />
-                            <Setter Property="Foreground" Value="#333333" />
-                            <Setter Property="Height" Value="50" />
-                            <Setter Property="HorizontalContentAlignment" Value="Center" />
-                            <Setter Property="VerticalContentAlignment" Value="Center" />
-                            <Setter Property="BorderThickness" Value="0" />
-                            <Setter Property="Padding" Value="10,0" />
-                        </Style>
-                    </DataGrid.ColumnHeaderStyle>
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width=".5*" />
+                            <ColumnDefinition Width=".5*" />
+                        </Grid.ColumnDefinitions>
 
-                    <DataGrid.Columns>
-                        <DataGridTextColumn
-                            Width="*"
-                            Binding="{Binding MaDaiLy}"
-                            Header="Mã đại lý">
-                            <DataGridTextColumn.ElementStyle>
-                                <Style TargetType="TextBlock">
-                                    <Setter Property="FontFamily" Value="Open Sans" />
-                                    <Setter Property="FontSize" Value="15" />
-                                    <Setter Property="Foreground" Value="#333333" />
-                                    <Setter Property="VerticalAlignment" Value="Center" />
-                                    <Setter Property="HorizontalAlignment" Value="Center" />
-                                    <Setter Property="TextAlignment" Value="Center" />
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow}, Path=IsSelected}" Value="True">
-                                            <Setter Property="Foreground" Value="White" />
-                                            <Setter Property="FontWeight" Value="SemiBold" />
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </DataGridTextColumn.ElementStyle>
-                        </DataGridTextColumn>
+                        <StackPanel
+                            Grid.Column="0"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            Orientation="Horizontal">
 
-                        <DataGridTextColumn
-                            Width="*"
-                            Binding="{Binding TenDaiLy}"
-                            Header="Tên đại lý">
-                            <DataGridTextColumn.ElementStyle>
-                                <Style TargetType="TextBlock">
-                                    <Setter Property="FontFamily" Value="Open Sans" />
-                                    <Setter Property="FontSize" Value="15" />
-                                    <Setter Property="Foreground" Value="#333333" />
-                                    <Setter Property="VerticalAlignment" Value="Center" />
-                                    <Setter Property="HorizontalAlignment" Value="Center" />
-                                    <Setter Property="TextAlignment" Value="Center" />
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow}, Path=IsSelected}" Value="True">
-                                            <Setter Property="Foreground" Value="White" />
-                                            <Setter Property="FontWeight" Value="SemiBold" />
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </DataGridTextColumn.ElementStyle>
-                        </DataGridTextColumn>
+                            <Button
+                                Margin="20,0,0,0"
+                                Command="{Binding SearchDaiLyCommand}"
+                                Style="{StaticResource PrimaryButtonStyle}">
+                                <StackPanel Orientation="Horizontal">
+                                    <fa:FontAwesome
+                                        Margin="0,0,8,0"
+                                        VerticalAlignment="Center"
+                                        Icon="Search" />
+                                    <TextBlock VerticalAlignment="Center" Text="Tra cứu đại lý" />
+                                </StackPanel>
+                            </Button>
+                            <Button
+                                Width="50"
+                                Margin="10,0,0,0"
+                                Command="{Binding LoadDataCommand}"
+                                Style="{StaticResource PrimaryButtonStyle}">
+                                <fa:FontAwesome VerticalAlignment="Center" Icon="Refresh" />
+                            </Button>
 
-                        <DataGridTextColumn
-                            Width="*"
-                            Binding="{Binding DiaChi}"
-                            Header="Địa chỉ">
-                            <DataGridTextColumn.ElementStyle>
-                                <Style TargetType="TextBlock">
-                                    <Setter Property="FontFamily" Value="Open Sans" />
-                                    <Setter Property="FontSize" Value="15" />
-                                    <Setter Property="Foreground" Value="#333333" />
-                                    <Setter Property="VerticalAlignment" Value="Center" />
-                                    <Setter Property="HorizontalAlignment" Value="Center" />
-                                    <Setter Property="TextAlignment" Value="Center" />
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow}, Path=IsSelected}" Value="True">
-                                            <Setter Property="Foreground" Value="White" />
-                                            <Setter Property="FontWeight" Value="SemiBold" />
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </DataGridTextColumn.ElementStyle>
-                        </DataGridTextColumn>
+                        </StackPanel>
 
-                        <DataGridTextColumn
-                            Width="*"
-                            Binding="{Binding Quan.TenQuan}"
-                            Header="Quận">
-                            <DataGridTextColumn.ElementStyle>
-                                <Style TargetType="TextBlock">
-                                    <Setter Property="FontFamily" Value="Open Sans" />
-                                    <Setter Property="FontSize" Value="15" />
-                                    <Setter Property="Foreground" Value="#333333" />
-                                    <Setter Property="VerticalAlignment" Value="Center" />
-                                    <Setter Property="HorizontalAlignment" Value="Center" />
-                                    <Setter Property="TextAlignment" Value="Center" />
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow}, Path=IsSelected}" Value="True">
-                                            <Setter Property="Foreground" Value="White" />
-                                            <Setter Property="FontWeight" Value="SemiBold" />
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </DataGridTextColumn.ElementStyle>
-                        </DataGridTextColumn>
+                        <StackPanel
+                            Grid.Column="1"
+                            Margin="0,0,20,0"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"
+                            Orientation="Horizontal">
 
-                        <DataGridTextColumn
-                            Width="*"
-                            Binding="{Binding LoaiDaiLy.TenLoaiDaiLy}"
-                            Header="Loại đại lý">
-                            <DataGridTextColumn.ElementStyle>
-                                <Style TargetType="TextBlock">
-                                    <Setter Property="FontFamily" Value="Open Sans" />
-                                    <Setter Property="FontSize" Value="15" />
-                                    <Setter Property="Foreground" Value="#333333" />
-                                    <Setter Property="VerticalAlignment" Value="Center" />
-                                    <Setter Property="HorizontalAlignment" Value="Center" />
-                                    <Setter Property="TextAlignment" Value="Center" />
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow}, Path=IsSelected}" Value="True">
-                                            <Setter Property="Foreground" Value="White" />
-                                            <Setter Property="FontWeight" Value="SemiBold" />
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </DataGridTextColumn.ElementStyle>
-                        </DataGridTextColumn>
+                            <Button Command="{Binding OpenHoSoDaiLyCommand}" Style="{StaticResource PrimaryButtonStyle}">
+                                <StackPanel Orientation="Horizontal">
+                                    <fa:FontAwesome
+                                        Margin="0,0,8,0"
+                                        VerticalAlignment="Center"
+                                        Icon="Plus" />
+                                    <TextBlock VerticalAlignment="Center" Text="Tiếp nhận đại lý" />
+                                </StackPanel>
+                            </Button>
 
-                        <DataGridTextColumn
-                            Width="*"
-                            Binding="{Binding DienThoai}"
-                            Header="Điện thoại">
-                            <DataGridTextColumn.ElementStyle>
-                                <Style TargetType="TextBlock">
-                                    <Setter Property="FontFamily" Value="Open Sans" />
-                                    <Setter Property="FontSize" Value="15" />
-                                    <Setter Property="Foreground" Value="#333333" />
-                                    <Setter Property="VerticalAlignment" Value="Center" />
-                                    <Setter Property="HorizontalAlignment" Value="Center" />
-                                    <Setter Property="TextAlignment" Value="Center" />
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow}, Path=IsSelected}" Value="True">
-                                            <Setter Property="Foreground" Value="White" />
-                                            <Setter Property="FontWeight" Value="SemiBold" />
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </DataGridTextColumn.ElementStyle>
-                        </DataGridTextColumn>
+                            <Button
+                                Margin="10,0,0,0"
+                                Command="{Binding EditDaiLyCommand}"
+                                Style="{StaticResource PrimaryButtonStyle}">
+                                <StackPanel Orientation="Horizontal">
+                                    <fa:FontAwesome
+                                        Margin="0,0,8,0"
+                                        VerticalAlignment="Center"
+                                        Icon="Edit" />
+                                    <TextBlock VerticalAlignment="Center" Text="Cập nhật đại lý" />
+                                </StackPanel>
+                            </Button>
 
-                        <DataGridTextColumn
-                            Width="*"
-                            Binding="{Binding NgayTiepNhan, StringFormat={}{0:dd/MM/yyyy}}"
-                            Header="Ngày tiếp nhận">
-                            <DataGridTextColumn.ElementStyle>
-                                <Style TargetType="TextBlock">
-                                    <Setter Property="FontFamily" Value="Open Sans" />
-                                    <Setter Property="FontSize" Value="15" />
-                                    <Setter Property="Foreground" Value="#333333" />
-                                    <Setter Property="VerticalAlignment" Value="Center" />
-                                    <Setter Property="HorizontalAlignment" Value="Center" />
-                                    <Setter Property="TextAlignment" Value="Center" />
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow}, Path=IsSelected}" Value="True">
-                                            <Setter Property="Foreground" Value="White" />
-                                            <Setter Property="FontWeight" Value="SemiBold" />
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </DataGridTextColumn.ElementStyle>
-                        </DataGridTextColumn>
+                            <Button
+                                Margin="10,0,0,0"
+                                Command="{Binding DeleteDaiLyCommand}"
+                                Style="{StaticResource DeleteButtonStyle}">
+                                <StackPanel Orientation="Horizontal">
+                                    <fa:FontAwesome
+                                        Margin="0,0,8,0"
+                                        VerticalAlignment="Center"
+                                        Icon="Trash" />
+                                    <TextBlock VerticalAlignment="Center" Text="Xóa đại lý" />
+                                </StackPanel>
+                            </Button>
 
-                        <DataGridTextColumn
-                            Width="*"
-                            Binding="{Binding TienNo, StringFormat={}{0:N0} VNĐ}"
-                            Header="Tiền nợ">
-                            <DataGridTextColumn.ElementStyle>
-                                <Style TargetType="TextBlock">
-                                    <Setter Property="FontFamily" Value="Open Sans" />
-                                    <Setter Property="FontSize" Value="15" />
-                                    <Setter Property="Foreground" Value="#333333" />
-                                    <Setter Property="VerticalAlignment" Value="Center" />
-                                    <Setter Property="HorizontalAlignment" Value="Center" />
-                                    <Setter Property="TextAlignment" Value="Center" />
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow}, Path=IsSelected}" Value="True">
-                                            <Setter Property="Foreground" Value="White" />
-                                            <Setter Property="FontWeight" Value="SemiBold" />
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </DataGridTextColumn.ElementStyle>
-                        </DataGridTextColumn>
-                    </DataGrid.Columns>
-                </DataGrid>
+                        </StackPanel>
+                    </Grid>
+
+                    <Border
+                        Grid.Row="2"
+                        Margin="20"
+                        Background="#F7F9FD"
+                        BorderBrush="#E0E0E0"
+                        BorderThickness="1">
+                        <DataGrid
+                            ItemsSource="{Binding DanhSachDaiLy}"
+                            SelectedItem="{Binding SelectedDaiLy}"
+                            Style="{StaticResource DefaultDataGridStyle}">
+
+                            <DataGrid.Columns>
+                                <DataGridTextColumn
+                                    Width="*"
+                                    Binding="{Binding MaDaiLy}"
+                                    ElementStyle="{StaticResource ColumnTextBlockStyle}"
+                                    Header="Mã đại lý" />
+
+                                <DataGridTextColumn
+                                    Width="*"
+                                    Binding="{Binding TenDaiLy}"
+                                    ElementStyle="{StaticResource ColumnTextBlockStyle}"
+                                    Header="Tên đại lý" />
+
+                                <DataGridTextColumn
+                                    Width="*"
+                                    Binding="{Binding DiaChi}"
+                                    ElementStyle="{StaticResource ColumnTextBlockStyle}"
+                                    Header="Địa chỉ" />
+
+                                <DataGridTextColumn
+                                    Width="*"
+                                    Binding="{Binding Quan.TenQuan}"
+                                    ElementStyle="{StaticResource ColumnTextBlockStyle}"
+                                    Header="Quận" />
+
+                                <DataGridTextColumn
+                                    Width="*"
+                                    Binding="{Binding LoaiDaiLy.TenLoaiDaiLy}"
+                                    ElementStyle="{StaticResource ColumnTextBlockStyle}"
+                                    Header="Loại đại lý" />
+
+                                <DataGridTextColumn
+                                    Width="*"
+                                    Binding="{Binding DienThoai}"
+                                    ElementStyle="{StaticResource ColumnTextBlockStyle}"
+                                    Header="Điện thoại" />
+
+                                <DataGridTextColumn
+                                    Width="*"
+                                    Binding="{Binding NgayTiepNhan, StringFormat={}{0:dd/MM/yyyy}}"
+                                    ElementStyle="{StaticResource ColumnTextBlockStyle}"
+                                    Header="Ngày tiếp nhận" />
+
+                                <DataGridTextColumn
+                                    Width="*"
+                                    Binding="{Binding TienNo, StringFormat={}{0:N0} VNĐ}"
+                                    ElementStyle="{StaticResource ColumnTextBlockStyle}"
+                                    Header="Tiền nợ" />
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </Border>
+
+                    <Border Grid.Row="3" Style="{StaticResource PaginationBorder}">
+                        <StackPanel
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Stretch"
+                            Orientation="Horizontal">
+                            <Button
+                                Command="{Binding GoToPreviousPageCommand}"
+                                Content="← Trang trước"
+                                Style="{StaticResource BackForwardButtonStyle}" />
+                            <Border
+                                Width="1"
+                                Margin="4,0"
+                                Background="#E0E0E0" />
+                            <Button
+                                Command="{Binding PageSelectionCommand}"
+                                CommandParameter="{Binding ButtonParamFirst}"
+                                Content="1"
+                                Style="{StaticResource PageButtonSelectedStyle}" />
+                            <Button
+                                Command="{Binding PageSelectionCommand}"
+                                CommandParameter="{Binding ButtonParamSecond}"
+                                Content="2"
+                                Style="{StaticResource PageButtonUnSelectedStyle}" />
+                            <Button
+                                Command="{Binding PageSelectionCommand}"
+                                CommandParameter="{Binding ButtonParamThird}"
+                                Content="3"
+                                Style="{StaticResource PageButtonUnSelectedStyle}" />
+                            <Button
+                                Command="{Binding PageSelectionCommand}"
+                                CommandParameter="{Binding ButtonParamForth}"
+                                Content="4"
+                                Style="{StaticResource PageButtonUnSelectedStyle}" />
+                            <Button
+                                Command="{Binding PageSelectionCommand}"
+                                CommandParameter="{Binding ButtonParamFith}"
+                                Content="5"
+                                Style="{StaticResource PageButtonUnSelectedStyle}" />
+                            <Border
+                                Width="1"
+                                Margin="4,0"
+                                Background="#E0E0E0" />
+                            <Button
+                                Command="{Binding GoToNextPageCommand}"
+                                Content="Trang sau →"
+                                Style="{StaticResource BackForwardButtonStyle}" />
+                        </StackPanel>
+                    </Border>
+                </Grid>
             </Border>
+
+            <Frame
+                x:Name="MainContent"
+                Grid.Column="1"
+                VerticalAlignment="Stretch"
+                Panel.ZIndex="1"
+                ContentRendered="MainContent_ContentRendered"
+                IsHitTestVisible="True"
+                Navigated="MainContent_Navigated"
+                NavigationUIVisibility="Hidden" />
         </Grid>
-
-        <Frame
-            x:Name="MainContent"
-            Grid.Column="1"
-            Grid.ColumnSpan="3"
-            VerticalAlignment="Stretch"
-            Panel.ZIndex="1"
-            ContentRendered="MainContent_ContentRendered"
-            IsHitTestVisible="True"
-            Navigated="MainContent_Navigated"
-            NavigationUIVisibility="Hidden" />
-
     </Grid>
 </Window>

@@ -4,6 +4,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using QuanLyDaiLy.Views.CustomAnimation;
 using Microsoft.Extensions.DependencyInjection;
+using System.Windows.Media;
 
 namespace QuanLyDaiLy.Views
 {
@@ -76,6 +77,17 @@ namespace QuanLyDaiLy.Views
                 case "Dashboard":
                     var dashboardPage = _serviceProvider.GetRequiredService<DashboardViews.DashboardPage>();
                     MainContent.Navigate(dashboardPage);
+                    StackPanelTabButton.Visibility = Visibility.Hidden;
+                    break;
+                case "DanhSach":
+                    MainContent.Content = null;
+                    StackPanelTabButton.Visibility = Visibility.Visible;
+                    var dailyButton = FindVisualChildren<RadioButton>(this)
+                        .FirstOrDefault(rb => rb.Tag as string == "DaiLy");
+                    if (dailyButton != null)
+                    {
+                        dailyButton.IsChecked = true;
+                    }
                     break;
                 case "DaiLy":
                     MainContent.Content = null;
@@ -107,10 +119,12 @@ namespace QuanLyDaiLy.Views
                 case "ThamSo":
                     var thamSoPage = _serviceProvider.GetRequiredService<ThamSoViews.ThamSoPage>();
                     MainContent.Navigate(thamSoPage);
+                    StackPanelTabButton.Visibility = Visibility.Hidden;
                     break;
                 case "BaoCao":
                     var baoCaoPage = _serviceProvider.GetRequiredService<BaoCaoViews.BaoCaoChiTietPage>();
                     MainContent.Navigate(baoCaoPage);
+                    StackPanelTabButton.Visibility = Visibility.Hidden;
                     break;
                 default:
                     break;
@@ -134,6 +148,26 @@ namespace QuanLyDaiLy.Views
         private void MainContent_Navigated(object sender, System.Windows.Navigation.NavigationEventArgs e)
         {
 
+        }
+
+        private IEnumerable<T> FindVisualChildren<T>(DependencyObject depObj) where T : DependencyObject
+        {
+            if (depObj != null)
+            {
+                for (int i = 0; i < VisualTreeHelper.GetChildrenCount(depObj); i++)
+                {
+                    DependencyObject child = VisualTreeHelper.GetChild(depObj, i);
+                    if (child != null && child is T t)
+                    {
+                        yield return t;
+                    }
+
+                    foreach (T childOfChild in FindVisualChildren<T>(child))
+                    {
+                        yield return childOfChild;
+                    }
+                }
+            }
         }
     }
 }

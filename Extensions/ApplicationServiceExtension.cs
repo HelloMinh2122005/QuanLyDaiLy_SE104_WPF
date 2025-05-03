@@ -90,6 +90,7 @@ public static class ApplicationServiceExtensions
         services.AddTransient<Views.MatHangViews.MatHangPage>();
         services.AddTransient<Views.MatHangViews.ThemMatHangWindow>();
         services.AddTransient<Views.MatHangViews.CapNhatMatHangWindow>();
+        services.AddTransient<Views.MatHangViews.TraCuuMatHangWindow>();
 
         services.AddTransient<Views.PhieuThuViews.PhieuThuPage>();
         services.AddTransient<Views.PhieuThuViews.ThemPhieuThuWindow>();
@@ -135,13 +136,8 @@ public static class ApplicationServiceExtensions
 
         services.AddTransient<ViewModels.MatHangViewModels.MatHangPageViewModel>();
         services.AddTransient<ViewModels.MatHangViewModels.ThemMatHangWindowViewModel>();
-        services.AddTransient<Func<int, ViewModels.MatHangViewModels.CapNhatMatHangWindowViewModel>>(sp => matHangId =>
-            new ViewModels.MatHangViewModels.CapNhatMatHangWindowViewModel(
-                sp.GetRequiredService<IMatHangService>(),
-                sp.GetRequiredService<IDonViTinhService>(),
-                matHangId
-            )
-        );
+        services.AddTransient<ViewModels.MatHangViewModels.CapNhatMatHangWindowViewModel>();
+        services.AddTransient<ViewModels.MatHangViewModels.TraCuuMatHangWindowViewModel>();
 
         services.AddTransient<ViewModels.PhieuThuViewModels.PhieuThuPageViewModel>();
         services.AddTransient<ViewModels.PhieuThuViewModels.ThemPhieuThuWindowViewModel>();
