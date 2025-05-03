@@ -158,7 +158,7 @@
                                     IsReadOnly="True">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
-                                            <Border Width="150" Style="{StaticResource BaoCaoBorderStyle}">
+                                            <Border Width="200" Style="{StaticResource BaoCaoBorderStyle}">
                                                 <TextBlock Style="{StaticResource BaoCaoTemplateTextBlockStyle}" Text="{Binding TenDaiLy}" />
                                             </Border>
                                         </DataTemplate>
@@ -171,7 +171,7 @@
                                     IsReadOnly="True">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
-                                            <Border Width="150" Style="{StaticResource BaoCaoBorderStyle}">
+                                            <Border Width="200" Style="{StaticResource BaoCaoBorderStyle}">
                                                 <TextBlock Style="{StaticResource BaoCaoTemplateTextBlockStyle}" Text="{Binding NoDau, StringFormat={}{0:N0} VNĐ}" />
                                             </Border>
                                         </DataTemplate>
@@ -184,7 +184,7 @@
                                     IsReadOnly="True">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
-                                            <Border Width="200" Style="{StaticResource BaoCaoBorderStyle}">
+                                            <Border Width="400" Style="{StaticResource BaoCaoBorderStyle}">
                                                 <TextBlock Style="{StaticResource BaoCaoTemplateTextBlockStyle}" Text="{Binding PhatSinh, StringFormat={}{0:N0} VNĐ}" />
                                             </Border>
                                         </DataTemplate>
@@ -197,7 +197,7 @@
                                     IsReadOnly="True">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
-                                            <Border Width="150" Style="{StaticResource BaoCaoBorderStyle}">
+                                            <Border Width="200" Style="{StaticResource BaoCaoBorderStyle}">
                                                 <TextBlock Style="{StaticResource BaoCaoTemplateTextBlockStyle}" Text="{Binding NoCuoi, StringFormat={}{0:N0} VNĐ}" />
                                             </Border>
                                         </DataTemplate>
