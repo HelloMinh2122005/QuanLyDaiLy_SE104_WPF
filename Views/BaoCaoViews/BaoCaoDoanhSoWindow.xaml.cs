@@ -10,10 +10,5 @@ namespace QuanLyDaiLy.Views.BaoCaoViews
             InitializeComponent();
             DataContext = vm;
         }
-
-        private void DataGrid_SelectionChanged()
-        {
-
-        }
     }
 }
