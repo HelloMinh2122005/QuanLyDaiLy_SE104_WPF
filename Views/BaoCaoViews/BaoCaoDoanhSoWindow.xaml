@@ -16,14 +16,6 @@
     mc:Ignorable="d">
 
     <Window.Resources>
-        <DropShadowEffect
-            x:Key="DropShadowEffect"
-            BlurRadius="10"
-            Opacity="0.5"
-            ShadowDepth="0"
-            Color="Black" />
-
-        <helpers:ComboBoxItemConverter x:Key="ComboBoxItemConverter" />
         <helpers:RowToIndexConverter x:Key="RowToIndexConverter" />
     </Window.Resources>
 
@@ -70,16 +62,7 @@
             <Border Grid.Row="3" Background="LightGray" />
 
             <!--  Body  -->
-            <Border
-                Grid.Row="2"
-                Margin="15"
-                Padding="10"
-                HorizontalAlignment="Stretch"
-                VerticalAlignment="Stretch"
-                Background="#F7F9FD"
-                BorderBrush="Transparent"
-                CornerRadius="11"
-                Effect="{StaticResource DropShadowEffect}">
+            <Border Grid.Row="2" Style="{StaticResource WindowBorderContentWrapper}">
                 <Grid Margin="10">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="2*" />
@@ -105,7 +88,7 @@
 
                             <TextBlock
                                 Grid.Row="0"
-                                Style="{StaticResource FieldLabelTextBlockStyle}"
+                                Style="{StaticResource FieldSmallLabelTextBlockStyle}"
                                 Text="Năm lập báo cáo" />
                             <ComboBox
                                 Grid.Row="1"
@@ -126,7 +109,7 @@
 
                             <TextBlock
                                 Grid.Row="0"
-                                Style="{StaticResource FieldLabelTextBlockStyle}"
+                                Style="{StaticResource FieldSmallLabelTextBlockStyle}"
                                 Text="Tháng lập báo cáo" />
                             <ComboBox
                                 Grid.Row="1"
@@ -158,7 +141,7 @@
                             FontWeight="Normal"
                             Foreground="White "
                             IsReadOnly="True"
-                            Text="{Binding TotalDoanhSo}"
+                            Text="{Binding TotalDoanhSo, StringFormat={}{0:N0} VNĐ}"
                             TextAlignment="Left">
                             <TextBox.Resources>
                                 <Style TargetType="{x:Type Border}">
@@ -190,97 +173,16 @@
                         BorderThickness="2"
                         CornerRadius="10">
 
-                        <DataGrid
-                            AutoGenerateColumns="False"
-                            Background="Transparent"
-                            BorderThickness="0"
-                            CanUserAddRows="False"
-                            CanUserDeleteRows="False"
-                            GridLinesVisibility="Horizontal"
-                            HeadersVisibility="Column"
-                            IsReadOnly="False"
-                            ItemsSource="{Binding BaoCaoDoanhSoList}"
-                            RowHeight="60"
-                            ScrollViewer.VerticalScrollBarVisibility="Auto">
-                            <DataGrid.Resources>
-                                <Style TargetType="DataGridCell">
-                                    <Setter Property="BorderThickness" Value="0" />
-                                    <Setter Property="FocusVisualStyle" Value="{x:Null}" />
-                                    <Setter Property="Padding" Value="10,0" />
-                                    <Setter Property="Template">
-                                        <Setter.Value>
-                                            <ControlTemplate TargetType="DataGridCell">
-                                                <Border
-                                                    Background="{TemplateBinding Background}"
-                                                    BorderBrush="{TemplateBinding BorderBrush}"
-                                                    BorderThickness="{TemplateBinding BorderThickness}"
-                                                    SnapsToDevicePixels="True">
-                                                    <ContentPresenter
-                                                        HorizontalAlignment="Center"
-                                                        VerticalAlignment="Center"
-                                                        SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
-                                                </Border>
-                                            </ControlTemplate>
-                                        </Setter.Value>
-                                    </Setter>
-                                </Style>
-                            </DataGrid.Resources>
-
-                            <DataGrid.RowStyle>
-                                <Style TargetType="DataGridRow">
-                                    <Setter Property="Background" Value="Transparent" />
-                                    <Setter Property="BorderThickness" Value="0,0,0,1" />
-                                    <Setter Property="BorderBrush" Value="#E0E0E0" />
-                                    <Style.Triggers>
-                                        <Trigger Property="IsMouseOver" Value="True">
-                                            <Setter Property="Background" Value="#F5F9FF" />
-                                        </Trigger>
-                                        <Trigger Property="IsSelected" Value="True">
-                                            <Setter Property="Background" Value="#00AAFF" />
-                                        </Trigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </DataGrid.RowStyle>
-
-                            <DataGrid.ColumnHeaderStyle>
-                                <Style TargetType="DataGridColumnHeader">
-                                    <Setter Property="Background" Value="White" />
-                                    <Setter Property="FontFamily" Value="Open Sans" />
-                                    <Setter Property="FontWeight" Value="SemiBold" />
-                                    <Setter Property="FontSize" Value="20" />
-                                    <Setter Property="Foreground" Value="#333333" />
-                                    <Setter Property="Height" Value="40" />
-                                    <Setter Property="HorizontalContentAlignment" Value="Center" />
-                                    <Setter Property="VerticalContentAlignment" Value="Center" />
-                                    <Setter Property="BorderThickness" Value="0" />
-                                    <Setter Property="Padding" Value="10,0" />
-                                </Style>
-                            </DataGrid.ColumnHeaderStyle>
-
+                        <DataGrid ItemsSource="{Binding BaoCaoDoanhSoList}" Style="{StaticResource BaoCaoDataGridStyle}">
                             <DataGrid.Columns>
                                 <DataGridTextColumn
                                     Width="Auto"
+                                    ElementStyle="{StaticResource BaoCaoTextBlockStyle}"
                                     Header="STT"
                                     IsReadOnly="True">
                                     <DataGridTextColumn.Binding>
                                         <Binding Converter="{StaticResource RowToIndexConverter}" RelativeSource="{RelativeSource AncestorType=DataGridRow}" />
                                     </DataGridTextColumn.Binding>
-                                    <DataGridTextColumn.ElementStyle>
-                                        <Style TargetType="TextBlock">
-                                            <Setter Property="FontFamily" Value="Open Sans" />
-                                            <Setter Property="FontSize" Value="20" />
-                                            <Setter Property="Foreground" Value="#333333" />
-                                            <Setter Property="VerticalAlignment" Value="Center" />
-                                            <Setter Property="HorizontalAlignment" Value="Center" />
-                                            <Setter Property="TextAlignment" Value="Center" />
-                                            <Style.Triggers>
-                                                <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow}, Path=IsSelected}" Value="True">
-                                                    <Setter Property="Foreground" Value="White" />
-                                                    <Setter Property="FontWeight" Value="SemiBold" />
-                                                </DataTrigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </DataGridTextColumn.ElementStyle>
                                 </DataGridTextColumn>
 
                                 <DataGridTemplateColumn
@@ -289,32 +191,8 @@
                                     IsReadOnly="True">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
-                                            <Border
-                                                Width="150"
-                                                Padding="10,5"
-                                                HorizontalAlignment="Center"
-                                                Background="#A2A2A2"
-                                                BorderBrush="#33000000"
-                                                BorderThickness="1"
-                                                CornerRadius="10">
-                                                <TextBlock
-                                                    HorizontalAlignment="Center"
-                                                    VerticalAlignment="Center"
-                                                    FontFamily="Open Sans"
-                                                    FontSize="20"
-                                                    Foreground="White"
-                                                    Text="{Binding TenDaiLy}"
-                                                    TextAlignment="Center">
-                                                    <TextBlock.Style>
-                                                        <Style TargetType="TextBlock">
-                                                            <Style.Triggers>
-                                                                <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow}, Path=IsSelected}" Value="True">
-                                                                    <Setter Property="FontWeight" Value="SemiBold" />
-                                                                </DataTrigger>
-                                                            </Style.Triggers>
-                                                        </Style>
-                                                    </TextBlock.Style>
-                                                </TextBlock>
+                                            <Border Width="200" Style="{StaticResource BaoCaoBorderStyle}">
+                                                <TextBlock Style="{StaticResource BaoCaoTemplateTextBlockStyle}" Text="{Binding TenDaiLy}" />
                                             </Border>
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
@@ -326,32 +204,8 @@
                                     IsReadOnly="True">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
-                                            <Border
-                                                Width="150"
-                                                Padding="10,5"
-                                                HorizontalAlignment="Center"
-                                                Background="#A2A2A2"
-                                                BorderBrush="#33000000"
-                                                BorderThickness="1"
-                                                CornerRadius="10">
-                                                <TextBlock
-                                                    HorizontalAlignment="Center"
-                                                    VerticalAlignment="Center"
-                                                    FontFamily="Open Sans"
-                                                    FontSize="20"
-                                                    Foreground="White"
-                                                    Text="{Binding SoLuongPhieuXuat}"
-                                                    TextAlignment="Center">
-                                                    <TextBlock.Style>
-                                                        <Style TargetType="TextBlock">
-                                                            <Style.Triggers>
-                                                                <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow}, Path=IsSelected}" Value="True">
-                                                                    <Setter Property="FontWeight" Value="SemiBold" />
-                                                                </DataTrigger>
-                                                            </Style.Triggers>
-                                                        </Style>
-                                                    </TextBlock.Style>
-                                                </TextBlock>
+                                            <Border Width="150" Style="{StaticResource BaoCaoBorderStyle}">
+                                                <TextBlock Style="{StaticResource BaoCaoTemplateTextBlockStyle}" Text="{Binding SoLuongPhieuXuat}" />
                                             </Border>
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
@@ -363,32 +217,8 @@
                                     IsReadOnly="True">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
-                                            <Border
-                                                Width="150"
-                                                Padding="10,5"
-                                                HorizontalAlignment="Center"
-                                                Background="#A2A2A2"
-                                                BorderBrush="#33000000"
-                                                BorderThickness="1"
-                                                CornerRadius="10">
-                                                <TextBlock
-                                                    HorizontalAlignment="Center"
-                                                    VerticalAlignment="Center"
-                                                    FontFamily="Open Sans"
-                                                    FontSize="20"
-                                                    Foreground="White"
-                                                    Text="{Binding TongGiaTriGiaoDich}"
-                                                    TextAlignment="Center">
-                                                    <TextBlock.Style>
-                                                        <Style TargetType="TextBlock">
-                                                            <Style.Triggers>
-                                                                <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow}, Path=IsSelected}" Value="True">
-                                                                    <Setter Property="FontWeight" Value="SemiBold" />
-                                                                </DataTrigger>
-                                                            </Style.Triggers>
-                                                        </Style>
-                                                    </TextBlock.Style>
-                                                </TextBlock>
+                                            <Border Width="350" Style="{StaticResource BaoCaoBorderStyle}">
+                                                <TextBlock Style="{StaticResource BaoCaoTemplateTextBlockStyle}" Text="{Binding TongGiaTriGiaoDich, StringFormat={}{0:N0} VNĐ}" />
                                             </Border>
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
@@ -400,37 +230,12 @@
                                     IsReadOnly="True">
                                     <DataGridTemplateColumn.CellTemplate>
                                         <DataTemplate>
-                                            <Border
-                                                Width="150"
-                                                Padding="10,5"
-                                                HorizontalAlignment="Center"
-                                                Background="#A2A2A2"
-                                                BorderBrush="#33000000"
-                                                BorderThickness="1"
-                                                CornerRadius="10">
-                                                <TextBlock
-                                                    HorizontalAlignment="Center"
-                                                    VerticalAlignment="Center"
-                                                    FontFamily="Open Sans"
-                                                    FontSize="20"
-                                                    Foreground="White"
-                                                    Text="{Binding TiLe}"
-                                                    TextAlignment="Center">
-                                                    <TextBlock.Style>
-                                                        <Style TargetType="TextBlock">
-                                                            <Style.Triggers>
-                                                                <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=DataGridRow}, Path=IsSelected}" Value="True">
-                                                                    <Setter Property="FontWeight" Value="SemiBold" />
-                                                                </DataTrigger>
-                                                            </Style.Triggers>
-                                                        </Style>
-                                                    </TextBlock.Style>
-                                                </TextBlock>
+                                            <Border Width="150" Style="{StaticResource BaoCaoBorderStyle}">
+                                                <TextBlock Style="{StaticResource BaoCaoTemplateTextBlockStyle}" Text="{Binding TiLe, StringFormat={}{0:P0}}" />
                                             </Border>
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>
                                 </DataGridTemplateColumn>
-
                             </DataGrid.Columns>
                         </DataGrid>
 

@@ -15,10 +15,6 @@
     WindowStyle="None"
     mc:Ignorable="d">
 
-    <Window.Resources>
-        <helpers:ComboBoxItemConverter x:Key="ComboBoxItemConverter" />
-    </Window.Resources>
-
     <Border Style="{StaticResource WindowPopUpBorder}">
         <Grid>
             <Grid.RowDefinitions>
@@ -176,7 +172,7 @@
                             Grid.Row="1"
                             Grid.Column="0"
                             Style="{StaticResource ReadOnlyTextBoxStyle}"
-                            Text="{Binding QuyDinhTienThuTienNo}" />
+                            Text="{Binding NoiDung}" />
 
                         <TextBlock
                             Grid.Row="0"
