@@ -9,7 +9,9 @@ using System.Collections.ObjectModel;
 using Microsoft.Win32;
 using System.IO;
 using OfficeOpenXml;
-using GemBox.Spreadsheet;
+using QuestPDF.Fluent;
+using QuestPDF.Helpers;
+using QuestPDF.Infrastructure;
 
 namespace QuanLyDaiLy.ViewModels.BaoCaoViewModels
 {
@@ -56,7 +58,7 @@ namespace QuanLyDaiLy.ViewModels.BaoCaoViewModels
             SelectedYear = selectedYear;
 
             _ = LoadData();
-            ExportToPDFCommand = new RelayCommand(ExportToPDF);
+            LapBaoCaoCommand = new RelayCommand(ExportToPDF);
             CloseCommand = new RelayCommand(CloseWindow);
         }
         public event EventHandler? DataChanged;
@@ -105,7 +107,7 @@ namespace QuanLyDaiLy.ViewModels.BaoCaoViewModels
         }
 
         public ICommand CloseCommand { get; }
-        public ICommand ExportToPDFCommand { get; }
+        public ICommand LapBaoCaoCommand { get; }
         private async Task LoadData()
         {
             BaoCaoCongNoList.Clear();
@@ -150,7 +152,7 @@ namespace QuanLyDaiLy.ViewModels.BaoCaoViewModels
                     .Sum(p => p.SoTienThu);
 
                 // Nợ cuối tháng = Nợ đầu - tổng phiếu thu trong tháng
-                decimal noCuoiThang = noDauThang - tongPhieuThuTrongThang;
+                decimal noCuoiThang = noDauThang + tongPhieuXuatTrongThang - tongPhieuThuTrongThang;
 
                 // Thêm vào danh sách báo cáo
                 BaoCaoCongNoList.Add(new BaoCaoCongNo
@@ -163,17 +165,15 @@ namespace QuanLyDaiLy.ViewModels.BaoCaoViewModels
                 });
             }
         }
-
-        [Obsolete]
         private void ExportToPDF()
         {
-            GemBox.Spreadsheet.SpreadsheetInfo.SetLicense("FREE-LIMITED-KEY");
-
             if (BaoCaoCongNoList == null || BaoCaoCongNoList.Count == 0)
             {
                 MessageBox.Show("Không có dữ liệu để xuất báo cáo.", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
+
+            QuestPDF.Settings.License = QuestPDF.Infrastructure.LicenseType.Community;
 
             string folderPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
             string baseFileName = $"BaoCaoCongNo_{SelectedMonth.Replace(" ", "")}_{SelectedYear}";
@@ -187,7 +187,7 @@ namespace QuanLyDaiLy.ViewModels.BaoCaoViewModels
                 count++;
             }
 
-            var saveFileDialog = new SaveFileDialog
+            var saveFileDialog = new Microsoft.Win32.SaveFileDialog
             {
                 Filter = "PDF Files (*.pdf)|*.pdf",
                 FileName = Path.GetFileName(pdfFilePath),
@@ -197,106 +197,102 @@ namespace QuanLyDaiLy.ViewModels.BaoCaoViewModels
             if (saveFileDialog.ShowDialog() == true)
             {
                 pdfFilePath = saveFileDialog.FileName;
-                ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
 
-                using (var memoryStream = new MemoryStream())
+                var document = QuestPDF.Fluent.Document.Create(container =>
                 {
-                    using (var package = new ExcelPackage())
+                    container.Page(page =>
                     {
-                        var ws = package.Workbook.Worksheets.Add("Báo Cáo Công Nợ");
+                        page.Margin(30);
 
-                        ws.Cells["A1"].Value = $"Báo Cáo Công Nợ {SelectedMonth} - {SelectedYear}";
-                        ws.Cells["A1:E1"].Merge = true;
-                        ws.Cells["A1"].Style.Font.Size = 16;
-                        ws.Cells["A1"].Style.Font.Bold = true;
-                        ws.Cells["A1"].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
-
-                        string nguoiLap = "Nguyễn Văn A";
-                        string ngayLap = DateTime.Now.ToString("dd/MM/yyyy");
-
-                        ws.Cells["A2"].Value = "Người lập:";
-                        ws.Cells["B2"].Value = nguoiLap;
-                        ws.Cells["B2"].Style.Font.Italic = true;
-
-                        ws.Cells["A3"].Value = "Ngày lập:";
-                        ws.Cells["B3"].Value = ngayLap;
-                        ws.Cells["B3"].Style.Font.Italic = true;
-
-                        // Tiêu đề bảng
-                        ws.Cells["A5"].Value = "STT";
-                        ws.Cells["B5"].Value = "Tên Đại Lý";
-                        ws.Cells["C5"].Value = "Nợ Đầu Tháng";
-                        ws.Cells["D5"].Value = "Giá Trị Giao Dịch";
-                        ws.Cells["E5"].Value = "Nợ Cuối Tháng";
-
-                        ws.Cells["A5:E5"].Style.Font.Bold = true;
-                        ws.Cells["A5:E5"].Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
-                        ws.Cells["A5:E5"].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.LightSalmon);
-
-                        int row = 6;
-
-                        foreach (var item in BaoCaoCongNoList)
+                        // Header
+                        page.Header().Element(header =>
                         {
-                            ws.Cells[row, 1].Value = item.STT;
-                            ws.Cells[row, 2].Value = item.TenDaiLy;
-                            ws.Cells[row, 3].Value = item.NoDauThang;
-                            ws.Cells[row, 4].Value = item.GiaTriGiaoDich;
-                            ws.Cells[row, 5].Value = item.NoCuoiThang;
-
-                            // Format tiền
-                            ws.Cells[row, 3].Style.Numberformat.Format = "#,##0\" VNĐ\"";
-                            ws.Cells[row, 4].Style.Numberformat.Format = "#,##0\" VNĐ\"";
-                            ws.Cells[row, 5].Style.Numberformat.Format = "#,##0\" VNĐ\"";
-
-
-                            row++;
-                        }
-
-                        // AutoFit và định dạng bảng
-                        ws.Cells[ws.Dimension.Address].AutoFitColumns();
-
-                        var borderRange = ws.Cells[$"A5:E{row - 1}"];
-                        borderRange.Style.Border.Top.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
-                        borderRange.Style.Border.Bottom.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
-                        borderRange.Style.Border.Left.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
-                        borderRange.Style.Border.Right.Style = OfficeOpenXml.Style.ExcelBorderStyle.Thin;
-                        borderRange.Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
-                        borderRange.Style.VerticalAlignment = OfficeOpenXml.Style.ExcelVerticalAlignment.Center;
-
-                        ws.PrinterSettings.HorizontalCentered = true;
-                        ws.PrinterSettings.PaperSize = ePaperSize.A4;
-                        ws.PrinterSettings.FitToPage = true;
-                        ws.PrinterSettings.FitToWidth = 1;
-                        ws.PrinterSettings.FitToHeight = 0;
-
-                        ws.PrinterSettings.LeftMargin = 0.5M;
-                        ws.PrinterSettings.RightMargin = 0.5M;
-                        ws.PrinterSettings.TopMargin = 0.5M;
-                        ws.PrinterSettings.BottomMargin = 0.5M;
-
-                        ws.PrinterSettings.RepeatRows = new ExcelAddress("$5:$5");
-
-                        package.SaveAs(memoryStream);
-                    }
-
-                    memoryStream.Position = 0;
-
-                    GemBox.Spreadsheet.ExcelFile.Load(memoryStream).Save(pdfFilePath, GemBox.Spreadsheet.SaveOptions.PdfDefault);
-
-                    MessageBox.Show("Xuất PDF thành công:\n" + pdfFilePath, "Thành công", MessageBoxButton.OK, MessageBoxImage.Information);
-
-                    try
-                    {
-                        System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
-                        {
-                            FileName = pdfFilePath,
-                            UseShellExecute = true
+                            header
+                                .PaddingBottom(10)
+                                .Text($"Báo Cáo Công Nợ {SelectedMonth} - {SelectedYear}")
+                                .FontSize(16)
+                                .Bold()
+                                .AlignCenter();
                         });
-                    }
-                    catch { }
+
+                        // Nội dung
+                        page.Content().Element(content =>
+                        {
+                            content.PaddingVertical(10).Column(column =>
+                            {
+                                column.Spacing(5);
+
+                                // Thông tin người lập và ngày lập
+                                column.Item().Text($"Người lập: Nguyễn Văn A").Italic();
+                                column.Item().Text($"Ngày lập: {DateTime.Now:dd/MM/yyyy}").Italic();
+
+                                // Bảng dữ liệu
+                                column.Item().Element(tableContainer =>
+                                {
+                                    tableContainer.Table(table =>
+                                    {
+                                        table.ColumnsDefinition(columns =>
+                                        {
+                                            columns.RelativeColumn(); // STT
+                                            columns.RelativeColumn(); // Tên Đại Lý
+                                            columns.RelativeColumn(); // Nợ Đầu Tháng
+                                            columns.RelativeColumn(); // Giá Trị Giao Dịch
+                                            columns.RelativeColumn(); // Nợ Cuối Tháng
+                                        });
+
+                                        // Tiêu đề cột (Thêm màu nền xanh nhạt và căn giữa)
+                                        table.Header(header =>
+                                        {
+                                            header.Cell().Element(CellStyle).AlignCenter().Text("STT").Bold();
+                                            header.Cell().Element(CellStyle).AlignCenter().Text("Tên Đại Lý").Bold();
+                                            header.Cell().Element(CellStyle).AlignCenter().Text("Nợ Đầu Tháng").Bold();
+                                            header.Cell().Element(CellStyle).AlignCenter().Text("Giá Trị Giao Dịch").Bold();
+                                            header.Cell().Element(CellStyle).AlignCenter().Text("Nợ Cuối Tháng").Bold();
+                                        });
+
+                                        // Dữ liệu (Căn giữa các ô)
+                                        foreach (var item in BaoCaoCongNoList)
+                                        {
+                                            table.Cell().Element(CellStyle).AlignCenter().Text(item.STT.ToString());
+                                            table.Cell().Element(CellStyle).AlignCenter().Text(item.TenDaiLy ?? "");
+                                            table.Cell().Element(CellStyle).AlignCenter().Text(item.NoDauThang.ToString("N0") + " VNĐ");
+                                            table.Cell().Element(CellStyle).AlignCenter().Text(item.GiaTriGiaoDich.ToString("N0") + " VNĐ");
+                                            table.Cell().Element(CellStyle).AlignCenter().Text(item.NoCuoiThang.ToString("N0") + " VNĐ");
+                                        }
+                                    });
+                                });
+                            });
+                        });
+                    });
+                });
+
+                try
+                {
+                    document.GeneratePdf(pdfFilePath);
+                    MessageBox.Show($"Xuất PDF thành công:\n{pdfFilePath}", "Thành công", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                    System.Diagnostics.Process.Start(new System.Diagnostics.ProcessStartInfo
+                    {
+                        FileName = pdfFilePath,
+                        UseShellExecute = true
+                    });
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Lỗi khi tạo PDF: " + ex.Message, "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
             }
         }
+
+        // Style cho mỗi cell trong bảng
+        QuestPDF.Infrastructure.IContainer CellStyle(QuestPDF.Infrastructure.IContainer container)
+        {
+            return container
+                .Border(1)
+                .BorderColor(QuestPDF.Helpers.Colors.Grey.Lighten2)
+                .Padding(5);
+        }
+
 
         private void CloseWindow()
         {
