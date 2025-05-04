@@ -559,4 +559,100 @@
         <Setter Property="Visibility" Value="Collapsed" />
     </Style>
 
+    <!--  Small Button Style  -->
+    <Style x:Key="SmallButtonStyle" TargetType="Button">
+        <!--  Font properties  -->
+        <Setter Property="FontFamily" Value="Roboto" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="FontStyle" Value="Normal" />
+        <Setter Property="FontWeight" Value="Medium" />
+        <Setter Property="Foreground" Value="#FFFFFF" />
+        <Setter Property="Background" Value="#00AAFF" />
+        <Setter Property="Width" Value="190" />
+        <Setter Property="Height" Value="28" />
+
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="Button">
+                    <Border
+                        x:Name="buttonBorder"
+                        Padding="6,3,6,2"
+                        Background="{TemplateBinding Background}"
+                        BorderBrush="#0077BB"
+                        BorderThickness="2"
+                        CornerRadius="10">
+                        <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        <Border.Effect>
+                            <DropShadowEffect
+                                x:Name="shadowEffect"
+                                BlurRadius="0"
+                                Opacity="0"
+                                ShadowDepth="0"
+                                Color="#555555" />
+                        </Border.Effect>
+                    </Border>
+                    <ControlTemplate.Resources>
+                        <Storyboard x:Key="HoverOn">
+                            <ColorAnimation
+                                Storyboard.TargetName="buttonBorder"
+                                Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
+                                To="#0088CC"
+                                Duration="0:0:0.2" />
+                            <DoubleAnimation
+                                Storyboard.TargetName="shadowEffect"
+                                Storyboard.TargetProperty="BlurRadius"
+                                To="6"
+                                Duration="0:0:0.2" />
+                            <DoubleAnimation
+                                Storyboard.TargetName="shadowEffect"
+                                Storyboard.TargetProperty="Opacity"
+                                To="0.3"
+                                Duration="0:0:0.2" />
+                            <DoubleAnimation
+                                Storyboard.TargetName="shadowEffect"
+                                Storyboard.TargetProperty="ShadowDepth"
+                                To="3"
+                                Duration="0:0:0.2" />
+                        </Storyboard>
+                        <Storyboard x:Key="HoverOff">
+                            <ColorAnimation
+                                Storyboard.TargetName="buttonBorder"
+                                Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
+                                To="#00AAFF"
+                                Duration="0:0:0.2" />
+                            <DoubleAnimation
+                                Storyboard.TargetName="shadowEffect"
+                                Storyboard.TargetProperty="BlurRadius"
+                                To="0"
+                                Duration="0:0:0.2" />
+                            <DoubleAnimation
+                                Storyboard.TargetName="shadowEffect"
+                                Storyboard.TargetProperty="Opacity"
+                                To="0"
+                                Duration="0:0:0.2" />
+                            <DoubleAnimation
+                                Storyboard.TargetName="shadowEffect"
+                                Storyboard.TargetProperty="ShadowDepth"
+                                To="0"
+                                Duration="0:0:0.2" />
+                        </Storyboard>
+                    </ControlTemplate.Resources>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Trigger.EnterActions>
+                                <BeginStoryboard Storyboard="{StaticResource HoverOn}" />
+                            </Trigger.EnterActions>
+                            <Trigger.ExitActions>
+                                <BeginStoryboard Storyboard="{StaticResource HoverOff}" />
+                            </Trigger.ExitActions>
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="True">
+                            <Setter TargetName="buttonBorder" Property="Background" Value="#006699" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
 </ResourceDictionary>

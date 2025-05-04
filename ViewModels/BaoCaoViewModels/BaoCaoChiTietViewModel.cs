@@ -117,7 +117,7 @@ namespace QuanLyDaiLy.ViewModels.BaoCaoViewModels
         public event EventHandler? DataChanged;
 
         [RelayCommand]
-        private void OpenDoanhSoWindow()
+        private void DoanhSo()
         {
             var viewModel_DoanhSo = _monthYearDoanhSoFactory(SelectedDoanhSoMonth, SelectedDoanhSoYear);
             viewModel_DoanhSo.DataChanged += async (sender, e) => await InitializeDoanhSoData();
@@ -126,7 +126,7 @@ namespace QuanLyDaiLy.ViewModels.BaoCaoViewModels
         }
 
         [RelayCommand]
-        private void OpenCongNoWindow()
+        private void CongNo()
         {
             var viewModel_CongNow = _monthYearCongNoFactory(SelectedCongNoMonth, SelectedCongNoYear);
             viewModel_CongNow.DataChanged += async (sender, e) => await InitializeCongNoData();

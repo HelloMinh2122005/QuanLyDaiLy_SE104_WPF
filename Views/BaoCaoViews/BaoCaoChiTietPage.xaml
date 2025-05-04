@@ -133,8 +133,11 @@
                                             Style="{StaticResource SmallComboBoxStyle}" />
                                     </Grid>
                                 </StackPanel>
-                                <Border Grid.Column="1" HorizontalAlignment="Right">
-                                    <Button Command="{Binding DoanhSoCommand}" Style="{StaticResource WindowPrimaryButtonStyle}">
+                                <Border
+                                    Grid.Column="1"
+                                    Margin="10,0,0,0"
+                                    HorizontalAlignment="Right">
+                                    <Button Command="{Binding DoanhSoCommand}" Style="{StaticResource SmallButtonStyle}">
                                         <StackPanel Orientation="Horizontal">
                                             <fa:FontAwesome Margin="0,0,10,0" Icon="FileText" />
                                             <TextBlock Text="Lập báo cáo doanh số" />
@@ -258,8 +261,11 @@
                                             Style="{StaticResource SmallComboBoxStyle}" />
                                     </Grid>
                                 </StackPanel>
-                                <Border Grid.Column="1" HorizontalAlignment="Right">
-                                    <Button Command="{Binding CongNoCommand}" Style="{StaticResource WindowPrimaryButtonStyle}">
+                                <Border
+                                    Grid.Column="1"
+                                    Margin="10,0,0,0"
+                                    HorizontalAlignment="Right">
+                                    <Button Command="{Binding CongNoCommand}" Style="{StaticResource SmallButtonStyle}">
                                         <StackPanel Orientation="Horizontal">
                                             <fa:FontAwesome Margin="0,0,10,0" Icon="FileText" />
                                             <TextBlock Text="Lập báo cáo công nợ" />
