@@ -152,7 +152,7 @@ namespace QuanLyDaiLy.ViewModels.BaoCaoViewModels
                     .Sum(p => p.SoTienThu);
 
                 // Nợ cuối tháng = Nợ đầu - tổng phiếu thu trong tháng
-                decimal noCuoiThang = noDauThang - tongPhieuThuTrongThang;
+                decimal noCuoiThang = noDauThang + tongPhieuXuatTrongThang - tongPhieuThuTrongThang;
 
                 // Thêm vào danh sách báo cáo
                 BaoCaoCongNoList.Add(new BaoCaoCongNo

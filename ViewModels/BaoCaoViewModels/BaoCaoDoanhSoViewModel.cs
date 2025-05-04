@@ -165,7 +165,7 @@ namespace QuanLyDaiLy.ViewModels.BaoCaoViewModels
             {
                 foreach (var item in BaoCaoDoanhSoList)
                 {
-                    item.TiLe = Math.Round((double)(item.TongGiaTriGiaoDich / tongTatCa), 2);
+                    item.TiLe = Math.Round((double)(item.TongGiaTriGiaoDich / tongTatCa)*100, 2);
                 }
             }
         }
