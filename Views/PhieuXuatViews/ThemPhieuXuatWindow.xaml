@@ -16,7 +16,6 @@
     mc:Ignorable="d">
 
     <Window.Resources>
-        <helpers:ComboBoxItemConverter x:Key="ComboBoxItemConverter" />
         <helpers:RowToIndexConverter x:Key="RowToIndexConverter" />
     </Window.Resources>
 
@@ -340,7 +339,7 @@
                                                 Background="White"
                                                 ItemsSource="{Binding DanhSachMatHang}"
                                                 SelectedItem="{Binding SelectedMatHang, UpdateSourceTrigger=PropertyChanged}"
-                                                Style="{StaticResource StyledComboBox}">
+                                                Style="{StaticResource StandardComboBoxStyle}">
                                                 <ComboBox.ItemTemplate>
                                                     <DataTemplate>
                                                         <TextBlock Text="{Binding TenMatHang}" />

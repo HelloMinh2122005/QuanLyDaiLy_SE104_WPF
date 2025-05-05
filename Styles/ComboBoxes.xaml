@@ -1,5 +1,8 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
 
+
+    <Style x:Key="StyledComboBox" TargetType="{x:Type ComboBox}" />
+
     <!--  Standard ComboBox Style  -->
     <Style x:Key="StandardComboBoxStyle" TargetType="{x:Type ComboBox}">
         <Setter Property="Background" Value="#FFFFFF" />
