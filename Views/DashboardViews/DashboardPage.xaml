@@ -3,7 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    xmlns:helpers="clr-namespace:QuanLyDaiLy.Helpers"
+    xmlns:fa="http://schemas.fontawesome.io/icons/"
     xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     d:DesignHeight="2000"
@@ -11,139 +11,7 @@
     Background="#F7F9FD"
     mc:Ignorable="d">
 
-    <!--  Page Resources  -->
-    <Page.Resources>
-        <DropShadowEffect
-            x:Key="DropShadowEffect"
-            BlurRadius="10"
-            Opacity="0.5"
-            ShadowDepth="0"
-            Color="Black" />
-        <helpers:ComboBoxItemConverter x:Key="ComboBoxItemConverter" />
-        <!--  ComboBox Style  -->
-        <Style x:Key="StyledComboBox" TargetType="{x:Type ComboBox}">
-            <Setter Property="Background" Value="#FFFFFF" />
-            <Setter Property="BorderBrush" Value="#33000000" />
-            <Setter Property="HorizontalAlignment" Value="Stretch" />
-            <Setter Property="VerticalAlignment" Value="Stretch" />
-            <Setter Property="VerticalContentAlignment" Value="Center" />
-            <Setter Property="FontFamily" Value="Nunito" />
-            <Setter Property="FontStyle" Value="Normal" />
-            <Setter Property="FontWeight" Value="Normal" />
-            <Setter Property="FontSize" Value="15" />
-            <Setter Property="Foreground" Value="#000000" />
-            <Setter Property="BorderThickness" Value="1" />
-            <Setter Property="ItemTemplate">
-                <Setter.Value>
-                    <DataTemplate>
-                        <TextBlock Text="{Binding}" />
-                    </DataTemplate>
-                </Setter.Value>
-            </Setter>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type ComboBox}">
-                        <Grid>
-                            <Border
-                                x:Name="mainBorder"
-                                Background="{TemplateBinding Background}"
-                                BorderBrush="{TemplateBinding BorderBrush}"
-                                BorderThickness="{TemplateBinding BorderThickness}"
-                                CornerRadius="10">
-                                <Grid>
-                                    <ToggleButton
-                                        x:Name="toggleButton"
-                                        Background="Transparent"
-                                        BorderBrush="Transparent"
-                                        ClickMode="Press"
-                                        Focusable="false"
-                                        IsChecked="{Binding Path=IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}">
-                                        <ToggleButton.Template>
-                                            <ControlTemplate TargetType="ToggleButton">
-                                                <Grid Background="Transparent">
-                                                    <Grid.ColumnDefinitions>
-                                                        <ColumnDefinition />
-                                                        <ColumnDefinition Width="30" />
-                                                    </Grid.ColumnDefinitions>
-                                                    <Border Grid.ColumnSpan="2" Background="Transparent" />
-                                                    <Path
-                                                        x:Name="arrow"
-                                                        Grid.Column="1"
-                                                        Width="12"
-                                                        Height="12"
-                                                        HorizontalAlignment="Center"
-                                                        VerticalAlignment="Center"
-                                                        Data="M7 10l5 5 5-5z"
-                                                        Fill="#9A000000"
-                                                        Stretch="Fill" />
-                                                </Grid>
-                                                <ControlTemplate.Triggers>
-                                                    <Trigger Property="IsMouseOver" Value="true">
-                                                        <Setter TargetName="arrow" Property="Fill" Value="#0088CC" />
-                                                    </Trigger>
-                                                    <Trigger Property="IsChecked" Value="true">
-                                                        <Setter TargetName="arrow" Property="Fill" Value="#0088CC" />
-                                                    </Trigger>
-                                                </ControlTemplate.Triggers>
-                                            </ControlTemplate>
-                                        </ToggleButton.Template>
-                                    </ToggleButton>
-
-                                    <TextBlock
-                                        x:Name="contentText"
-                                        Margin="10,0,30,0"
-                                        VerticalAlignment="Center"
-                                        Text="{TemplateBinding SelectionBoxItem,
-                                                               Converter={StaticResource ComboBoxItemConverter}}" />
-                                </Grid>
-                            </Border>
-
-                            <Popup
-                                x:Name="PART_Popup"
-                                AllowsTransparency="True"
-                                Focusable="False"
-                                IsOpen="{Binding IsChecked, ElementName=toggleButton}"
-                                Placement="Bottom"
-                                PopupAnimation="Slide">
-                                <Border
-                                    x:Name="dropDownBorder"
-                                    MinWidth="{TemplateBinding ActualWidth}"
-                                    Margin="0,1,0,0"
-                                    Background="#FFFFFF"
-                                    BorderBrush="#33000000"
-                                    BorderThickness="1"
-                                    CornerRadius="8"
-                                    Effect="{StaticResource DropShadowEffect}">
-                                    <ScrollViewer MaxHeight="200" SnapsToDevicePixels="True">
-                                        <ItemsPresenter KeyboardNavigation.DirectionalNavigation="Contained" />
-                                    </ScrollViewer>
-                                </Border>
-                            </Popup>
-                        </Grid>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="mainBorder" Property="BorderBrush" Value="#0088CC" />
-                            </Trigger>
-                            <Trigger Property="IsDropDownOpen" Value="True">
-                                <Setter TargetName="mainBorder" Property="BorderBrush" Value="#0088CC" />
-                            </Trigger>
-                            <Trigger Property="IsEnabled" Value="False">
-                                <Setter TargetName="mainBorder" Property="Opacity" Value="0.6" />
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-
-    </Page.Resources>
-
-    <Border
-        Margin="10"
-        HorizontalAlignment="Stretch"
-        VerticalAlignment="Stretch"
-        Background="White"
-        CornerRadius="10">
+    <Border Style="{StaticResource PageBorderWrapper}">
         <Grid MaxWidth="1500" HorizontalAlignment="Center">
             <Grid.RowDefinitions>
                 <RowDefinition Height="150" />
@@ -156,17 +24,7 @@
                     <ColumnDefinition Width="5*" />
                 </Grid.ColumnDefinitions>
 
-                <TextBlock
-                    Margin="20,10,0,0"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Center"
-                    FontFamily="Nunito"
-                    FontSize="60"
-                    FontStyle="Normal"
-                    FontWeight="Bold"
-                    Foreground="#333333"
-                    LineHeight="50"
-                    Text="Bảng điều khiển" />
+                <TextBlock Style="{StaticResource PageHeaderTextBlockStyle}" Text="Bảng điều khiển" />
 
                 <StackPanel
                     Grid.Column="1"
@@ -174,209 +32,18 @@
                     HorizontalAlignment="Right"
                     VerticalAlignment="Bottom"
                     Orientation="Horizontal">
-                    <Border
-                        Width="170"
-                        Height="40"
-                        Margin="10,0,0,0"
-                        CornerRadius="8">
-                        <Button
-                            Width="170"
-                            Height="40"
-                            Background="#00AAFF"
-                            Content="➕ Thêm widget"
-                            FontFamily="Roboto"
-                            FontSize="16"
-                            FontStyle="Normal"
-                            FontWeight="Medium"
-                            Foreground="#FFFFFF">
-                            <Button.Style>
-                                <Style TargetType="Button">
-                                    <Setter Property="Template">
-                                        <Setter.Value>
-                                            <ControlTemplate TargetType="Button">
-                                                <Border
-                                                    x:Name="buttonBorder"
-                                                    Padding="8,5,8,4"
-                                                    Background="{TemplateBinding Background}"
-                                                    CornerRadius="8">
-                                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-                                                    <Border.Effect>
-                                                        <DropShadowEffect
-                                                            x:Name="shadowEffect"
-                                                            BlurRadius="0"
-                                                            Opacity="0"
-                                                            ShadowDepth="0"
-                                                            Color="#555555" />
-                                                    </Border.Effect>
-                                                </Border>
-                                                <ControlTemplate.Resources>
-                                                    <Storyboard x:Key="HoverOn">
-                                                        <ColorAnimation
-                                                            Storyboard.TargetName="buttonBorder"
-                                                            Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
-                                                            To="#0088CC"
-                                                            Duration="0:0:0.2" />
-                                                        <DoubleAnimation
-                                                            Storyboard.TargetName="shadowEffect"
-                                                            Storyboard.TargetProperty="BlurRadius"
-                                                            To="8"
-                                                            Duration="0:0:0.2" />
-                                                        <DoubleAnimation
-                                                            Storyboard.TargetName="shadowEffect"
-                                                            Storyboard.TargetProperty="Opacity"
-                                                            To="0.3"
-                                                            Duration="0:0:0.2" />
-                                                        <DoubleAnimation
-                                                            Storyboard.TargetName="shadowEffect"
-                                                            Storyboard.TargetProperty="ShadowDepth"
-                                                            To="4"
-                                                            Duration="0:0:0.2" />
-                                                    </Storyboard>
-                                                    <Storyboard x:Key="HoverOff">
-                                                        <ColorAnimation
-                                                            Storyboard.TargetName="buttonBorder"
-                                                            Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
-                                                            To="#00AAFF"
-                                                            Duration="0:0:0.2" />
-                                                        <DoubleAnimation
-                                                            Storyboard.TargetName="shadowEffect"
-                                                            Storyboard.TargetProperty="BlurRadius"
-                                                            To="0"
-                                                            Duration="0:0:0.2" />
-                                                        <DoubleAnimation
-                                                            Storyboard.TargetName="shadowEffect"
-                                                            Storyboard.TargetProperty="Opacity"
-                                                            To="0"
-                                                            Duration="0:0:0.2" />
-                                                        <DoubleAnimation
-                                                            Storyboard.TargetName="shadowEffect"
-                                                            Storyboard.TargetProperty="ShadowDepth"
-                                                            To="0"
-                                                            Duration="0:0:0.2" />
-                                                    </Storyboard>
-                                                </ControlTemplate.Resources>
-                                                <ControlTemplate.Triggers>
-                                                    <Trigger Property="IsMouseOver" Value="True">
-                                                        <Trigger.EnterActions>
-                                                            <BeginStoryboard Storyboard="{StaticResource HoverOn}" />
-                                                        </Trigger.EnterActions>
-                                                        <Trigger.ExitActions>
-                                                            <BeginStoryboard Storyboard="{StaticResource HoverOff}" />
-                                                        </Trigger.ExitActions>
-                                                    </Trigger>
-                                                    <Trigger Property="IsPressed" Value="True">
-                                                        <Setter TargetName="buttonBorder" Property="Background" Value="#006699" />
-                                                    </Trigger>
-                                                </ControlTemplate.Triggers>
-                                            </ControlTemplate>
-                                        </Setter.Value>
-                                    </Setter>
-                                </Style>
-                            </Button.Style>
-                        </Button>
-                    </Border>
-                    <Border
-                        Width="50"
-                        Height="40"
-                        Margin="15,0,0,0"
-                        CornerRadius="8">
-                        <Button
-                            Width="50"
-                            Height="40"
-                            Background="#00AAFF"
-                            Click="RefreshButton_Click"
-                            Content="🔃"
-                            FontFamily="Roboto"
-                            FontSize="16"
-                            FontStyle="Normal"
-                            FontWeight="Medium"
-                            Foreground="#FFFFFF">
-                            <Button.Style>
-                                <Style TargetType="Button">
-                                    <Setter Property="Template">
-                                        <Setter.Value>
-                                            <ControlTemplate TargetType="Button">
-                                                <Border
-                                                    x:Name="buttonBorder"
-                                                    Padding="8,5,8,4"
-                                                    Background="{TemplateBinding Background}"
-                                                    CornerRadius="8">
-                                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-                                                    <Border.Effect>
-                                                        <DropShadowEffect
-                                                            x:Name="shadowEffect"
-                                                            BlurRadius="0"
-                                                            Opacity="0"
-                                                            ShadowDepth="0"
-                                                            Color="#555555" />
-                                                    </Border.Effect>
-                                                </Border>
-                                                <ControlTemplate.Resources>
-                                                    <Storyboard x:Key="HoverOn">
-                                                        <ColorAnimation
-                                                            Storyboard.TargetName="buttonBorder"
-                                                            Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
-                                                            To="#0088CC"
-                                                            Duration="0:0:0.2" />
-                                                        <DoubleAnimation
-                                                            Storyboard.TargetName="shadowEffect"
-                                                            Storyboard.TargetProperty="BlurRadius"
-                                                            To="8"
-                                                            Duration="0:0:0.2" />
-                                                        <DoubleAnimation
-                                                            Storyboard.TargetName="shadowEffect"
-                                                            Storyboard.TargetProperty="Opacity"
-                                                            To="0.3"
-                                                            Duration="0:0:0.2" />
-                                                        <DoubleAnimation
-                                                            Storyboard.TargetName="shadowEffect"
-                                                            Storyboard.TargetProperty="ShadowDepth"
-                                                            To="4"
-                                                            Duration="0:0:0.2" />
-                                                    </Storyboard>
-                                                    <Storyboard x:Key="HoverOff">
-                                                        <ColorAnimation
-                                                            Storyboard.TargetName="buttonBorder"
-                                                            Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
-                                                            To="#00AAFF"
-                                                            Duration="0:0:0.2" />
-                                                        <DoubleAnimation
-                                                            Storyboard.TargetName="shadowEffect"
-                                                            Storyboard.TargetProperty="BlurRadius"
-                                                            To="0"
-                                                            Duration="0:0:0.2" />
-                                                        <DoubleAnimation
-                                                            Storyboard.TargetName="shadowEffect"
-                                                            Storyboard.TargetProperty="Opacity"
-                                                            To="0"
-                                                            Duration="0:0:0.2" />
-                                                        <DoubleAnimation
-                                                            Storyboard.TargetName="shadowEffect"
-                                                            Storyboard.TargetProperty="ShadowDepth"
-                                                            To="0"
-                                                            Duration="0:0:0.2" />
-                                                    </Storyboard>
-                                                </ControlTemplate.Resources>
-                                                <ControlTemplate.Triggers>
-                                                    <Trigger Property="IsMouseOver" Value="True">
-                                                        <Trigger.EnterActions>
-                                                            <BeginStoryboard Storyboard="{StaticResource HoverOn}" />
-                                                        </Trigger.EnterActions>
-                                                        <Trigger.ExitActions>
-                                                            <BeginStoryboard Storyboard="{StaticResource HoverOff}" />
-                                                        </Trigger.ExitActions>
-                                                    </Trigger>
-                                                    <Trigger Property="IsPressed" Value="True">
-                                                        <Setter TargetName="buttonBorder" Property="Background" Value="#006699" />
-                                                    </Trigger>
-                                                </ControlTemplate.Triggers>
-                                            </ControlTemplate>
-                                        </Setter.Value>
-                                    </Setter>
-                                </Style>
-                            </Button.Style>
-                        </Button>
-                    </Border>
+                    <Button
+                        HorizontalAlignment="Center"
+                        Click="RefreshButton_Click"
+                        Style="{StaticResource PrimaryButtonStyle}">
+                        <StackPanel Orientation="Horizontal">
+                            <fa:FontAwesome
+                                Margin="0,0,8,0"
+                                VerticalAlignment="Center"
+                                Icon="Refresh" />
+                            <TextBlock VerticalAlignment="Center" Text="Tải lại Widget" />
+                        </StackPanel>
+                    </Button>
                 </StackPanel>
             </Grid>
 
@@ -388,12 +55,7 @@
                 <ScrollViewer PanningMode="VerticalOnly" VerticalScrollBarVisibility="Hidden">
                     <WrapPanel HorizontalAlignment="Stretch" Orientation="Horizontal">
 
-                        <Border
-                            Width="320"
-                            Height="130"
-                            Margin="0,0,30,20"
-                            Background="#E6F1FD"
-                            CornerRadius="10">
+                        <Border Style="{StaticResource ThirdBorderWidget}">
                             <Grid Margin="20">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="114*" />
@@ -412,113 +74,13 @@
 
                                     <TextBlock
                                         Grid.Column="0"
-                                        FontFamily="Font Family"
-                                        FontSize="25"
-                                        FontWeight="Regular"
-                                        Text="Số lượng Đại lý" />
+                                        Style="{StaticResource SmallWidgetTextBlockStyle}"
+                                        Text="Doanh số trong ngày" />
 
                                     <Button
                                         Grid.Column="1"
-                                        Width="30"
-                                        Height="30"
-                                        VerticalAlignment="Top"
-                                        HorizontalContentAlignment="Center"
-                                        VerticalContentAlignment="Top"
-                                        Background="Transparent"
-                                        BorderBrush="Transparent"
                                         Click="HideBorderButton_Click"
-                                        Content="❌"
-                                        FontFamily="Nunito"
-                                        FontSize="20"
-                                        FontStyle="Normal"
-                                        FontWeight="Normal"
-                                        Foreground="Gray">
-                                        <Button.Style>
-                                            <Style TargetType="Button">
-                                                <Setter Property="Template">
-                                                    <Setter.Value>
-                                                        <ControlTemplate TargetType="Button">
-                                                            <Border
-                                                                x:Name="buttonBorder"
-                                                                Background="{TemplateBinding Background}"
-                                                                BorderBrush="{TemplateBinding BorderBrush}"
-                                                                BorderThickness="{TemplateBinding BorderThickness}"
-                                                                CornerRadius="8">
-                                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-                                                                <Border.Effect>
-                                                                    <DropShadowEffect
-                                                                        x:Name="shadowEffect"
-                                                                        BlurRadius="0"
-                                                                        Opacity="0"
-                                                                        ShadowDepth="0"
-                                                                        Color="#555555" />
-                                                                </Border.Effect>
-                                                            </Border>
-                                                            <ControlTemplate.Resources>
-                                                                <Storyboard x:Key="HoverOn">
-                                                                    <ColorAnimation
-                                                                        Storyboard.TargetName="buttonBorder"
-                                                                        Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
-                                                                        To="#D32F2F"
-                                                                        Duration="0:0:0.2" />
-                                                                    <DoubleAnimation
-                                                                        Storyboard.TargetName="shadowEffect"
-                                                                        Storyboard.TargetProperty="BlurRadius"
-                                                                        To="8"
-                                                                        Duration="0:0:0.2" />
-                                                                    <DoubleAnimation
-                                                                        Storyboard.TargetName="shadowEffect"
-                                                                        Storyboard.TargetProperty="Opacity"
-                                                                        To="0.3"
-                                                                        Duration="0:0:0.2" />
-                                                                    <DoubleAnimation
-                                                                        Storyboard.TargetName="shadowEffect"
-                                                                        Storyboard.TargetProperty="ShadowDepth"
-                                                                        To="4"
-                                                                        Duration="0:0:0.2" />
-                                                                </Storyboard>
-                                                                <Storyboard x:Key="HoverOff">
-                                                                    <ColorAnimation
-                                                                        Storyboard.TargetName="buttonBorder"
-                                                                        Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
-                                                                        To="Transparent"
-                                                                        Duration="0:0:0.2" />
-                                                                    <DoubleAnimation
-                                                                        Storyboard.TargetName="shadowEffect"
-                                                                        Storyboard.TargetProperty="BlurRadius"
-                                                                        To="0"
-                                                                        Duration="0:0:0.2" />
-                                                                    <DoubleAnimation
-                                                                        Storyboard.TargetName="shadowEffect"
-                                                                        Storyboard.TargetProperty="Opacity"
-                                                                        To="0"
-                                                                        Duration="0:0:0.2" />
-                                                                    <DoubleAnimation
-                                                                        Storyboard.TargetName="shadowEffect"
-                                                                        Storyboard.TargetProperty="ShadowDepth"
-                                                                        To="0"
-                                                                        Duration="0:0:0.2" />
-                                                                </Storyboard>
-                                                            </ControlTemplate.Resources>
-                                                            <ControlTemplate.Triggers>
-                                                                <Trigger Property="IsMouseOver" Value="True">
-                                                                    <Trigger.EnterActions>
-                                                                        <BeginStoryboard Storyboard="{StaticResource HoverOn}" />
-                                                                    </Trigger.EnterActions>
-                                                                    <Trigger.ExitActions>
-                                                                        <BeginStoryboard Storyboard="{StaticResource HoverOff}" />
-                                                                    </Trigger.ExitActions>
-                                                                </Trigger>
-                                                                <Trigger Property="IsPressed" Value="True">
-                                                                    <Setter TargetName="buttonBorder" Property="Background" Value="#B71C1C" />
-                                                                </Trigger>
-                                                            </ControlTemplate.Triggers>
-                                                        </ControlTemplate>
-                                                    </Setter.Value>
-                                                </Setter>
-                                            </Style>
-                                        </Button.Style>
-                                    </Button>
+                                        Style="{StaticResource CloseSmallWidgetButtonStyle}" />
                                 </Grid>
 
                                 <Grid Grid.Row="1" Grid.ColumnSpan="2">
@@ -529,11 +91,7 @@
 
                                     <TextBlock
                                         Grid.Column="0"
-                                        HorizontalAlignment="Left"
-                                        VerticalAlignment="Center"
-                                        FontFamily="Iter"
-                                        FontSize="30"
-                                        FontWeight="SemiBold"
+                                        Style="{StaticResource SmallWidgetContentTextBlockStyle}"
                                         Text="{Binding WidgetSoLuongDaiLy}" />
 
                                     <StackPanel
@@ -565,303 +123,39 @@
                                                 </Style>
                                             </Image.Style>
                                         </Image>
-                                        <!--
-                                    <Image
-                                        Width="20"
-                                        Height="20"
-                                        Margin="5,0,0,0"
-                                        VerticalAlignment="Center"
-                                        Source="pack://application:,,,/QuanLyDaiLy;component/Resources/image-removebg-preview.png" />
-                                        -->
                                     </StackPanel>
                                 </Grid>
                             </Grid>
                         </Border>
-                        <Border
-                            Width="335"
-                            Height="130"
-                            Margin="0,0,30,20"
-                            Background="#E6F1FD"
-                            CornerRadius="10">
+                        <Border Style="{StaticResource ThirdBorderWidget}">
                             <Grid Margin="20">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="114*" />
+                                    <ColumnDefinition Width="181*" />
+                                </Grid.ColumnDefinitions>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="5*" />
                                     <RowDefinition Height="5*" />
                                 </Grid.RowDefinitions>
 
-                                <Grid
-                                    Grid.Row="0"
-                                    HorizontalAlignment="Stretch"
-                                    VerticalAlignment="Stretch">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="Auto" />
-                                    </Grid.ColumnDefinitions>
-                                    <TextBlock
-                                        Grid.Column="0"
-                                        FontFamily="Font Family"
-                                        FontSize="23"
-                                        FontWeight="Regular"
-                                        LineHeight="1"
-                                        Text="Doanh thu" />
-                                    <Button
-                                        Grid.Column="1"
-                                        Width="30"
-                                        Height="30"
-                                        VerticalAlignment="Top"
-                                        HorizontalContentAlignment="Center"
-                                        VerticalContentAlignment="Top"
-                                        Background="Transparent"
-                                        BorderBrush="Transparent"
-                                        Click="HideBorderButton_Click"
-                                        Content="❌"
-                                        FontFamily="Nunito"
-                                        FontSize="20"
-                                        FontStyle="Normal"
-                                        FontWeight="Normal"
-                                        Foreground="Gray">
-                                        <Button.Style>
-                                            <Style TargetType="Button">
-                                                <Setter Property="Template">
-                                                    <Setter.Value>
-                                                        <ControlTemplate TargetType="Button">
-                                                            <Border
-                                                                x:Name="buttonBorder"
-                                                                Background="{TemplateBinding Background}"
-                                                                BorderBrush="{TemplateBinding BorderBrush}"
-                                                                BorderThickness="{TemplateBinding BorderThickness}"
-                                                                CornerRadius="8">
-                                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-                                                                <Border.Effect>
-                                                                    <DropShadowEffect
-                                                                        x:Name="shadowEffect"
-                                                                        BlurRadius="0"
-                                                                        Opacity="0"
-                                                                        ShadowDepth="0"
-                                                                        Color="#555555" />
-                                                                </Border.Effect>
-                                                            </Border>
-                                                            <ControlTemplate.Resources>
-                                                                <Storyboard x:Key="HoverOn">
-                                                                    <ColorAnimation
-                                                                        Storyboard.TargetName="buttonBorder"
-                                                                        Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
-                                                                        To="#D32F2F"
-                                                                        Duration="0:0:0.2" />
-                                                                    <DoubleAnimation
-                                                                        Storyboard.TargetName="shadowEffect"
-                                                                        Storyboard.TargetProperty="BlurRadius"
-                                                                        To="8"
-                                                                        Duration="0:0:0.2" />
-                                                                    <DoubleAnimation
-                                                                        Storyboard.TargetName="shadowEffect"
-                                                                        Storyboard.TargetProperty="Opacity"
-                                                                        To="0.3"
-                                                                        Duration="0:0:0.2" />
-                                                                    <DoubleAnimation
-                                                                        Storyboard.TargetName="shadowEffect"
-                                                                        Storyboard.TargetProperty="ShadowDepth"
-                                                                        To="4"
-                                                                        Duration="0:0:0.2" />
-                                                                </Storyboard>
-                                                                <Storyboard x:Key="HoverOff">
-                                                                    <ColorAnimation
-                                                                        Storyboard.TargetName="buttonBorder"
-                                                                        Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
-                                                                        To="Transparent"
-                                                                        Duration="0:0:0.2" />
-                                                                    <DoubleAnimation
-                                                                        Storyboard.TargetName="shadowEffect"
-                                                                        Storyboard.TargetProperty="BlurRadius"
-                                                                        To="0"
-                                                                        Duration="0:0:0.2" />
-                                                                    <DoubleAnimation
-                                                                        Storyboard.TargetName="shadowEffect"
-                                                                        Storyboard.TargetProperty="Opacity"
-                                                                        To="0"
-                                                                        Duration="0:0:0.2" />
-                                                                    <DoubleAnimation
-                                                                        Storyboard.TargetName="shadowEffect"
-                                                                        Storyboard.TargetProperty="ShadowDepth"
-                                                                        To="0"
-                                                                        Duration="0:0:0.2" />
-                                                                </Storyboard>
-                                                            </ControlTemplate.Resources>
-                                                            <ControlTemplate.Triggers>
-                                                                <Trigger Property="IsMouseOver" Value="True">
-                                                                    <Trigger.EnterActions>
-                                                                        <BeginStoryboard Storyboard="{StaticResource HoverOn}" />
-                                                                    </Trigger.EnterActions>
-                                                                    <Trigger.ExitActions>
-                                                                        <BeginStoryboard Storyboard="{StaticResource HoverOff}" />
-                                                                    </Trigger.ExitActions>
-                                                                </Trigger>
-                                                                <Trigger Property="IsPressed" Value="True">
-                                                                    <Setter TargetName="buttonBorder" Property="Background" Value="#B71C1C" />
-                                                                </Trigger>
-                                                            </ControlTemplate.Triggers>
-                                                        </ControlTemplate>
-                                                    </Setter.Value>
-                                                </Setter>
-                                            </Style>
-                                        </Button.Style>
-                                    </Button>
-                                </Grid>
-
-                                <Grid Grid.Row="1">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="65*" />
-                                    </Grid.ColumnDefinitions>
-
-                                    <TextBlock
-                                        Grid.Column="0"
-                                        HorizontalAlignment="Left"
-                                        VerticalAlignment="Center"
-                                        FontFamily="Iter"
-                                        FontSize="30"
-                                        FontWeight="SemiBold"
-                                        Text="{Binding WidgetDoanhThuThang}" />
-
-                                    <StackPanel
-                                        Grid.Column="1"
-                                        HorizontalAlignment="Right"
-                                        VerticalAlignment="Center"
-                                        Orientation="Horizontal" />
-                                </Grid>
-                            </Grid>
-                        </Border>
-                        <Border
-                            Width="335"
-                            Height="130"
-                            Margin="0,0,30,20"
-                            Background="#EDEEFC"
-                            CornerRadius="10">
-                            <Grid Margin="20">
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="5*" />
-                                    <RowDefinition Height="5*" />
-                                </Grid.RowDefinitions>
-                                <Grid
-                                    Grid.Row="0"
-                                    HorizontalAlignment="Stretch"
-                                    VerticalAlignment="Stretch">
+                                <Grid Grid.Row="0" Grid.ColumnSpan="2">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="9*" />
                                         <ColumnDefinition Width="1*" />
                                     </Grid.ColumnDefinitions>
+
                                     <TextBlock
-                                        Grid.Row="0"
-                                        FontFamily="Font Family"
-                                        FontSize="25"
-                                        FontWeight="Regular"
-                                        LineHeight="1"
-                                        Text="Tổng giá trị Phiếu xuất" />
+                                        Grid.Column="0"
+                                        Style="{StaticResource SmallWidgetTextBlockStyle}"
+                                        Text="Doanh số trong tháng" />
+
                                     <Button
                                         Grid.Column="1"
-                                        Width="30"
-                                        Height="30"
-                                        VerticalAlignment="Top"
-                                        HorizontalContentAlignment="Center"
-                                        VerticalContentAlignment="Top"
-                                        Background="Transparent"
-                                        BorderBrush="Transparent"
                                         Click="HideBorderButton_Click"
-                                        Content="❌"
-                                        FontFamily="Nunito"
-                                        FontSize="20"
-                                        FontStyle="Normal"
-                                        FontWeight="Normal"
-                                        Foreground="Gray">
-                                        <Button.Style>
-                                            <Style TargetType="Button">
-                                                <Setter Property="Template">
-                                                    <Setter.Value>
-                                                        <ControlTemplate TargetType="Button">
-                                                            <Border
-                                                                x:Name="buttonBorder"
-                                                                Background="{TemplateBinding Background}"
-                                                                BorderBrush="{TemplateBinding BorderBrush}"
-                                                                BorderThickness="{TemplateBinding BorderThickness}"
-                                                                CornerRadius="8">
-                                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-                                                                <Border.Effect>
-                                                                    <DropShadowEffect
-                                                                        x:Name="shadowEffect"
-                                                                        BlurRadius="0"
-                                                                        Opacity="0"
-                                                                        ShadowDepth="0"
-                                                                        Color="#555555" />
-                                                                </Border.Effect>
-                                                            </Border>
-                                                            <ControlTemplate.Resources>
-                                                                <Storyboard x:Key="HoverOn">
-                                                                    <ColorAnimation
-                                                                        Storyboard.TargetName="buttonBorder"
-                                                                        Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
-                                                                        To="#D32F2F"
-                                                                        Duration="0:0:0.2" />
-                                                                    <DoubleAnimation
-                                                                        Storyboard.TargetName="shadowEffect"
-                                                                        Storyboard.TargetProperty="BlurRadius"
-                                                                        To="8"
-                                                                        Duration="0:0:0.2" />
-                                                                    <DoubleAnimation
-                                                                        Storyboard.TargetName="shadowEffect"
-                                                                        Storyboard.TargetProperty="Opacity"
-                                                                        To="0.3"
-                                                                        Duration="0:0:0.2" />
-                                                                    <DoubleAnimation
-                                                                        Storyboard.TargetName="shadowEffect"
-                                                                        Storyboard.TargetProperty="ShadowDepth"
-                                                                        To="4"
-                                                                        Duration="0:0:0.2" />
-                                                                </Storyboard>
-                                                                <Storyboard x:Key="HoverOff">
-                                                                    <ColorAnimation
-                                                                        Storyboard.TargetName="buttonBorder"
-                                                                        Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
-                                                                        To="Transparent"
-                                                                        Duration="0:0:0.2" />
-                                                                    <DoubleAnimation
-                                                                        Storyboard.TargetName="shadowEffect"
-                                                                        Storyboard.TargetProperty="BlurRadius"
-                                                                        To="0"
-                                                                        Duration="0:0:0.2" />
-                                                                    <DoubleAnimation
-                                                                        Storyboard.TargetName="shadowEffect"
-                                                                        Storyboard.TargetProperty="Opacity"
-                                                                        To="0"
-                                                                        Duration="0:0:0.2" />
-                                                                    <DoubleAnimation
-                                                                        Storyboard.TargetName="shadowEffect"
-                                                                        Storyboard.TargetProperty="ShadowDepth"
-                                                                        To="0"
-                                                                        Duration="0:0:0.2" />
-                                                                </Storyboard>
-                                                            </ControlTemplate.Resources>
-                                                            <ControlTemplate.Triggers>
-                                                                <Trigger Property="IsMouseOver" Value="True">
-                                                                    <Trigger.EnterActions>
-                                                                        <BeginStoryboard Storyboard="{StaticResource HoverOn}" />
-                                                                    </Trigger.EnterActions>
-                                                                    <Trigger.ExitActions>
-                                                                        <BeginStoryboard Storyboard="{StaticResource HoverOff}" />
-                                                                    </Trigger.ExitActions>
-                                                                </Trigger>
-                                                                <Trigger Property="IsPressed" Value="True">
-                                                                    <Setter TargetName="buttonBorder" Property="Background" Value="#B71C1C" />
-                                                                </Trigger>
-                                                            </ControlTemplate.Triggers>
-                                                        </ControlTemplate>
-                                                    </Setter.Value>
-                                                </Setter>
-                                            </Style>
-                                        </Button.Style>
-                                    </Button>
+                                        Style="{StaticResource CloseSmallWidgetButtonStyle}" />
                                 </Grid>
 
-
-                                <Grid Grid.Row="1">
+                                <Grid Grid.Row="1" Grid.ColumnSpan="2">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="65*" />
                                         <ColumnDefinition Width="35*" />
@@ -869,12 +163,8 @@
 
                                     <TextBlock
                                         Grid.Column="0"
-                                        HorizontalAlignment="Left"
-                                        VerticalAlignment="Center"
-                                        FontFamily="Iter"
-                                        FontSize="30"
-                                        FontWeight="SemiBold"
-                                        Text="{Binding WidgetTongGiaTriPhieuXuat}" />
+                                        Style="{StaticResource SmallWidgetContentTextBlockStyle}"
+                                        Text="{Binding WidgetSoLuongDaiLy}" />
 
                                     <StackPanel
                                         Grid.Column="1"
@@ -886,7 +176,7 @@
                                             FontSize="20"
                                             FontWeight="Regular"
                                             LineHeight="16"
-                                            Text="{Binding WidgetPhieuXuatDeltaText}" />
+                                            Text="{Binding WidgetSoLuongDaiLyDeltaText}" />
                                         <Image
                                             Width="20"
                                             Height="20"
@@ -898,156 +188,47 @@
                                                     <Setter Property="Source" Value="pack://application:,,,/QuanLyDaiLy;component/Resources/up.png" />
                                                     <Style.Triggers>
                                                         <!--  Nếu WidgetPhiXuatIsUp == False thì chuyển sang mũi tên xuống  -->
-                                                        <DataTrigger Binding="{Binding WidgetPhieuXuatIsUp}" Value="False">
+                                                        <DataTrigger Binding="{Binding WidgetSoLuongDaiLyIsUp}" Value="False">
                                                             <Setter Property="Source" Value="pack://application:,,,/QuanLyDaiLy;component/Resources/image-removebg-preview.png" />
                                                         </DataTrigger>
                                                     </Style.Triggers>
                                                 </Style>
                                             </Image.Style>
                                         </Image>
-                                        <!--
-                                    <Image
-                                        Width="20"
-                                        Height="20"
-                                        Margin="5,0,0,0"
-                                        VerticalAlignment="Center"
-                                        Source="pack://application:,,,/QuanLyDaiLy;component/Resources/up.png" />
-                                        -->
                                     </StackPanel>
                                 </Grid>
                             </Grid>
                         </Border>
-                        <Border
-                            Width="335"
-                            Height="130"
-                            Margin="0,0,0,20"
-                            Background="#EDEEFC"
-                            CornerRadius="10">
+                        <Border Margin="0,0,0,20" Style="{StaticResource ThirdBorderWidget}">
                             <Grid Margin="20">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="114*" />
+                                    <ColumnDefinition Width="181*" />
+                                </Grid.ColumnDefinitions>
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="5*" />
                                     <RowDefinition Height="5*" />
                                 </Grid.RowDefinitions>
-                                <Grid
-                                    Grid.Row="0"
-                                    HorizontalAlignment="Stretch"
-                                    VerticalAlignment="Stretch">
+
+                                <Grid Grid.Row="0" Grid.ColumnSpan="2">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="9*" />
                                         <ColumnDefinition Width="1*" />
                                     </Grid.ColumnDefinitions>
+
                                     <TextBlock
-                                        Grid.Row="0"
-                                        FontFamily="Font Family"
-                                        FontSize="25"
-                                        FontWeight="Regular"
-                                        LineHeight="1"
-                                        Text="Tổng giá trị Phiếu thu" />
+                                        Grid.Column="0"
+                                        Margin="0,0,0,0"
+                                        Style="{StaticResource SmallWidgetTextBlockStyle}"
+                                        Text="Doanh số trong năm" />
+
                                     <Button
                                         Grid.Column="1"
-                                        Width="30"
-                                        Height="30"
-                                        VerticalAlignment="Top"
-                                        HorizontalContentAlignment="Center"
-                                        VerticalContentAlignment="Top"
-                                        Background="Transparent"
-                                        BorderBrush="Transparent"
                                         Click="HideBorderButton_Click"
-                                        Content="❌"
-                                        FontFamily="Nunito"
-                                        FontSize="20"
-                                        FontStyle="Normal"
-                                        FontWeight="Normal"
-                                        Foreground="Gray">
-                                        <Button.Style>
-                                            <Style TargetType="Button">
-                                                <Setter Property="Template">
-                                                    <Setter.Value>
-                                                        <ControlTemplate TargetType="Button">
-                                                            <Border
-                                                                x:Name="buttonBorder"
-                                                                Background="{TemplateBinding Background}"
-                                                                BorderBrush="{TemplateBinding BorderBrush}"
-                                                                BorderThickness="{TemplateBinding BorderThickness}"
-                                                                CornerRadius="8">
-                                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-                                                                <Border.Effect>
-                                                                    <DropShadowEffect
-                                                                        x:Name="shadowEffect"
-                                                                        BlurRadius="0"
-                                                                        Opacity="0"
-                                                                        ShadowDepth="0"
-                                                                        Color="#555555" />
-                                                                </Border.Effect>
-                                                            </Border>
-                                                            <ControlTemplate.Resources>
-                                                                <Storyboard x:Key="HoverOn">
-                                                                    <ColorAnimation
-                                                                        Storyboard.TargetName="buttonBorder"
-                                                                        Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
-                                                                        To="#D32F2F"
-                                                                        Duration="0:0:0.2" />
-                                                                    <DoubleAnimation
-                                                                        Storyboard.TargetName="shadowEffect"
-                                                                        Storyboard.TargetProperty="BlurRadius"
-                                                                        To="8"
-                                                                        Duration="0:0:0.2" />
-                                                                    <DoubleAnimation
-                                                                        Storyboard.TargetName="shadowEffect"
-                                                                        Storyboard.TargetProperty="Opacity"
-                                                                        To="0.3"
-                                                                        Duration="0:0:0.2" />
-                                                                    <DoubleAnimation
-                                                                        Storyboard.TargetName="shadowEffect"
-                                                                        Storyboard.TargetProperty="ShadowDepth"
-                                                                        To="4"
-                                                                        Duration="0:0:0.2" />
-                                                                </Storyboard>
-                                                                <Storyboard x:Key="HoverOff">
-                                                                    <ColorAnimation
-                                                                        Storyboard.TargetName="buttonBorder"
-                                                                        Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
-                                                                        To="Transparent"
-                                                                        Duration="0:0:0.2" />
-                                                                    <DoubleAnimation
-                                                                        Storyboard.TargetName="shadowEffect"
-                                                                        Storyboard.TargetProperty="BlurRadius"
-                                                                        To="0"
-                                                                        Duration="0:0:0.2" />
-                                                                    <DoubleAnimation
-                                                                        Storyboard.TargetName="shadowEffect"
-                                                                        Storyboard.TargetProperty="Opacity"
-                                                                        To="0"
-                                                                        Duration="0:0:0.2" />
-                                                                    <DoubleAnimation
-                                                                        Storyboard.TargetName="shadowEffect"
-                                                                        Storyboard.TargetProperty="ShadowDepth"
-                                                                        To="0"
-                                                                        Duration="0:0:0.2" />
-                                                                </Storyboard>
-                                                            </ControlTemplate.Resources>
-                                                            <ControlTemplate.Triggers>
-                                                                <Trigger Property="IsMouseOver" Value="True">
-                                                                    <Trigger.EnterActions>
-                                                                        <BeginStoryboard Storyboard="{StaticResource HoverOn}" />
-                                                                    </Trigger.EnterActions>
-                                                                    <Trigger.ExitActions>
-                                                                        <BeginStoryboard Storyboard="{StaticResource HoverOff}" />
-                                                                    </Trigger.ExitActions>
-                                                                </Trigger>
-                                                                <Trigger Property="IsPressed" Value="True">
-                                                                    <Setter TargetName="buttonBorder" Property="Background" Value="#B71C1C" />
-                                                                </Trigger>
-                                                            </ControlTemplate.Triggers>
-                                                        </ControlTemplate>
-                                                    </Setter.Value>
-                                                </Setter>
-                                            </Style>
-                                        </Button.Style>
-                                    </Button>
+                                        Style="{StaticResource CloseSmallWidgetButtonStyle}" />
                                 </Grid>
 
-                                <Grid Grid.Row="1">
+                                <Grid Grid.Row="1" Grid.ColumnSpan="2">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="65*" />
                                         <ColumnDefinition Width="35*" />
@@ -1055,12 +236,8 @@
 
                                     <TextBlock
                                         Grid.Column="0"
-                                        HorizontalAlignment="Left"
-                                        VerticalAlignment="Center"
-                                        FontFamily="Iter"
-                                        FontSize="30"
-                                        FontWeight="SemiBold"
-                                        Text="{Binding WidgetTongGiaTriPhieuThu}" />
+                                        Style="{StaticResource SmallWidgetContentTextBlockStyle}"
+                                        Text="{Binding WidgetSoLuongDaiLy}" />
 
                                     <StackPanel
                                         Grid.Column="1"
@@ -1072,7 +249,7 @@
                                             FontSize="20"
                                             FontWeight="Regular"
                                             LineHeight="16"
-                                            Text="{Binding WidgetPhieuThuDeltaText}" />
+                                            Text="{Binding WidgetSoLuongDaiLyDeltaText}" />
                                         <Image
                                             Width="20"
                                             Height="20"
@@ -1084,33 +261,19 @@
                                                     <Setter Property="Source" Value="pack://application:,,,/QuanLyDaiLy;component/Resources/up.png" />
                                                     <Style.Triggers>
                                                         <!--  Nếu WidgetPhiXuatIsUp == False thì chuyển sang mũi tên xuống  -->
-                                                        <DataTrigger Binding="{Binding WidgetPhieuThuIsUp}" Value="False">
+                                                        <DataTrigger Binding="{Binding WidgetSoLuongDaiLyIsUp}" Value="False">
                                                             <Setter Property="Source" Value="pack://application:,,,/QuanLyDaiLy;component/Resources/image-removebg-preview.png" />
                                                         </DataTrigger>
                                                     </Style.Triggers>
                                                 </Style>
                                             </Image.Style>
                                         </Image>
-
-                                        <!--
-                                    <Image
-                                        Width="20"
-                                        Height="20"
-                                        Margin="5,0,0,0"
-                                        VerticalAlignment="Center"
-                                        Source="pack://application:,,,/QuanLyDaiLy;component/Resources/up.png" />
-                                        -->
                                     </StackPanel>
                                 </Grid>
                             </Grid>
                         </Border>
 
-                        <Border
-                            Width="1415"
-                            Height="500"
-                            Margin="0,0,0,20"
-                            Background="#F9F9FA"
-                            CornerRadius="10">
+                        <Border Style="{StaticResource BigBorderWidget}">
                             <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="15*" />
@@ -1124,12 +287,7 @@
 
                                     <TextBlock
                                         Grid.Row="0"
-                                        Margin="10,10,0,15"
-                                        HorizontalAlignment="Left"
-                                        VerticalAlignment="Center"
-                                        FontFamily="Nunito"
-                                        FontSize="28"
-                                        FontWeight="Bold"
+                                        Style="{StaticResource BigWidgetTextBlockStyle}"
                                         Text="Doanh thu theo tháng" />
 
                                     <!--  Add to fit in here  -->
@@ -1147,20 +305,15 @@
 
                                             <TextBlock
                                                 Grid.Row="0"
-                                                HorizontalAlignment="Left"
-                                                VerticalAlignment="Center"
-                                                FontFamily="Nunito"
-                                                FontSize="15"
-                                                FontWeight="Medium"
-                                                Foreground="#000000"
+                                                Style="{StaticResource FieldSmallLabelTextBlockStyle}"
                                                 Text="Tháng" />
                                             <ComboBox
                                                 Grid.Row="1"
                                                 Height="25"
-                                                Margin="0,3,0,0"
+                                                Margin="0"
                                                 ItemsSource="{Binding MonthOptions}"
                                                 SelectedItem="{Binding RevenueChartMonth}"
-                                                Style="{StaticResource StyledComboBox}" />
+                                                Style="{StaticResource SmallComboBoxStyle}" />
                                         </Grid>
 
                                         <Grid Width="130">
@@ -1171,126 +324,22 @@
 
                                             <TextBlock
                                                 Grid.Row="0"
-                                                HorizontalAlignment="Left"
-                                                VerticalAlignment="Center"
-                                                FontFamily="Nunito"
-                                                FontSize="15"
-                                                FontWeight="Medium"
-                                                Foreground="#000000"
+                                                Style="{StaticResource FieldSmallLabelTextBlockStyle}"
                                                 Text="Năm" />
                                             <ComboBox
                                                 Grid.Row="1"
                                                 Height="25"
-                                                Margin="0,3,0,0"
+                                                Margin="0"
                                                 ItemsSource="{Binding YearOptions}"
                                                 SelectedItem="{Binding RevenueChartYear}"
-                                                Style="{StaticResource StyledComboBox}" />
+                                                Style="{StaticResource SmallComboBoxStyle}" />
                                         </Grid>
                                     </StackPanel>
 
                                     <Button
                                         Grid.Column="1"
-                                        Width="30"
-                                        Height="30"
-                                        Margin="0,10,0,0"
-                                        VerticalAlignment="Top"
-                                        HorizontalContentAlignment="Center"
-                                        VerticalContentAlignment="Top"
-                                        Background="Transparent"
-                                        BorderBrush="Transparent"
                                         Click="HideBorderButton_Click"
-                                        Content="❌"
-                                        FontFamily="Nunito"
-                                        FontSize="20"
-                                        FontStyle="Normal"
-                                        FontWeight="Normal"
-                                        Foreground="Gray">
-                                        <Button.Style>
-                                            <Style TargetType="Button">
-                                                <Setter Property="Template">
-                                                    <Setter.Value>
-                                                        <ControlTemplate TargetType="Button">
-                                                            <Border
-                                                                x:Name="buttonBorder"
-                                                                Background="{TemplateBinding Background}"
-                                                                BorderBrush="{TemplateBinding BorderBrush}"
-                                                                BorderThickness="{TemplateBinding BorderThickness}"
-                                                                CornerRadius="8">
-                                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-                                                                <Border.Effect>
-                                                                    <DropShadowEffect
-                                                                        x:Name="shadowEffect"
-                                                                        BlurRadius="0"
-                                                                        Opacity="0"
-                                                                        ShadowDepth="0"
-                                                                        Color="#555555" />
-                                                                </Border.Effect>
-                                                            </Border>
-                                                            <ControlTemplate.Resources>
-                                                                <Storyboard x:Key="HoverOn">
-                                                                    <ColorAnimation
-                                                                        Storyboard.TargetName="buttonBorder"
-                                                                        Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
-                                                                        To="#D32F2F"
-                                                                        Duration="0:0:0.2" />
-                                                                    <DoubleAnimation
-                                                                        Storyboard.TargetName="shadowEffect"
-                                                                        Storyboard.TargetProperty="BlurRadius"
-                                                                        To="8"
-                                                                        Duration="0:0:0.2" />
-                                                                    <DoubleAnimation
-                                                                        Storyboard.TargetName="shadowEffect"
-                                                                        Storyboard.TargetProperty="Opacity"
-                                                                        To="0.3"
-                                                                        Duration="0:0:0.2" />
-                                                                    <DoubleAnimation
-                                                                        Storyboard.TargetName="shadowEffect"
-                                                                        Storyboard.TargetProperty="ShadowDepth"
-                                                                        To="4"
-                                                                        Duration="0:0:0.2" />
-                                                                </Storyboard>
-                                                                <Storyboard x:Key="HoverOff">
-                                                                    <ColorAnimation
-                                                                        Storyboard.TargetName="buttonBorder"
-                                                                        Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
-                                                                        To="Transparent"
-                                                                        Duration="0:0:0.2" />
-                                                                    <DoubleAnimation
-                                                                        Storyboard.TargetName="shadowEffect"
-                                                                        Storyboard.TargetProperty="BlurRadius"
-                                                                        To="0"
-                                                                        Duration="0:0:0.2" />
-                                                                    <DoubleAnimation
-                                                                        Storyboard.TargetName="shadowEffect"
-                                                                        Storyboard.TargetProperty="Opacity"
-                                                                        To="0"
-                                                                        Duration="0:0:0.2" />
-                                                                    <DoubleAnimation
-                                                                        Storyboard.TargetName="shadowEffect"
-                                                                        Storyboard.TargetProperty="ShadowDepth"
-                                                                        To="0"
-                                                                        Duration="0:0:0.2" />
-                                                                </Storyboard>
-                                                            </ControlTemplate.Resources>
-                                                            <ControlTemplate.Triggers>
-                                                                <Trigger Property="IsMouseOver" Value="True">
-                                                                    <Trigger.EnterActions>
-                                                                        <BeginStoryboard Storyboard="{StaticResource HoverOn}" />
-                                                                    </Trigger.EnterActions>
-                                                                    <Trigger.ExitActions>
-                                                                        <BeginStoryboard Storyboard="{StaticResource HoverOff}" />
-                                                                    </Trigger.ExitActions>
-                                                                </Trigger>
-                                                                <Trigger Property="IsPressed" Value="True">
-                                                                    <Setter TargetName="buttonBorder" Property="Background" Value="#B71C1C" />
-                                                                </Trigger>
-                                                            </ControlTemplate.Triggers>
-                                                        </ControlTemplate>
-                                                    </Setter.Value>
-                                                </Setter>
-                                            </Style>
-                                        </Button.Style>
-                                    </Button>
+                                        Style="{StaticResource CloseWidgetButtonStyle}" />
                                 </Grid>
 
 
@@ -1357,14 +406,7 @@
                             </Grid>
                         </Border>
 
-                        <Border
-                            Width="697"
-                            Height="400"
-                            Margin="0,0,20,20"
-                            HorizontalAlignment="Stretch"
-                            VerticalAlignment="Stretch"
-                            Background="#F9F9FA"
-                            CornerRadius="10">
+                        <Border Style="{StaticResource HalfSmallWidgetLeft}">
                             <Grid
                                 Margin="15,10"
                                 HorizontalAlignment="Stretch"
@@ -1382,10 +424,8 @@
 
                                     <TextBlock
                                         Grid.Column="0"
-                                        VerticalAlignment="Center"
-                                        FontFamily="Nunito"
-                                        FontSize="28"
-                                        FontWeight="Bold">
+                                        Margin="0"
+                                        Style="{StaticResource BigWidgetTextBlockStyle}">
                                         <Run Text="Số lượng Đại lý" />
                                         <LineBreak />
                                         <Run Text="của từng Loại đại lý" />
@@ -1405,20 +445,15 @@
 
                                             <TextBlock
                                                 Grid.Row="0"
-                                                HorizontalAlignment="Left"
-                                                VerticalAlignment="Center"
-                                                FontFamily="Nunito"
-                                                FontSize="15"
-                                                FontWeight="Medium"
-                                                Foreground="#000000"
+                                                Style="{StaticResource FieldSmallLabelTextBlockStyle}"
                                                 Text="Tháng" />
                                             <ComboBox
                                                 Grid.Row="1"
                                                 Height="25"
-                                                Margin="0,3,0,0"
+                                                Margin="0"
                                                 ItemsSource="{Binding MonthOptions}"
                                                 SelectedItem="{Binding PieChartMonth}"
-                                                Style="{StaticResource StyledComboBox}" />
+                                                Style="{StaticResource SmallComboBoxStyle}" />
                                         </Grid>
 
                                         <Grid Width="130">
@@ -1429,126 +464,22 @@
 
                                             <TextBlock
                                                 Grid.Row="0"
-                                                HorizontalAlignment="Left"
-                                                VerticalAlignment="Center"
-                                                FontFamily="Nunito"
-                                                FontSize="15"
-                                                FontWeight="Medium"
-                                                Foreground="#000000"
+                                                Style="{StaticResource FieldSmallLabelTextBlockStyle}"
                                                 Text="Năm" />
                                             <ComboBox
                                                 Grid.Row="1"
                                                 Height="25"
-                                                Margin="0,3,0,0"
+                                                Margin="0"
                                                 ItemsSource="{Binding YearOptions}"
                                                 SelectedItem="{Binding PieChartYear, Mode=TwoWay}"
-                                                Style="{StaticResource StyledComboBox}" />
+                                                Style="{StaticResource SmallComboBoxStyle}" />
                                         </Grid>
                                     </StackPanel>
 
                                     <Button
                                         Grid.Column="1"
-                                        Width="30"
-                                        Height="30"
-                                        Margin="0,5,0,0"
-                                        VerticalAlignment="Top"
-                                        HorizontalContentAlignment="Center"
-                                        VerticalContentAlignment="Top"
-                                        Background="Transparent"
-                                        BorderBrush="Transparent"
                                         Click="HideBorderButton_Click"
-                                        Content="❌"
-                                        FontFamily="Nunito"
-                                        FontSize="20"
-                                        FontStyle="Normal"
-                                        FontWeight="Normal"
-                                        Foreground="Gray">
-                                        <Button.Style>
-                                            <Style TargetType="Button">
-                                                <Setter Property="Template">
-                                                    <Setter.Value>
-                                                        <ControlTemplate TargetType="Button">
-                                                            <Border
-                                                                x:Name="buttonBorder"
-                                                                Background="{TemplateBinding Background}"
-                                                                BorderBrush="{TemplateBinding BorderBrush}"
-                                                                BorderThickness="{TemplateBinding BorderThickness}"
-                                                                CornerRadius="8">
-                                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-                                                                <Border.Effect>
-                                                                    <DropShadowEffect
-                                                                        x:Name="shadowEffect"
-                                                                        BlurRadius="0"
-                                                                        Opacity="0"
-                                                                        ShadowDepth="0"
-                                                                        Color="#555555" />
-                                                                </Border.Effect>
-                                                            </Border>
-                                                            <ControlTemplate.Resources>
-                                                                <Storyboard x:Key="HoverOn">
-                                                                    <ColorAnimation
-                                                                        Storyboard.TargetName="buttonBorder"
-                                                                        Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
-                                                                        To="#D32F2F"
-                                                                        Duration="0:0:0.2" />
-                                                                    <DoubleAnimation
-                                                                        Storyboard.TargetName="shadowEffect"
-                                                                        Storyboard.TargetProperty="BlurRadius"
-                                                                        To="8"
-                                                                        Duration="0:0:0.2" />
-                                                                    <DoubleAnimation
-                                                                        Storyboard.TargetName="shadowEffect"
-                                                                        Storyboard.TargetProperty="Opacity"
-                                                                        To="0.3"
-                                                                        Duration="0:0:0.2" />
-                                                                    <DoubleAnimation
-                                                                        Storyboard.TargetName="shadowEffect"
-                                                                        Storyboard.TargetProperty="ShadowDepth"
-                                                                        To="4"
-                                                                        Duration="0:0:0.2" />
-                                                                </Storyboard>
-                                                                <Storyboard x:Key="HoverOff">
-                                                                    <ColorAnimation
-                                                                        Storyboard.TargetName="buttonBorder"
-                                                                        Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
-                                                                        To="Transparent"
-                                                                        Duration="0:0:0.2" />
-                                                                    <DoubleAnimation
-                                                                        Storyboard.TargetName="shadowEffect"
-                                                                        Storyboard.TargetProperty="BlurRadius"
-                                                                        To="0"
-                                                                        Duration="0:0:0.2" />
-                                                                    <DoubleAnimation
-                                                                        Storyboard.TargetName="shadowEffect"
-                                                                        Storyboard.TargetProperty="Opacity"
-                                                                        To="0"
-                                                                        Duration="0:0:0.2" />
-                                                                    <DoubleAnimation
-                                                                        Storyboard.TargetName="shadowEffect"
-                                                                        Storyboard.TargetProperty="ShadowDepth"
-                                                                        To="0"
-                                                                        Duration="0:0:0.2" />
-                                                                </Storyboard>
-                                                            </ControlTemplate.Resources>
-                                                            <ControlTemplate.Triggers>
-                                                                <Trigger Property="IsMouseOver" Value="True">
-                                                                    <Trigger.EnterActions>
-                                                                        <BeginStoryboard Storyboard="{StaticResource HoverOn}" />
-                                                                    </Trigger.EnterActions>
-                                                                    <Trigger.ExitActions>
-                                                                        <BeginStoryboard Storyboard="{StaticResource HoverOff}" />
-                                                                    </Trigger.ExitActions>
-                                                                </Trigger>
-                                                                <Trigger Property="IsPressed" Value="True">
-                                                                    <Setter TargetName="buttonBorder" Property="Background" Value="#B71C1C" />
-                                                                </Trigger>
-                                                            </ControlTemplate.Triggers>
-                                                        </ControlTemplate>
-                                                    </Setter.Value>
-                                                </Setter>
-                                            </Style>
-                                        </Button.Style>
-                                    </Button>
+                                        Style="{StaticResource CloseWidgetButtonStyle}" />
                                 </Grid>
 
                                 <lvc:PieChart
@@ -1568,14 +499,7 @@
                             </Grid>
                         </Border>
 
-                        <Border
-                            Width="698"
-                            Height="400"
-                            Margin="0,0,0,20"
-                            HorizontalAlignment="Stretch"
-                            VerticalAlignment="Stretch"
-                            Background="#F9F9FA"
-                            CornerRadius="10">
+                        <Border Margin="0,0,0,20" Style="{StaticResource HalfSmallWidgetLeft}">
                             <Grid
                                 Margin="15,10"
                                 HorizontalAlignment="Stretch"
@@ -1593,10 +517,8 @@
 
                                     <TextBlock
                                         Grid.Column="0"
-                                        VerticalAlignment="Center"
-                                        FontFamily="Nunito"
-                                        FontSize="28"
-                                        FontWeight="Bold">
+                                        Margin="0"
+                                        Style="{StaticResource BigWidgetTextBlockStyle}">
                                         <Run Text="Thống kê doanh số" />
                                         <LineBreak />
                                         <Run Text="trong tháng" />
@@ -1616,20 +538,15 @@
 
                                             <TextBlock
                                                 Grid.Row="0"
-                                                HorizontalAlignment="Left"
-                                                VerticalAlignment="Center"
-                                                FontFamily="Nunito"
-                                                FontSize="15"
-                                                FontWeight="Medium"
-                                                Foreground="#000000"
+                                                Style="{StaticResource FieldSmallLabelTextBlockStyle}"
                                                 Text="Tháng" />
                                             <ComboBox
                                                 Grid.Row="1"
                                                 Height="25"
-                                                Margin="0,3,0,0"
+                                                Margin="0"
                                                 ItemsSource="{Binding MonthOptions}"
                                                 SelectedItem="{Binding TopAgentChartMonth}"
-                                                Style="{StaticResource StyledComboBox}" />
+                                                Style="{StaticResource SmallComboBoxStyle}" />
                                         </Grid>
 
                                         <Grid Width="130">
@@ -1640,126 +557,22 @@
 
                                             <TextBlock
                                                 Grid.Row="0"
-                                                HorizontalAlignment="Left"
-                                                VerticalAlignment="Center"
-                                                FontFamily="Nunito"
-                                                FontSize="15"
-                                                FontWeight="Medium"
-                                                Foreground="#000000"
+                                                Style="{StaticResource FieldSmallLabelTextBlockStyle}"
                                                 Text="Năm" />
                                             <ComboBox
                                                 Grid.Row="1"
                                                 Height="25"
-                                                Margin="0,3,0,0"
+                                                Margin="0"
                                                 ItemsSource="{Binding YearOptions}"
                                                 SelectedItem="{Binding TopAgentChartYear, Mode=TwoWay}"
-                                                Style="{StaticResource StyledComboBox}" />
+                                                Style="{StaticResource SmallComboBoxStyle}" />
                                         </Grid>
                                     </StackPanel>
 
                                     <Button
                                         Grid.Column="1"
-                                        Width="30"
-                                        Height="30"
-                                        Margin="0,5,0,0"
-                                        VerticalAlignment="Top"
-                                        HorizontalContentAlignment="Center"
-                                        VerticalContentAlignment="Top"
-                                        Background="Transparent"
-                                        BorderBrush="Transparent"
                                         Click="HideBorderButton_Click"
-                                        Content="❌"
-                                        FontFamily="Nunito"
-                                        FontSize="20"
-                                        FontStyle="Normal"
-                                        FontWeight="Normal"
-                                        Foreground="Gray">
-                                        <Button.Style>
-                                            <Style TargetType="Button">
-                                                <Setter Property="Template">
-                                                    <Setter.Value>
-                                                        <ControlTemplate TargetType="Button">
-                                                            <Border
-                                                                x:Name="buttonBorder"
-                                                                Background="{TemplateBinding Background}"
-                                                                BorderBrush="{TemplateBinding BorderBrush}"
-                                                                BorderThickness="{TemplateBinding BorderThickness}"
-                                                                CornerRadius="8">
-                                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-                                                                <Border.Effect>
-                                                                    <DropShadowEffect
-                                                                        x:Name="shadowEffect"
-                                                                        BlurRadius="0"
-                                                                        Opacity="0"
-                                                                        ShadowDepth="0"
-                                                                        Color="#555555" />
-                                                                </Border.Effect>
-                                                            </Border>
-                                                            <ControlTemplate.Resources>
-                                                                <Storyboard x:Key="HoverOn">
-                                                                    <ColorAnimation
-                                                                        Storyboard.TargetName="buttonBorder"
-                                                                        Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
-                                                                        To="#D32F2F"
-                                                                        Duration="0:0:0.2" />
-                                                                    <DoubleAnimation
-                                                                        Storyboard.TargetName="shadowEffect"
-                                                                        Storyboard.TargetProperty="BlurRadius"
-                                                                        To="8"
-                                                                        Duration="0:0:0.2" />
-                                                                    <DoubleAnimation
-                                                                        Storyboard.TargetName="shadowEffect"
-                                                                        Storyboard.TargetProperty="Opacity"
-                                                                        To="0.3"
-                                                                        Duration="0:0:0.2" />
-                                                                    <DoubleAnimation
-                                                                        Storyboard.TargetName="shadowEffect"
-                                                                        Storyboard.TargetProperty="ShadowDepth"
-                                                                        To="4"
-                                                                        Duration="0:0:0.2" />
-                                                                </Storyboard>
-                                                                <Storyboard x:Key="HoverOff">
-                                                                    <ColorAnimation
-                                                                        Storyboard.TargetName="buttonBorder"
-                                                                        Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
-                                                                        To="Transparent"
-                                                                        Duration="0:0:0.2" />
-                                                                    <DoubleAnimation
-                                                                        Storyboard.TargetName="shadowEffect"
-                                                                        Storyboard.TargetProperty="BlurRadius"
-                                                                        To="0"
-                                                                        Duration="0:0:0.2" />
-                                                                    <DoubleAnimation
-                                                                        Storyboard.TargetName="shadowEffect"
-                                                                        Storyboard.TargetProperty="Opacity"
-                                                                        To="0"
-                                                                        Duration="0:0:0.2" />
-                                                                    <DoubleAnimation
-                                                                        Storyboard.TargetName="shadowEffect"
-                                                                        Storyboard.TargetProperty="ShadowDepth"
-                                                                        To="0"
-                                                                        Duration="0:0:0.2" />
-                                                                </Storyboard>
-                                                            </ControlTemplate.Resources>
-                                                            <ControlTemplate.Triggers>
-                                                                <Trigger Property="IsMouseOver" Value="True">
-                                                                    <Trigger.EnterActions>
-                                                                        <BeginStoryboard Storyboard="{StaticResource HoverOn}" />
-                                                                    </Trigger.EnterActions>
-                                                                    <Trigger.ExitActions>
-                                                                        <BeginStoryboard Storyboard="{StaticResource HoverOff}" />
-                                                                    </Trigger.ExitActions>
-                                                                </Trigger>
-                                                                <Trigger Property="IsPressed" Value="True">
-                                                                    <Setter TargetName="buttonBorder" Property="Background" Value="#B71C1C" />
-                                                                </Trigger>
-                                                            </ControlTemplate.Triggers>
-                                                        </ControlTemplate>
-                                                    </Setter.Value>
-                                                </Setter>
-                                            </Style>
-                                        </Button.Style>
-                                    </Button>
+                                        Style="{StaticResource CloseWidgetButtonStyle}" />
                                 </Grid>
 
                                 <lvc:CartesianChart
@@ -1797,12 +610,7 @@
                             </Grid>
                         </Border>
 
-                        <Border
-                            Width="1415"
-                            Height="400"
-                            HorizontalAlignment="Stretch"
-                            Background="#F9F9FA"
-                            CornerRadius="10">
+                        <Border Height="400" Style="{StaticResource BigBorderWidget}">
                             <Grid
                                 Margin="15,10"
                                 HorizontalAlignment="Stretch"
@@ -1823,10 +631,7 @@
 
                                     <TextBlock
                                         Grid.Column="0"
-                                        VerticalAlignment="Center"
-                                        FontFamily="Nunito"
-                                        FontSize="28"
-                                        FontWeight="Bold"
+                                        Style="{StaticResource BigWidgetTextBlockStyle}"
                                         Text="Thống kê công nợ trong tháng" />
 
                                     <StackPanel
@@ -1843,20 +648,15 @@
 
                                             <TextBlock
                                                 Grid.Row="0"
-                                                HorizontalAlignment="Left"
-                                                VerticalAlignment="Center"
-                                                FontFamily="Nunito"
-                                                FontSize="15"
-                                                FontWeight="Medium"
-                                                Foreground="#000000"
+                                                Style="{StaticResource FieldSmallLabelTextBlockStyle}"
                                                 Text="Tháng" />
                                             <ComboBox
                                                 Grid.Row="1"
                                                 Height="25"
-                                                Margin="0,3,0,0"
+                                                Margin="0"
                                                 ItemsSource="{Binding MonthOptions}"
                                                 SelectedItem="{Binding DebtChartMonth}"
-                                                Style="{StaticResource StyledComboBox}" />
+                                                Style="{StaticResource SmallComboBoxStyle}" />
                                         </Grid>
 
                                         <Grid Width="130">
@@ -1867,126 +667,22 @@
 
                                             <TextBlock
                                                 Grid.Row="0"
-                                                HorizontalAlignment="Left"
-                                                VerticalAlignment="Center"
-                                                FontFamily="Nunito"
-                                                FontSize="15"
-                                                FontWeight="Medium"
-                                                Foreground="#000000"
+                                                Style="{StaticResource FieldSmallLabelTextBlockStyle}"
                                                 Text="Năm" />
                                             <ComboBox
                                                 Grid.Row="1"
                                                 Height="25"
-                                                Margin="0,3,0,0"
+                                                Margin="0"
                                                 ItemsSource="{Binding YearOptions}"
                                                 SelectedItem="{Binding DebtChartYear, Mode=TwoWay}"
-                                                Style="{StaticResource StyledComboBox}" />
+                                                Style="{StaticResource SmallComboBoxStyle}" />
                                         </Grid>
                                     </StackPanel>
 
                                     <Button
                                         Grid.Column="1"
-                                        Width="30"
-                                        Height="30"
-                                        Margin="0,5,0,0"
-                                        VerticalAlignment="Top"
-                                        HorizontalContentAlignment="Center"
-                                        VerticalContentAlignment="Top"
-                                        Background="Transparent"
-                                        BorderBrush="Transparent"
                                         Click="HideBorderButton_Click"
-                                        Content="❌"
-                                        FontFamily="Nunito"
-                                        FontSize="20"
-                                        FontStyle="Normal"
-                                        FontWeight="Normal"
-                                        Foreground="Gray">
-                                        <Button.Style>
-                                            <Style TargetType="Button">
-                                                <Setter Property="Template">
-                                                    <Setter.Value>
-                                                        <ControlTemplate TargetType="Button">
-                                                            <Border
-                                                                x:Name="buttonBorder"
-                                                                Background="{TemplateBinding Background}"
-                                                                BorderBrush="{TemplateBinding BorderBrush}"
-                                                                BorderThickness="{TemplateBinding BorderThickness}"
-                                                                CornerRadius="8">
-                                                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" />
-                                                                <Border.Effect>
-                                                                    <DropShadowEffect
-                                                                        x:Name="shadowEffect"
-                                                                        BlurRadius="0"
-                                                                        Opacity="0"
-                                                                        ShadowDepth="0"
-                                                                        Color="#555555" />
-                                                                </Border.Effect>
-                                                            </Border>
-                                                            <ControlTemplate.Resources>
-                                                                <Storyboard x:Key="HoverOn">
-                                                                    <ColorAnimation
-                                                                        Storyboard.TargetName="buttonBorder"
-                                                                        Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
-                                                                        To="#D32F2F"
-                                                                        Duration="0:0:0.2" />
-                                                                    <DoubleAnimation
-                                                                        Storyboard.TargetName="shadowEffect"
-                                                                        Storyboard.TargetProperty="BlurRadius"
-                                                                        To="8"
-                                                                        Duration="0:0:0.2" />
-                                                                    <DoubleAnimation
-                                                                        Storyboard.TargetName="shadowEffect"
-                                                                        Storyboard.TargetProperty="Opacity"
-                                                                        To="0.3"
-                                                                        Duration="0:0:0.2" />
-                                                                    <DoubleAnimation
-                                                                        Storyboard.TargetName="shadowEffect"
-                                                                        Storyboard.TargetProperty="ShadowDepth"
-                                                                        To="4"
-                                                                        Duration="0:0:0.2" />
-                                                                </Storyboard>
-                                                                <Storyboard x:Key="HoverOff">
-                                                                    <ColorAnimation
-                                                                        Storyboard.TargetName="buttonBorder"
-                                                                        Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
-                                                                        To="Transparent"
-                                                                        Duration="0:0:0.2" />
-                                                                    <DoubleAnimation
-                                                                        Storyboard.TargetName="shadowEffect"
-                                                                        Storyboard.TargetProperty="BlurRadius"
-                                                                        To="0"
-                                                                        Duration="0:0:0.2" />
-                                                                    <DoubleAnimation
-                                                                        Storyboard.TargetName="shadowEffect"
-                                                                        Storyboard.TargetProperty="Opacity"
-                                                                        To="0"
-                                                                        Duration="0:0:0.2" />
-                                                                    <DoubleAnimation
-                                                                        Storyboard.TargetName="shadowEffect"
-                                                                        Storyboard.TargetProperty="ShadowDepth"
-                                                                        To="0"
-                                                                        Duration="0:0:0.2" />
-                                                                </Storyboard>
-                                                            </ControlTemplate.Resources>
-                                                            <ControlTemplate.Triggers>
-                                                                <Trigger Property="IsMouseOver" Value="True">
-                                                                    <Trigger.EnterActions>
-                                                                        <BeginStoryboard Storyboard="{StaticResource HoverOn}" />
-                                                                    </Trigger.EnterActions>
-                                                                    <Trigger.ExitActions>
-                                                                        <BeginStoryboard Storyboard="{StaticResource HoverOff}" />
-                                                                    </Trigger.ExitActions>
-                                                                </Trigger>
-                                                                <Trigger Property="IsPressed" Value="True">
-                                                                    <Setter TargetName="buttonBorder" Property="Background" Value="#B71C1C" />
-                                                                </Trigger>
-                                                            </ControlTemplate.Triggers>
-                                                        </ControlTemplate>
-                                                    </Setter.Value>
-                                                </Setter>
-                                            </Style>
-                                        </Button.Style>
-                                    </Button>
+                                        Style="{StaticResource CloseWidgetButtonStyle}" />
                                 </Grid>
 
                                 <!--  Add column chart for DaiLy with highest Tiền nợ  -->
