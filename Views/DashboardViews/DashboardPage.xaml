@@ -12,13 +12,19 @@
     mc:Ignorable="d">
 
     <Border Style="{StaticResource PageBorderWrapper}">
-        <Grid MaxWidth="1500" HorizontalAlignment="Center">
+        <Grid
+            MaxWidth="1500"
+            Margin="0,0,0,5"
+            HorizontalAlignment="Center">
             <Grid.RowDefinitions>
                 <RowDefinition Height="150" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
 
-            <Grid Grid.Row="0" HorizontalAlignment="Stretch">
+            <Grid
+                Grid.Row="0"
+                Margin="15,15,15,0"
+                HorizontalAlignment="Stretch">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="5*" />
                     <ColumnDefinition Width="5*" />
@@ -28,7 +34,7 @@
 
                 <StackPanel
                     Grid.Column="1"
-                    Margin="0,0,20,10"
+                    Margin="0,0,20,0"
                     HorizontalAlignment="Right"
                     VerticalAlignment="Bottom"
                     Orientation="Horizontal">
@@ -49,7 +55,7 @@
 
             <Border
                 Grid.Row="1"
-                Margin="20"
+                Margin="20,10,20,20"
                 HorizontalAlignment="Stretch"
                 VerticalAlignment="Stretch">
                 <ScrollViewer PanningMode="VerticalOnly" VerticalScrollBarVisibility="Hidden">
@@ -199,7 +205,7 @@
                                 </Grid>
                             </Grid>
                         </Border>
-                        <Border Margin="0,0,0,20" Style="{StaticResource ThirdBorderWidget}">
+                        <Border Style="{StaticResource ThirdBorderWidget}">
                             <Grid Margin="20">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="114*" />
@@ -526,10 +532,7 @@
                                 </Grid>
                             </Grid>
                         </Border>
-                        <Border
-                            Margin="0,0,0,20"
-                            Background="#EDEEFC"
-                            Style="{StaticResource ThirdBorderWidget}">
+                        <Border Background="#EDEEFC" Style="{StaticResource ThirdBorderWidget}">
                             <Grid Margin="20">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="114*" />
@@ -856,10 +859,7 @@
                                 </Grid>
                             </Grid>
                         </Border>
-                        <Border
-                            Margin="0,0,0,20"
-                            Background="#FCEDF8"
-                            Style="{StaticResource ThirdBorderWidget}">
+                        <Border Background="#FCEDF8" Style="{StaticResource ThirdBorderWidget}">
                             <Grid Margin="20">
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="114*" />
@@ -1137,7 +1137,7 @@
                             </Grid>
                         </Border>
 
-                        <Border Margin="0,0,0,20" Style="{StaticResource HalfSmallWidgetLeft}">
+                        <Border Style="{StaticResource HalfSmallWidgetLeft}">
                             <Grid
                                 Margin="15,10"
                                 HorizontalAlignment="Stretch"

@@ -40,9 +40,9 @@
 
     <!--  Third Border Widget Style  -->
     <Style x:Key="ThirdBorderWidget" TargetType="Border">
-        <Setter Property="Width" Value="451.66667" />
+        <Setter Property="Width" Value="441.66667" />
         <Setter Property="Height" Value="130" />
-        <Setter Property="Margin" Value="0,0,30,20" />
+        <Setter Property="Margin" Value="15,10" />
         <Setter Property="Background" Value="#E6F1FD" />
         <Setter Property="CornerRadius" Value="10" />
     </Style>
@@ -50,18 +50,18 @@
 
     <!--  Big Border Widget Style  -->
     <Style x:Key="BigBorderWidget" TargetType="Border">
-        <Setter Property="Width" Value="1415" />
+        <Setter Property="Width" Value="1385" />
         <Setter Property="Height" Value="500" />
-        <Setter Property="Margin" Value="0,0,0,20" />
+        <Setter Property="Margin" Value="15,10" />
         <Setter Property="Background" Value="#F9F9FA" />
         <Setter Property="CornerRadius" Value="10" />
     </Style>
 
     <!--  Half Small Widget Left Style  -->
     <Style x:Key="HalfSmallWidgetLeft" TargetType="Border">
-        <Setter Property="Width" Value="697.5" />
+        <Setter Property="Width" Value="677.5" />
         <Setter Property="Height" Value="400" />
-        <Setter Property="Margin" Value="0,0,20,20" />
+        <Setter Property="Margin" Value="15,10" />
         <Setter Property="HorizontalAlignment" Value="Stretch" />
         <Setter Property="VerticalAlignment" Value="Stretch" />
         <Setter Property="Background" Value="#F9F9FA" />
