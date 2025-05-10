@@ -4,25 +4,11 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:fa="http://schemas.fontawesome.io/icons/"
-    xmlns:helpers="clr-namespace:QuanLyDaiLy.Helpers"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    Title="HoSoDaiLyWinDow"
     Width="800"
     Height="420"
-    AllowsTransparency="True"
-    Background="Transparent"
-    WindowStartupLocation="CenterScreen"
-    WindowStyle="None"
+    Style="{StaticResource WindowPopupStyle}"
     mc:Ignorable="d">
-
-    <Window.Resources>
-        <DropShadowEffect
-            x:Key="DropShadowEffect"
-            BlurRadius="10"
-            Opacity="0.5"
-            ShadowDepth="0"
-            Color="Black" />
-    </Window.Resources>
 
     <Border Style="{StaticResource WindowPopUpBorder}">
         <Grid>
@@ -35,21 +21,13 @@
             </Grid.RowDefinitions>
 
             <!--  Header  -->
-            <Grid Grid.Row="0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="Auto" />
-                </Grid.ColumnDefinitions>
+            <DockPanel Grid.Row="0">
 
-                <StackPanel
-                    Grid.Column="0"
-                    Margin="20,15,0,0"
-                    VerticalAlignment="Center">
+                <StackPanel Margin="20,15,0,0" VerticalAlignment="Center">
                     <TextBlock Style="{StaticResource WindowHeaderTextBlockStyle}" Text="Tra cứu Mặt hàng" />
                 </StackPanel>
 
                 <StackPanel
-                    Grid.Column="1"
                     Margin="0,0,20,0"
                     HorizontalAlignment="Right"
                     VerticalAlignment="Center">
@@ -58,7 +36,7 @@
                         Content="❌"
                         Style="{StaticResource WindowCloseButtonStyle}" />
                 </StackPanel>
-            </Grid>
+            </DockPanel>
 
             <!--  Body  -->
             <Border Grid.Row="2" Style="{StaticResource WindowBorderContentWrapper}">

@@ -8,9 +8,7 @@
     Title="CapNhatDonViTinhWindow"
     Width="960"
     Height="465"
-    AllowsTransparency="True"
-    Background="Transparent"
-    WindowStyle="None"
+    Style="{StaticResource WindowPopupStyle}"
     mc:Ignorable="d">
 
     <Border Style="{StaticResource WindowPopUpBorder}">

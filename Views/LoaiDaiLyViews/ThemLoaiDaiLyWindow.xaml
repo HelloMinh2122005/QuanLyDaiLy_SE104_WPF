@@ -8,10 +8,8 @@
     Title="Thêm Loại đại lý"
     Width="960"
     Height="520"
-    AllowsTransparency="True"
-    Background="Transparent"
+    Style="{StaticResource WindowPopupStyle}"
     WindowStartupLocation="CenterScreen"
-    WindowStyle="None"
     mc:Ignorable="d">
 
     <Border Style="{StaticResource WindowPopUpBorder}">

@@ -9,15 +9,9 @@
     Title="Tra Cứu Đại Lý"
     Width="1360"
     Height="742"
-    AllowsTransparency="True"
-    Background="Transparent"
+    Style="{StaticResource WindowPopupStyle}"
     WindowStartupLocation="CenterScreen"
-    WindowStyle="None"
     mc:Ignorable="d">
-
-    <Window.Resources>
-        <helpers:ComboBoxItemConverter x:Key="ComboBoxItemConverter" />
-    </Window.Resources>
 
     <Border Style="{StaticResource WindowPopUpBorder}">
         <Grid>

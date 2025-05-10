@@ -194,6 +194,7 @@
         <Setter Property="VerticalContentAlignment" Value="Center" />
         <Setter Property="Height" Value="50" />
         <Setter Property="Width" Value="50" />
+        <Setter Property="WindowChrome.IsHitTestVisibleInChrome" Value="True" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">

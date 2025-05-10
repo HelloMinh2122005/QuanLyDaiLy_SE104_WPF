@@ -9,14 +9,8 @@
     Title="Chỉnh Sửa Đại Lý"
     Width="960"
     Height="542"
-    AllowsTransparency="True"
-    Background="Transparent"
-    WindowStyle="None"
+    Style="{StaticResource WindowPopupStyle}"
     mc:Ignorable="d">
-
-    <Window.Resources>
-        <helpers:ComboBoxItemConverter x:Key="ComboBoxItemConverter" />
-    </Window.Resources>
 
     <Border Style="{StaticResource WindowPopUpBorder}">
         <Grid>

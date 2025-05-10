@@ -4,15 +4,12 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:fa="http://schemas.fontawesome.io/icons/"
-    xmlns:helpers="clr-namespace:QuanLyDaiLy.Helpers"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     Title="Lập Phiếu thu tiền"
     Width="760"
     Height="661"
-    AllowsTransparency="True"
-    Background="Transparent"
+    Style="{StaticResource WindowPopupStyle}"
     WindowStartupLocation="CenterScreen"
-    WindowStyle="None"
     mc:Ignorable="d">
 
     <Border Style="{StaticResource WindowPopUpBorder}">

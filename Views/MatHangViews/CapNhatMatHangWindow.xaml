@@ -8,9 +8,7 @@
     Title="HoSoDaiLyWinDow"
     Width="960"
     Height="442"
-    AllowsTransparency="True"
-    Background="Transparent"
-    WindowStyle="None"
+    Style="{StaticResource WindowPopupStyle}"
     mc:Ignorable="d">
 
     <Border Style="{StaticResource WindowPopUpBorder}">
@@ -27,21 +25,13 @@
             <Border Grid.Row="3" Background="LightGray" />
 
             <!--  Header  -->
-            <Grid Grid.Row="0">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width=".5*" />
-                    <ColumnDefinition Width=".5*" />
-                </Grid.ColumnDefinitions>
+            <DockPanel Grid.Row="0">
 
-                <StackPanel
-                    Grid.Column="0"
-                    Margin="20,15,0,0"
-                    VerticalAlignment="Center">
+                <StackPanel Margin="20,15,0,0" VerticalAlignment="Center">
                     <TextBlock Style="{StaticResource WindowHeaderTextBlockStyle}" Text="Cập nhật mặt hàng" />
                 </StackPanel>
 
                 <StackPanel
-                    Grid.Column="1"
                     Margin="0,0,20,0"
                     HorizontalAlignment="Right"
                     VerticalAlignment="Center">
@@ -51,7 +41,7 @@
                         Style="{StaticResource WindowCloseButtonStyle}" />
                 </StackPanel>
 
-            </Grid>
+            </DockPanel>
             <!--  Body  -->
             <Border Grid.Row="2" Style="{StaticResource WindowBorderContentWrapper}">
                 <Grid Margin="10">

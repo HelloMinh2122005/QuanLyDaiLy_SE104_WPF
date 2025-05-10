@@ -14,6 +14,7 @@
                 <ResourceDictionary Source="Styles/DatePickers.xaml" />
                 <ResourceDictionary Source="Styles/NavigationRail.xaml" />
                 <ResourceDictionary Source="Styles/Headers.xaml" />
+                <ResourceDictionary Source="Styles/Windows.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Application.Resources>
