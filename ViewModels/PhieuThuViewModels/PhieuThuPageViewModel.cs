@@ -1,30 +1,25 @@
 ﻿using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using System.Windows;
-using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Extensions.DependencyInjection;
+using QuanLyDaiLy.Messages;
 using QuanLyDaiLy.Models;
 using QuanLyDaiLy.Services;
-using QuanLyDaiLy.ViewModels.PhieuThuViewModels;
-using QuanLyDaiLy.Views;
 using QuanLyDaiLy.Views.PhieuThuViews;
 using RelayCommand = QuanLyDaiLy.Commands.RelayCommand;
 
 namespace QuanLyDaiLy.ViewModels.PhieuThuViewModels
 {
-    public partial class PhieuThuPageViewModel : ObservableObject
+    public partial class PhieuThuPageViewModel : 
+        ObservableObject,
+        IRecipient<SearchCompletedMessage<PhieuThu>>,
+        IRecipient<DataReloadMessage>
     {
+        // Services
         private readonly IPhieuThuService _phieuThuService;
         private readonly IServiceProvider _serviceProvider;
-
-        // Commands
-        public ICommand LoadDataCommand { get; }
-        public ICommand AddPhieuThuCommand { get; }
-        public ICommand DeletePhieuThuCommand { get; }
-        public ICommand SearchPhieuThuCommand { get; }
 
         public PhieuThuPageViewModel(
             IPhieuThuService phieuThuService,
@@ -32,61 +27,60 @@ namespace QuanLyDaiLy.ViewModels.PhieuThuViewModels
         )
         {
             _phieuThuService = phieuThuService;
-            _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
-
+            _serviceProvider = serviceProvider;
+            WeakReferenceMessenger.Default.RegisterAll(this);
             // Load initial data
             _ = LoadDataAsync();
-
-            // Initialize commands
-            LoadDataCommand = new RelayCommand(async () => await LoadDataExecuteAsync());
-            AddPhieuThuCommand = new RelayCommand(AddPhieuThu);
-            DeletePhieuThuCommand = new RelayCommand(DeletePhieuThu);
-            SearchPhieuThuCommand = new RelayCommand(SearchPhieuThu);
         }
-
-        [ObservableProperty]
-        private ObservableCollection<PhieuThu> _danhSachPhieuThu = [];
-
-        private PhieuThu _selectedPhieuThu = null!;
-        public PhieuThu SelectedPhieuThu
+        public void Receive(DataReloadMessage message)
         {
-            get => _selectedPhieuThu;
-            set
+            _ = LoadDataAsync();
+        }
+        public void Receive(SearchCompletedMessage<PhieuThu> message)
+        {
+            var searchResults = message.Value;
+
+            if (searchResults.Count > 0)
             {
-                _selectedPhieuThu = value;
-                OnPropertyChanged();
+                DanhSachPhieuThu = searchResults;
+            }
+            else
+            {
+                _ = LoadDataAsync();
             }
         }
         private async Task LoadDataAsync()
         {
             var list = await _phieuThuService.GetAllPhieuThu();
             DanhSachPhieuThu = [.. list];
-        }
-        private async Task LoadDataExecuteAsync()
-        {
             SelectedPhieuThu = null!;
-            await LoadDataAsync();
-            MessageBox.Show("Tải lại danh sách thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
+        #region Bindings Properties
+        [ObservableProperty]
+        private ObservableCollection<PhieuThu> _danhSachPhieuThu = [];
+        
+        [ObservableProperty]
+        private PhieuThu _selectedPhieuThu = null!;
+        #endregion
+
+        #region RelayCommand
+        [RelayCommand]
         private void AddPhieuThu()
         {
             SelectedPhieuThu = null!;
-
-            var addPhieuThuWindow = _serviceProvider.GetRequiredService<ThemPhieuThuWindow>();
-            if (addPhieuThuWindow.DataContext is ThemPhieuThuWindowViewModel viewModel)
+            try
             {
-                viewModel.DataChanged += async (sender, e) => await LoadDataAsync();
+                var addPhieuThuWindow = _serviceProvider.GetRequiredService<ThemPhieuThuWindow>();
+                addPhieuThuWindow.Show();
             }
-            addPhieuThuWindow.Show();
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi mở cửa sổ thêm phiếu thu: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
-
-        private void DeletePhieuThu()
-        {
-            _ = ExecuteDeletePhieuThu();
-        }
-
-        private async Task ExecuteDeletePhieuThu()
+        [RelayCommand]
+        private async Task DeletePhieuThu()
         {
             if (SelectedPhieuThu == null! || string.IsNullOrEmpty(SelectedPhieuThu.MaPhieuThu.ToString()))
             {
@@ -96,13 +90,12 @@ namespace QuanLyDaiLy.ViewModels.PhieuThuViewModels
 
             try
             {
-                var result = MessageBox.Show("Bạn có chắc chắn muốn xóa phiếu thu này?", "Xác nhận", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                var result = MessageBox.Show("Bạn có chắc chắn muốn xóa phiếu thu này?", "Xác nhận", MessageBoxButton.YesNo, MessageBoxImage.Question);
                 if (result == MessageBoxResult.Yes)
                 {
-                    // Call the service to delete the selected PhieuThu
                     await _phieuThuService.DeletePhieuThu(SelectedPhieuThu.MaPhieuThu);
-                    await LoadDataAsync();
                     MessageBox.Show("Đã xóa phiếu thu thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+                    await LoadDataAsync();
                 }
             }
             catch (Exception ex)
@@ -111,24 +104,22 @@ namespace QuanLyDaiLy.ViewModels.PhieuThuViewModels
             }
         }
 
-        private void SearchPhieuThu()
+        [RelayCommand]
+        private async Task SearchPhieuThu()
         {
             SelectedPhieuThu = null!;
 
             var traCuuPhieuThuWindow = _serviceProvider.GetRequiredService<TraCuuPhieuThuTienWindow>();
-
-            if (traCuuPhieuThuWindow.DataContext is TraCuuPhieuThuWindowViewModel viewModel)
-            {
-                viewModel.SearchCompleted += (sender, searchResults) =>
-                {
-                    if (searchResults.Count > 0)
-                    {
-                        DanhSachPhieuThu = searchResults;
-                    }
-                };
-            }
-
             traCuuPhieuThuWindow.Show();
         }
+
+        [RelayCommand]
+        private async Task LoadData()
+        {
+            SelectedPhieuThu = null!;
+            await LoadDataAsync();
+            MessageBox.Show("Tải lại danh sách thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+        }
+        #endregion
     }
 }
