@@ -33,15 +33,9 @@ public static class ApplicationServiceExtensions
         // Register ViewModels
         services.AddTransient<MainWindowViewModel>();
         services.AddTransient<HoSoDaiLyViewModel>();
-        services.AddTransient<Func<int, ChinhSuaDaiLyViewModel>>(sp => dailyId =>
-            new ChinhSuaDaiLyViewModel(
-                sp.GetRequiredService<IDaiLyService>(),
-                sp.GetRequiredService<IQuanService>(),
-                sp.GetRequiredService<ILoaiDaiLyService>(),
-                dailyId,
-                sp.GetRequiredService<IThamSoService>()
-            )
-        );
+        services.AddTransient<ChinhSuaDaiLyViewModel>();
+        services.AddTransient<TraCuuDaiLyViewModel>();
+
         services.AddSingleton<Func<string, int, BaoCaoDoanhSoViewModel>>(sp => (month, year) =>
         {
             var daiLyService = sp.GetRequiredService<IDaiLyService>();
@@ -60,10 +54,6 @@ public static class ApplicationServiceExtensions
             var vm = new BaoCaoCongNoViewModel(month, year, daiLyService, phieuXuatService, phieuThuService);
             return vm;
         });
-
-
-
-        services.AddTransient<TraCuuDaiLyViewModel>();
 
         // Register Views
         services.AddTransient<MainWindow>();

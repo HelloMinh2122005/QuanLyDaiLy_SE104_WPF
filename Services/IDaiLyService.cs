@@ -6,6 +6,8 @@ namespace QuanLyDaiLy.Services
     {
         Task<DaiLy> GetDaiLyById(int id);
         Task<IEnumerable<DaiLy>> GetAllDaiLy();
+        Task<IEnumerable<DaiLy>> GetDaiLyPage(int offset, int size = 20);
+        Task<int> GetTotalPages(int size = 20);
         Task AddDaiLy(DaiLy daiLy);
         Task UpdateDaiLy(DaiLy daiLy);
         Task DeleteDaiLy(int id);
