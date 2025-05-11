@@ -80,7 +80,7 @@ namespace QuanLyDaiLy.ViewModels
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Lỗi khi mở cửa sổ thêm mặt hàng: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Lỗi khi mở cửa sổ thêm đại lý: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
         [RelayCommand]
