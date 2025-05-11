@@ -254,7 +254,7 @@
                             VerticalAlignment="Center"
                             Orientation="Horizontal">
 
-                            <Button Command="{Binding OpenHoSoDaiLyCommand}" Style="{StaticResource PrimaryButtonStyle}">
+                            <Button Command="{Binding AddDaiLyCommand}" Style="{StaticResource PrimaryButtonStyle}">
                                 <StackPanel Orientation="Horizontal">
                                     <fa:FontAwesome
                                         Margin="0,0,8,0"

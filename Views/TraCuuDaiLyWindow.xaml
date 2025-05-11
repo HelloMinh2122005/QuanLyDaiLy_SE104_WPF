@@ -46,7 +46,7 @@
                     HorizontalAlignment="Right"
                     VerticalAlignment="Center">
                     <Button
-                        Command="{Binding CloseCommand}"
+                        Command="{Binding CloseWindowCommand}"
                         Content="❌"
                         Style="{StaticResource WindowCloseButtonStyle}" />
                 </StackPanel>
@@ -650,14 +650,14 @@
                 HorizontalAlignment="Center"
                 VerticalAlignment="Stretch"
                 Orientation="Horizontal">
-                <Button Command="{Binding TraCuuDaiLyCommand}" Style="{StaticResource WindowPrimaryButtonStyle}">
+                <Button Command="{Binding SearchDaiLyCommand}" Style="{StaticResource WindowPrimaryButtonStyle}">
                     <StackPanel Orientation="Horizontal">
                         <fa:FontAwesome Margin="0,0,10,0" Icon="Search" />
                         <TextBlock Text="Tra cứu đại lý" />
                     </StackPanel>
                 </Button>
 
-                <Button Command="{Binding CloseCommand}" Style="{StaticResource WindowSignoutButtonStyle}">
+                <Button Command="{Binding CloseWindowCommand}" Style="{StaticResource WindowSignoutButtonStyle}">
                     <StackPanel Orientation="Horizontal">
                         <fa:FontAwesome Margin="0,0,10,0" Icon="SignOut" />
                         <TextBlock Text="Thoát" />

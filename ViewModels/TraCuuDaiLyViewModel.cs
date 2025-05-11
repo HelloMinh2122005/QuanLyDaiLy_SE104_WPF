@@ -1,18 +1,24 @@
-﻿using QuanLyDaiLy.Commands;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+using QuanLyDaiLy.Commands;
+using QuanLyDaiLy.Messages;
 using QuanLyDaiLy.Models;
 using QuanLyDaiLy.Services;
 using QuanLyDaiLy.Views;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using System.Windows;
-using System.Windows.Input;
 
 namespace QuanLyDaiLy.ViewModels
 {
-    public class TraCuuDaiLyViewModel : INotifyPropertyChanged
+    public partial class TraCuuDaiLyViewModel : ObservableObject
     {
+        // Services
         private readonly IDaiLyService _daiLyService;
+        private readonly ILoaiDaiLyService _loaiDaiLyService;
+        private readonly IQuanService _quanService;
+        private readonly IDonViTinhService _donViTinhService;
+        private readonly IMatHangService _matHangService;
 
         public TraCuuDaiLyViewModel(
             ILoaiDaiLyService loaiDaiLyService,
@@ -28,427 +34,83 @@ namespace QuanLyDaiLy.ViewModels
             _matHangService = matHangService;
             _daiLyService = daiLyService;
 
-            // Initialize commands
-            TraCuuDaiLyCommand = new RelayCommand(async () => await SearchDaiLy());
-            CloseCommand = new RelayCommand(CloseWindow);
-
             _ = LoadDataAsync();
         }
 
-        #region
+        #region Binding Properties
+        [ObservableProperty]
         private string _maDaiLy = string.Empty;
-        public string MaDaiLy
-        {
-            get => _maDaiLy;
-            set
-            {
-                _maDaiLy = value;
-                OnPropertyChanged();
-            }
-        }
-
+        [ObservableProperty]
         private string _tenDaiLy = string.Empty;
-        public string TenDaiLy
-        {
-            get => _tenDaiLy;
-            set
-            {
-                _tenDaiLy = value;
-                OnPropertyChanged();
-            }
-        }
-
+        [ObservableProperty]
         private string _dienThoai = string.Empty;
-        public string DienThoai
-        {
-            get => _dienThoai;
-            set
-            {
-                _dienThoai = value;
-                OnPropertyChanged();
-            }
-        }
-
+        [ObservableProperty]
         private string _diaChi = string.Empty;
-        public string DiaChi
-        {
-            get => _diaChi;
-            set
-            {
-                _diaChi = value;
-                OnPropertyChanged();
-            }
-        }
-
+        [ObservableProperty]
         private string _email = string.Empty;
-        public string Email
-        {
-            get => _email;
-            set
-            {
-                _email = value;
-                OnPropertyChanged();
-            }
-        }
-
-        // LoaiDaiLy related properties
+        [ObservableProperty]
         private ObservableCollection<LoaiDaiLy> _loaiDaiLies = [];
-        public ObservableCollection<LoaiDaiLy> LoaiDaiLies
-        {
-            get => _loaiDaiLies;
-            set
-            {
-                _loaiDaiLies = value;
-                OnPropertyChanged();
-            }
-        }
-
+        [ObservableProperty]
         private LoaiDaiLy _selectedLoaiDaiLy = new();
-        public LoaiDaiLy SelectedLoaiDaiLy
-        {
-            get => _selectedLoaiDaiLy;
-            set
-            {
-                _selectedLoaiDaiLy = value;
-                OnPropertyChanged();
-            }
-        }
-
-        // Quan related properties
+        [ObservableProperty]
         private ObservableCollection<Quan> _quans = [];
-        public ObservableCollection<Quan> Quans
-        {
-            get => _quans;
-            set
-            {
-                _quans = value;
-                OnPropertyChanged();
-            }
-        }
-
+        [ObservableProperty]
         private Quan _selectedQuan = new();
-        public Quan SelectedQuan
-        {
-            get => _selectedQuan;
-            set
-            {
-                _selectedQuan = value;
-                OnPropertyChanged();
-            }
-        }
-
-        // Date range properties
+        [ObservableProperty]
         private DateTime _ngayTiepNhanFrom = DateTime.MinValue;
-        public DateTime NgayTiepNhanFrom
-        {
-            get => _ngayTiepNhanFrom;
-            set
-            {
-                _ngayTiepNhanFrom = value;
-                OnPropertyChanged();
-            }
-        }
-
+        [ObservableProperty]
         private DateTime _ngayTiepNhanTo = DateTime.Now;
-        public DateTime NgayTiepNhanTo
-        {
-            get => _ngayTiepNhanTo;
-            set
-            {
-                _ngayTiepNhanTo = value;
-                OnPropertyChanged();
-            }
-        }
-
-        // TienNo range properties
+        [ObservableProperty]
         private long _noDaiLyFrom = 0;
-        public long NoDaiLyFrom
-        {
-            get => _noDaiLyFrom;
-            set
-            {
-                _noDaiLyFrom = value;
-                OnPropertyChanged();
-            }
-        }
-
+        [ObservableProperty]
         private long _noDaiLyTo = long.MaxValue;
-        public long NoDaiLyTo
-        {
-            get => _noDaiLyTo;
-            set
-            {
-                _noDaiLyTo = value;
-                OnPropertyChanged();
-            }
-        }
-
-        // NoToiDa range properties
+        [ObservableProperty]
         private int _noTheoToiDaLoaiDaiLyFrom = 0;
-        public int NoTheoToiDaLoaiDaiLyFrom
-        {
-            get => _noTheoToiDaLoaiDaiLyFrom;
-            set
-            {
-                _noTheoToiDaLoaiDaiLyFrom = value;
-                OnPropertyChanged();
-            }
-        }
-
+        [ObservableProperty]
         private int _noTheoToiDaLoaiDaiLyTo = int.MaxValue;
-        public int NoTheoToiDaLoaiDaiLyTo
-        {
-            get => _noTheoToiDaLoaiDaiLyTo;
-            set
-            {
-                _noTheoToiDaLoaiDaiLyTo = value;
-                OnPropertyChanged();
-            }
-        }
-
-        // PhieuXuat related properties
+        [ObservableProperty]
         private int _maPhieuXuatFrom = 0;
-        public int MaPhieuXuatFrom
-        {
-            get => _maPhieuXuatFrom;
-            set
-            {
-                _maPhieuXuatFrom = value;
-                OnPropertyChanged();
-            }
-        }
-
+        [ObservableProperty]
         private int _maPhieuXuatTo = int.MaxValue;
-        public int MaPhieuXuatTo
-        {
-            get => _maPhieuXuatTo;
-            set
-            {
-                _maPhieuXuatTo = value;
-                OnPropertyChanged();
-            }
-        }
-
+        [ObservableProperty]
         private DateTime _ngayLapPhieuXuatFrom = DateTime.MinValue;
-        public DateTime NgayLapPhieuXuatFrom
-        {
-            get => _ngayLapPhieuXuatFrom;
-            set
-            {
-                _ngayLapPhieuXuatFrom = value;
-                OnPropertyChanged();
-            }
-        }
-
+        [ObservableProperty]
         private DateTime _ngayLapPhieuXuatTo = DateTime.Now;
-        public DateTime NgayLapPhieuXuatTo
-        {
-            get => _ngayLapPhieuXuatTo;
-            set
-            {
-                _ngayLapPhieuXuatTo = value;
-                OnPropertyChanged();
-            }
-        }
-
+        [ObservableProperty]
         private long _tongGiaTriPhieuXuatFrom = 0;
-        public long TongGiaTriPhieuXuatFrom
-        {
-            get => _tongGiaTriPhieuXuatFrom;
-            set
-            {
-                _tongGiaTriPhieuXuatFrom = value;
-                OnPropertyChanged();
-            }
-        }
-
+        [ObservableProperty]
         private long _tongGiaTriPhieuXuatTo = long.MaxValue;
-        public long TongGiaTriPhieuXuatTo
-        {
-            get => _tongGiaTriPhieuXuatTo;
-            set
-            {
-                _tongGiaTriPhieuXuatTo = value;
-                OnPropertyChanged();
-            }
-        }
-
-        // MatHang related properties
+        [ObservableProperty]
         private ObservableCollection<MatHang> _matHangXuats = [];
-        public ObservableCollection<MatHang> MatHangXuats
-        {
-            get => _matHangXuats;
-            set
-            {
-                _matHangXuats = value;
-                OnPropertyChanged();
-            }
-        }
-
+        [ObservableProperty]
         private MatHang _selectedMatHangXuat = new();
-        public MatHang SelectedMatHangXuat
-        {
-            get => _selectedMatHangXuat;
-            set
-            {
-                _selectedMatHangXuat = value;
-                OnPropertyChanged();
-            }
-        }
-
+        [ObservableProperty]
         private string _tenMatHang = string.Empty;
-        public string TenMatHang
-        {
-            get => _tenMatHang;
-            set
-            {
-                _tenMatHang = value;
-                OnPropertyChanged();
-            }
-        }
-
-        // DonViTinh related properties
+        [ObservableProperty]
         private ObservableCollection<DonViTinh> _donViTinhs = [];
-        public ObservableCollection<DonViTinh> DonViTinhs
-        {
-            get => _donViTinhs;
-            set
-            {
-                _donViTinhs = value;
-                OnPropertyChanged();
-            }
-        }
-
+        [ObservableProperty]
         private DonViTinh _selectedDonViTinh = new();
-        public DonViTinh SelectedDonViTinh
-        {
-            get => _selectedDonViTinh;
-            set
-            {
-                _selectedDonViTinh = value;
-                OnPropertyChanged();
-            }
-        }
-
+        [ObservableProperty]
         private string _tenDonViTinh = string.Empty;
-        public string TenDonViTinh
-        {
-            get => _tenDonViTinh;
-            set
-            {
-                _tenDonViTinh = value;
-                OnPropertyChanged();
-            }
-        }
-
-        // SoLuongXuat range properties
+        [ObservableProperty]
         private int _soLuongXuatCuaMatHangXuatFrom = 0;
-        public int SoLuongXuatCuaMatHangXuatFrom
-        {
-            get => _soLuongXuatCuaMatHangXuatFrom;
-            set
-            {
-                _soLuongXuatCuaMatHangXuatFrom = value;
-                OnPropertyChanged();
-            }
-        }
-
+        [ObservableProperty]
         private int _soLuongXuatCuaMatHangXuatTo = int.MaxValue;
-        public int SoLuongXuatCuaMatHangXuatTo
-        {
-            get => _soLuongXuatCuaMatHangXuatTo;
-            set
-            {
-                _soLuongXuatCuaMatHangXuatTo = value;
-                OnPropertyChanged();
-            }
-        }
-
-        // DonGia range properties
+        [ObservableProperty]
         private long _donGiaXuatCuaMatHangXuatFrom = 0;
-        public long DonGiaXuatCuaMatHangXuatFrom
-        {
-            get => _donGiaXuatCuaMatHangXuatFrom;
-            set
-            {
-                _donGiaXuatCuaMatHangXuatFrom = value;
-                OnPropertyChanged();
-            }
-        }
-
+        [ObservableProperty]
         private long _donGiaXuatCuaMatHangXuatTo = long.MaxValue;
-        public long DonGiaXuatCuaMatHangXuatTo
-        {
-            get => _donGiaXuatCuaMatHangXuatTo;
-            set
-            {
-                _donGiaXuatCuaMatHangXuatTo = value;
-                OnPropertyChanged();
-            }
-        }
-
-        // ThanhTien range properties
+        [ObservableProperty]
         private long _thanhTienCuaMatHangXuatFrom = 0;
-        public long ThanhTienCuaMatHangXuatFrom
-        {
-            get => _thanhTienCuaMatHangXuatFrom;
-            set
-            {
-                _thanhTienCuaMatHangXuatFrom = value;
-                OnPropertyChanged();
-            }
-        }
-
+        [ObservableProperty]
         private long _thanhTienCuaMatHangXuatTo = long.MaxValue;
-        public long ThanhTienCuaMatHangXuatTo
-        {
-            get => _thanhTienCuaMatHangXuatTo;
-            set
-            {
-                _thanhTienCuaMatHangXuatTo = value;
-                OnPropertyChanged();
-            }
-        }
-
-        // SoLuongTon range properties
+        [ObservableProperty]
         private int _soLuongTonCuaMatHangXuatFrom = 0;
-        public int SoLuongTonCuaMatHangXuatFrom
-        {
-            get => _soLuongTonCuaMatHangXuatFrom;
-            set
-            {
-                _soLuongTonCuaMatHangXuatFrom = value;
-                OnPropertyChanged();
-            }
-        }
-
+        [ObservableProperty]
         private int _soLuongTonCuaMatHangXuatTo = int.MaxValue;
-        public int SoLuongTonCuaMatHangXuatTo
-        {
-            get => _soLuongTonCuaMatHangXuatTo;
-            set
-            {
-                _soLuongTonCuaMatHangXuatTo = value;
-                OnPropertyChanged();
-            }
-        }
-
         // Search Results
-        private ObservableCollection<DaiLy> _searchResults = [];
-        public ObservableCollection<DaiLy> SearchResults
-        {
-            get => _searchResults;
-            set
-            {
-                _searchResults = value;
-                OnPropertyChanged();
-            }
-        }
+        public ObservableCollection<DaiLy> SearchResults = [];
         #endregion
-
-        // Commands
-        public ICommand TraCuuDaiLyCommand { get; }
-        public ICommand CloseCommand { get; }
 
         private async Task LoadDataAsync()
         {
@@ -475,6 +137,14 @@ namespace QuanLyDaiLy.ViewModels
             }
         }
 
+        #region RelayCommands
+        [RelayCommand]
+        private void CloseWindow()
+        {
+            Application.Current.Windows.OfType<TraCuuDaiLyWindow>().FirstOrDefault()?.Close();
+        }
+
+        [RelayCommand]
         private async Task SearchDaiLy()
         {
             try
@@ -573,8 +243,6 @@ namespace QuanLyDaiLy.ViewModels
 
                 SearchResults = [.. filteredResults];
 
-                // Raise the event with the search results
-                SearchCompleted?.Invoke(this, SearchResults);
                 ApplySearchResults();
 
                 if (SearchResults.Count == 0)
@@ -588,32 +256,11 @@ namespace QuanLyDaiLy.ViewModels
             }
         }
 
-        private void CloseWindow()
-        {
-            Application.Current.Windows.OfType<TraCuuDaiLyWindow>().FirstOrDefault()?.Close();
-        }
-
-        // services 
-        private readonly ILoaiDaiLyService _loaiDaiLyService;
-        private readonly IQuanService _quanService;
-        private readonly IDonViTinhService _donViTinhService;
-        private readonly IMatHangService _matHangService;
-
-        public event PropertyChangedEventHandler? PropertyChanged;
-        public event EventHandler<ObservableCollection<DaiLy>>? SearchCompleted;
-
         private void ApplySearchResults()
         {
-            // Trigger the event with current search results
-            SearchCompleted?.Invoke(this, SearchResults);
-
-            // Close the window after applying
+            WeakReferenceMessenger.Default.Send(new SearchCompletedMessage<DaiLy>(SearchResults));
             CloseWindow();
         }
-
-        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+        #endregion
     }
 }

@@ -1,85 +1,111 @@
 ﻿using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using QuanLyDaiLy.Models;
 using QuanLyDaiLy.Services;
 using QuanLyDaiLy.Commands;
 using QuanLyDaiLy.Views;
-using System.Windows.Input;
 using Microsoft.Extensions.DependencyInjection;
 using System.Windows;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Messaging;
+using CommunityToolkit.Mvvm.Input;
+using QuanLyDaiLy.Messages;
+
+//using CommunityToolkit.Mvvm.Input;
 
 namespace QuanLyDaiLy.ViewModels
 {
-    public class MainWindowViewModel : INotifyPropertyChanged
+    public partial class MainWindowViewModel :
+        ObservableObject,
+        IRecipient<SearchCompletedMessage<DaiLy>>,
+        IRecipient<DataReloadMessage>
     {
+        // Services
         private readonly IDaiLyService _dailyService;
         private readonly IServiceProvider _serviceProvider;
-        private readonly Func<int, ChinhSuaDaiLyViewModel> _chinhSuaDaiLyFactory;
 
         public MainWindowViewModel(
             IDaiLyService dailyService,
-            IServiceProvider serviceProvider,
-            Func<int, ChinhSuaDaiLyViewModel> chinhSuaDaiLyFactory
+            IServiceProvider serviceProvider
         )
         {
             _dailyService = dailyService;
-            _ = LoadData();
-
-            OpenHoSoDaiLyCommand = new RelayCommand(OpenHoSoDaiLyWindow);
-            EditDaiLyCommand = new RelayCommand(OpenChinhSuaDaiLyWindow);
-            DeleteDaiLyCommand = new RelayCommand(OpenDeleteDaiLyWindow);
-            SearchDaiLyCommand = new RelayCommand(OpenSearchDaiLyWindow);
-            LoadDataCommand = new RelayCommand(async () => await LoadDataExecute());
             _serviceProvider = serviceProvider;
-            _chinhSuaDaiLyFactory = chinhSuaDaiLyFactory;
+
+            WeakReferenceMessenger.Default.RegisterAll(this);
+
+            _ = LoadDataAsync();
         }
 
-        private ObservableCollection<DaiLy> _danhSachDaiLy = [];
-        public ObservableCollection<DaiLy> DanhSachDaiLy
+        public void Receive(DataReloadMessage message)
         {
-            get => _danhSachDaiLy;
-            set
+           _ = LoadDataAsync();
+        }
+        public void Receive(SearchCompletedMessage<DaiLy> message)
+        {
+            var searchResults = message.Value;
+
+            if (searchResults.Count > 0)
             {
-                _danhSachDaiLy = value;
-                OnPropertyChanged();
+                DanhSachDaiLy = searchResults;
+            }
+            else
+            {
+                _ = LoadDataAsync();
             }
         }
-
-        private async Task LoadData()
+        private async Task LoadDataAsync()
         {
             var list = await _dailyService.GetAllDaiLy();
             DanhSachDaiLy = [.. list];
             SelectedDaiLy = null!;
         }
 
-        public ICommand OpenHoSoDaiLyCommand { get; }
-        public ICommand EditDaiLyCommand { get; }
-        public ICommand DeleteDaiLyCommand { get; }
-        public ICommand SearchDaiLyCommand { get; }
-        public ICommand LoadDataCommand { get; }
+        #region Binding Properties
+        [ObservableProperty]
+        private ObservableCollection<DaiLy> _danhSachDaiLy = [];
 
-        private void OpenHoSoDaiLyWindow()
+        [ObservableProperty]
+        private DaiLy _selectedDaiLy = null!;
+        #endregion
+
+        #region RelayCommand
+        [RelayCommand]
+        private void AddDaiLy()
         {
             SelectedDaiLy = null!;
-
-            var hoSoDaiLyWindow = _serviceProvider.GetRequiredService<HoSoDaiLyWinDow>();
-
-            if (hoSoDaiLyWindow.DataContext is HoSoDaiLyViewModel viewModel)
+            try
             {
-                viewModel.DataChanged += async (sender, e) => await LoadData();
+                var hoSoDaiLyWindow = _serviceProvider.GetRequiredService<HoSoDaiLyWinDow>();
+                hoSoDaiLyWindow.Show();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi mở cửa sổ thêm mặt hàng: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
+        [RelayCommand]
+        private void EditDaiLy()
+        {
+            if (SelectedDaiLy == null || string.IsNullOrEmpty(SelectedDaiLy.TenDaiLy))
+            {
+                MessageBox.Show("Vui lòng chọn đại lý để chỉnh sửa!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
             }
 
-            hoSoDaiLyWindow.Show();
+            try
+            {
+                var window = _serviceProvider.GetRequiredService<ChinhSuaDaiLyWindow>();
+                window.Show();
+                WeakReferenceMessenger.Default.Send(new SelectedIdMessage(SelectedDaiLy.MaDaiLy));
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi mở cửa sổ chỉnh sửa đại lý: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
-        private async Task LoadDataExecute()
-        {
-            await LoadData();
-            MessageBox.Show("Tải lại danh sách thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
-        }
-
-        private async void OpenDeleteDaiLyWindow()
+        [RelayCommand]
+        private async Task DeleteDaiLy()
         {
             if (SelectedDaiLy == null! || string.IsNullOrEmpty(SelectedDaiLy.TenDaiLy))
             {
@@ -98,8 +124,8 @@ namespace QuanLyDaiLy.ViewModels
                 if (result == MessageBoxResult.Yes)
                 {
                     await _dailyService.DeleteDaiLy(SelectedDaiLy.MaDaiLy);
-                    await LoadData();
                     MessageBox.Show("Đã xóa đại lý thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+                    await LoadDataAsync();
                 }
             }
             catch (Exception ex)
@@ -107,65 +133,21 @@ namespace QuanLyDaiLy.ViewModels
                 MessageBox.Show($"Không thể xóa đại lý: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-
-        private void OpenSearchDaiLyWindow()
+        [RelayCommand]
+        private async Task SearchDaiLy()
         {
             SelectedDaiLy = null!;
 
             var traCuuDaiLyWindow = _serviceProvider.GetRequiredService<TraCuuDaiLyWindow>();
-
-            if (traCuuDaiLyWindow.DataContext is TraCuuDaiLyViewModel viewModel)
-            {
-                viewModel.SearchCompleted += (sender, searchResults) =>
-                {
-                    if (searchResults.Count > 0)
-                    {
-                        DanhSachDaiLy = searchResults;
-                    }
-                };
-            }
-
             traCuuDaiLyWindow.Show();
         }
-
-        private DaiLy _selectedDaiLy = new();
-        public DaiLy SelectedDaiLy
+        [RelayCommand]
+        private async Task LoadData()
         {
-            get => _selectedDaiLy;
-            set
-            {
-                _selectedDaiLy = value;
-                OnPropertyChanged();
-            }
+            SelectedDaiLy = null!;
+            await LoadDataAsync();
+            MessageBox.Show("Tải lại danh sách thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
         }
-
-        private void OpenChinhSuaDaiLyWindow()
-        {
-            if (SelectedDaiLy == null || string.IsNullOrEmpty(SelectedDaiLy.TenDaiLy))
-            {
-                MessageBox.Show("Vui lòng chọn đại lý để chỉnh sửa!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
-                return;
-            }
-
-            try
-            {
-                var viewModel = _chinhSuaDaiLyFactory(SelectedDaiLy.MaDaiLy);
-                viewModel.DataChanged += async (sender, e) => await LoadData();
-
-                var window = new ChinhSuaDaiLyWindow(viewModel);
-                window.Show();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error opening edit window: {ex.Message}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
-        }
-
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+        #endregion
     }
 }

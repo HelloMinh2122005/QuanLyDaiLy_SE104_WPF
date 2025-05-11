@@ -93,5 +93,25 @@ namespace QuanLyDaiLy.Repositories
             int maxId = await _context.DsDaiLy.MaxAsync(d => d.MaDaiLy);
             return maxId + 1;
         }
+        public async Task<IEnumerable<DaiLy>> GetDaiLyPage(int offset, int size = 20)
+        {
+            return await _context.DsDaiLy
+                .Include(m => m.LoaiDaiLy)
+                .Include(m => m.Quan)
+                .Skip(offset * size)
+                .Take(size)
+                .ToListAsync();
+        }
+
+        public async Task<int> GetTotalPages(int size = 20)
+        {
+            int leftover = await _context.DsDaiLy.CountAsync() % size;
+            int totalPages = await _context.DsDaiLy.CountAsync() / size;
+            if (leftover > 0)
+            {
+                totalPages++;
+            }
+            return totalPages;
+        }
     }
 }
