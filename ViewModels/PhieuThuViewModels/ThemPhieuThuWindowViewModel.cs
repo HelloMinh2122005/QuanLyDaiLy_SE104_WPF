@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Input;
+using CommunityToolkit.Mvvm.ComponentModel;
 using QuanLyDaiLy.Commands;
 using QuanLyDaiLy.Models;
 using QuanLyDaiLy.Services;
@@ -15,7 +9,7 @@ using QuanLyDaiLy.Views.PhieuThuViews;
 
 namespace QuanLyDaiLy.ViewModels.PhieuThuViewModels
 {
-    public class ThemPhieuThuWindowViewModel : INotifyPropertyChanged
+    public partial class ThemPhieuThuWindowViewModel : ObservableObject
     {
         private readonly IPhieuThuService _phieuThuService;
         private readonly IDaiLyService _daiLyService;
@@ -56,7 +50,11 @@ namespace QuanLyDaiLy.ViewModels.PhieuThuViewModels
                 DiaChi = SelectedDaiLy.DiaChi;
                 NoDaiLy = SelectedDaiLy.TienNo;
                 var thamso = await _thamSoService.GetThamSo();
-                QuyDinhTienThuTienNo = thamso.QuyDinhTienThuTienNo;
+                _quyDinhTienThuTienNo = thamso.QuyDinhTienThuTienNo;
+                if (_quyDinhTienThuTienNo == true)
+                    NoiDung = "Đang áp dụng";
+                else
+                    NoiDung = "Không áp dụng";
             }
         }
         private void CloseWindow()
@@ -221,25 +219,13 @@ namespace QuanLyDaiLy.ViewModels.PhieuThuViewModels
             }
         }
 
+        [ObservableProperty] private string _noiDung;
+
         private bool _quyDinhTienThuTienNo = true;
-        public bool QuyDinhTienThuTienNo
-        {
-            get => _quyDinhTienThuTienNo;
-            set
-            {
-                _quyDinhTienThuTienNo = value;
-                OnPropertyChanged();
-            }
-        }
         #endregion
 
 
         // Event to notify parent view when data changes
         public event EventHandler? DataChanged;
-        public event PropertyChangedEventHandler? PropertyChanged;
-        protected virtual void OnPropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string? propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
     }
 }

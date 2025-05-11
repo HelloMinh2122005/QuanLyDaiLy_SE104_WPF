@@ -19,6 +19,12 @@ namespace QuanLyDaiLy.Repositories
             }
         }
 
+        // Trả về ngày tiếp nhận nhỏ nhất (đại lý đầu tiên)
+        public async Task<DateTime?> GetEarliestDaiLyDateAsync()
+        {
+            return await _context.DsDaiLy
+                .MinAsync(d => (DateTime?)d.NgayTiepNhan);
+        }
         public async Task AddDaiLy(DaiLy daiLy)
         {
             _context.DsDaiLy.Add(daiLy);
@@ -34,14 +40,7 @@ namespace QuanLyDaiLy.Repositories
             return await _context.DsDaiLy
                 .CountAsync(d => d.NgayTiepNhan <= endDate);
         }
-        // Trả về Dictionary<MaLoaiDaiLy, Count>
-        public async Task<Dictionary<int, int>> GetCountsGroupedByLoaiAsync(int month, int year)
-        {
-            return await _context.DsDaiLy
-                .Where(d => d.NgayTiepNhan.Month == month && d.NgayTiepNhan.Year == year) // Lọc theo tháng và năm
-                .GroupBy(d => d.MaLoaiDaiLy) // Nhóm theo loại đại lý
-                .ToDictionaryAsync(g => g.Key, g => g.Count()); // Đếm số lượng đại lý cho từng loại
-        }
+
 
         public async Task<List<DaiLy>> GetDaiLysByIdsAsync(IEnumerable<int> ids)
         {
@@ -93,6 +92,26 @@ namespace QuanLyDaiLy.Repositories
         {
             int maxId = await _context.DsDaiLy.MaxAsync(d => d.MaDaiLy);
             return maxId + 1;
+        }
+        public async Task<IEnumerable<DaiLy>> GetDaiLyPage(int offset, int size = 20)
+        {
+            return await _context.DsDaiLy
+                .Include(m => m.LoaiDaiLy)
+                .Include(m => m.Quan)
+                .Skip(offset * size)
+                .Take(size)
+                .ToListAsync();
+        }
+
+        public async Task<int> GetTotalPages(int size = 20)
+        {
+            int leftover = await _context.DsDaiLy.CountAsync() % size;
+            int totalPages = await _context.DsDaiLy.CountAsync() / size;
+            if (leftover > 0)
+            {
+                totalPages++;
+            }
+            return totalPages;
         }
     }
 }

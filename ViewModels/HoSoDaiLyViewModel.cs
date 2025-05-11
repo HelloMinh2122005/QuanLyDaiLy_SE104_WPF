@@ -1,17 +1,18 @@
 ﻿using QuanLyDaiLy.Views;
-using System.Windows.Input;
 using System.Windows;
 using QuanLyDaiLy.Commands;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using QuanLyDaiLy.Models;
 using System.Collections.ObjectModel;
 using QuanLyDaiLy.Services;
 using System.Text.RegularExpressions;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+using QuanLyDaiLy.Messages;
 
 namespace QuanLyDaiLy.ViewModels
 {
-    public class HoSoDaiLyViewModel : INotifyPropertyChanged
+    public partial class HoSoDaiLyViewModel : ObservableObject
     {
         public HoSoDaiLyViewModel(
             IQuanService quanService,
@@ -20,10 +21,6 @@ namespace QuanLyDaiLy.ViewModels
             IThamSoService thamSoService
         )
         {
-            CloseWindowCommand = new RelayCommand(CloseWindow);
-            TiepNhanDaiLyCommand = new RelayCommand(async () => await TiepNhanDaiLy());
-            DaiLyMoiCommand = new RelayCommand(DaiLyMoi);
-
             _quanService = quanService;
             _loaiDaiLyService = loaiDaiLyService;
             _daiLyService = daiLyService;
@@ -32,131 +29,34 @@ namespace QuanLyDaiLy.ViewModels
             _ = LoadDataAsync();
         }
 
-        #region Binding Properties
-        private string _maDaiLy = string.Empty;
-        public string MaDaiLy
-        {
-            get => _maDaiLy;
-            set
-            {
-                _maDaiLy = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private string _tenDaiLy = string.Empty;
-        public string TenDaiLy
-        {
-            get => _tenDaiLy;
-            set
-            {
-                _tenDaiLy = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private string _soDienThoai = string.Empty;
-        public string SoDienThoai
-        {
-            get => _soDienThoai;
-            set
-            {
-                _soDienThoai = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private string _email = string.Empty;
-        public string Email
-        {
-            get => _email;
-            set
-            {
-                _email = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private DateTime _ngayTiepNhan = DateTime.Now;
-        public DateTime NgayTiepNhan
-        {
-            get => _ngayTiepNhan;
-            set
-            {
-                _ngayTiepNhan = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private string _diaChi = string.Empty;
-        public string DiaChi
-        {
-            get => _diaChi;
-            set
-            {
-                _diaChi = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private LoaiDaiLy _selectedLoaiDaiLy = new();
-        public LoaiDaiLy SelectedLoaiDaiLy
-        {
-            get => _selectedLoaiDaiLy;
-            set
-            {
-                _selectedLoaiDaiLy = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private Quan _selectedQuan = new();
-        public Quan SelectedQuan
-        {
-            get => _selectedQuan;
-            set
-            {
-                _selectedQuan = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private ObservableCollection<LoaiDaiLy> _loaiDaiLies = [];
-        public ObservableCollection<LoaiDaiLy> LoaiDaiLies
-        {
-            get => _loaiDaiLies;
-            set
-            {
-                _loaiDaiLies = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private ObservableCollection<Quan> _quans = [];
-        public ObservableCollection<Quan> Quans
-        {
-            get => _quans;
-            set
-            {
-                _quans = value;
-                OnPropertyChanged();
-            }
-        }
-        #endregion
-
-        // Events
-        public event EventHandler? DataChanged;
-
         // Services 
         private readonly ILoaiDaiLyService _loaiDaiLyService;
         private readonly IQuanService _quanService;
         private readonly IDaiLyService _daiLyService;
         private readonly IThamSoService _thamSoService;
 
-        // Commands
-        public ICommand CloseWindowCommand { get; }
-        public ICommand TiepNhanDaiLyCommand { get; }
-        public ICommand DaiLyMoiCommand { get; }
+        #region Binding Properties
+        [ObservableProperty]
+        private string _maDaiLy = string.Empty;
+        [ObservableProperty]
+        private string _tenDaiLy = string.Empty;
+        [ObservableProperty]
+        private string _soDienThoai = string.Empty;
+        [ObservableProperty]
+        private string _email = string.Empty;
+        [ObservableProperty]
+        private DateTime _ngayTiepNhan = DateTime.Now;
+        [ObservableProperty]
+        private string _diaChi = string.Empty;
+        [ObservableProperty]
+        private LoaiDaiLy _selectedLoaiDaiLy = null!;
+        [ObservableProperty]
+        private Quan _selectedQuan = null!;
+        [ObservableProperty]
+        private ObservableCollection<LoaiDaiLy> _loaiDaiLies = [];
+        [ObservableProperty]
+        private ObservableCollection<Quan> _quans = [];
+        #endregion
 
         private async Task LoadDataAsync()
         {
@@ -180,12 +80,15 @@ namespace QuanLyDaiLy.ViewModels
             }
         }
 
+        #region RelayCommand
+        [RelayCommand]
         private void CloseWindow()
         {
-            DataChanged?.Invoke(this, EventArgs.Empty);
+            WeakReferenceMessenger.Default.Send(new DataReloadMessage());
             Application.Current.Windows.OfType<HoSoDaiLyWinDow>().FirstOrDefault()?.Close();
         }
 
+        [RelayCommand]
         private async Task TiepNhanDaiLy()
         {
             if (string.IsNullOrWhiteSpace(TenDaiLy))
@@ -230,7 +133,6 @@ namespace QuanLyDaiLy.ViewModels
                 return;
             }
 
-
             if (string.IsNullOrWhiteSpace(DiaChi))
             {
                 MessageBox.Show("Địa chỉ không được để trống.", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Warning);
@@ -247,31 +149,30 @@ namespace QuanLyDaiLy.ViewModels
             if (quyDinhSoLuongDaiLyToiDa == true)
             {
                 var soLuongDaiLyToiDaTrongQuan = thamSo.SoLuongDaiLyToiDa;
-                var soLuongDaiLyTrongQuan = await _quanService.GetSoLuongDaiLyTrongQuan(SelectedQuan.MaQuan);
+                var soLuongDaiLyTrongQuan = (await _quanService.GetQuanById(SelectedQuan.MaQuan)).DsDaiLy.Count;
                 if (soLuongDaiLyTrongQuan >= soLuongDaiLyToiDaTrongQuan)
                 {
                     MessageBox.Show("Quận đã đạt số lượng đại lý tối đa!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
             }
-
-            MaDaiLy = (await _daiLyService.GenerateAvailableId()).ToString();
-            DaiLy daiLy = new()
-            {
-                MaDaiLy = int.Parse(MaDaiLy),
-                TenDaiLy = TenDaiLy,
-                DienThoai = SoDienThoai,
-                Email = Email,
-                NgayTiepNhan = NgayTiepNhan,
-                DiaChi = DiaChi,
-                MaLoaiDaiLy = SelectedLoaiDaiLy.MaLoaiDaiLy,
-                MaQuan = SelectedQuan.MaQuan,
-                LoaiDaiLy = SelectedLoaiDaiLy,
-                Quan = SelectedQuan
-            };
-
             try
             {
+                MaDaiLy = (await _daiLyService.GenerateAvailableId()).ToString();
+                DaiLy daiLy = new()
+                {
+                    MaDaiLy = int.Parse(MaDaiLy),
+                    TenDaiLy = TenDaiLy,
+                    DienThoai = SoDienThoai,
+                    Email = Email,
+                    NgayTiepNhan = NgayTiepNhan,
+                    DiaChi = DiaChi,
+                    MaLoaiDaiLy = SelectedLoaiDaiLy.MaLoaiDaiLy,
+                    MaQuan = SelectedQuan.MaQuan,
+                    LoaiDaiLy = SelectedLoaiDaiLy,
+                    Quan = SelectedQuan
+                };
+
                 await _daiLyService.AddDaiLy(daiLy);
                 MessageBox.Show("Tiếp nhận đại lý thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
             }
@@ -281,6 +182,7 @@ namespace QuanLyDaiLy.ViewModels
             }
         }
 
+        [RelayCommand]
         private void DaiLyMoi()
         {
             MaDaiLy = string.Empty;
@@ -294,12 +196,6 @@ namespace QuanLyDaiLy.ViewModels
             if (Quans.Count > 0)
                 SelectedQuan = Quans[0];
         }
-
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+        #endregion
     }
 }

@@ -1,16 +1,16 @@
 ﻿using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using System.Windows;
-using System.Windows.Input;
-using QuanLyDaiLy.Commands;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+using QuanLyDaiLy.Messages;
 using QuanLyDaiLy.Models;
 using QuanLyDaiLy.Services;
 using QuanLyDaiLy.Views.MatHangViews;
 
 namespace QuanLyDaiLy.ViewModels.MatHangViewModels
 {
-    public class ThemMatHangWindowViewModel : INotifyPropertyChanged
+    public partial class ThemMatHangWindowViewModel : ObservableObject
     {
         private readonly IMatHangService _matHangService;
         private readonly IDonViTinhService _donViTinhService;
@@ -20,79 +20,25 @@ namespace QuanLyDaiLy.ViewModels.MatHangViewModels
             _matHangService = matHangService;
             _donViTinhService = donViTinhService;
 
-            // Initialize commands
-            CloseWindowCommand = new RelayCommand(CloseWindow);
-            TiepNhanMatHangCommand = new RelayCommand(async () => await TiepNhanMatHang());
-            MatHangMoiCommand = new RelayCommand(MatHangMoi);
-
             // Load data
             _ = LoadDonViTinh();
         }
 
-        // Binding properties
+        // Binding properties with ObservableProperty attribute
+        [ObservableProperty]
         private string _maMatHang = "";
-        public string MaMatHang
-        {
-            get => _maMatHang;
-            set
-            {
-                _maMatHang = value;
-                OnPropertyChanged();
-            }
-        }
 
+        [ObservableProperty]
         private string _tenMatHang = "";
-        public string TenMatHang
-        {
-            get => _tenMatHang;
-            set
-            {
-                _tenMatHang = value;
-                OnPropertyChanged();
-            }
-        }
 
+        [ObservableProperty]
         private int _soLuongTon = 0;
-        public int SoLuongTon
-        {
-            get => _soLuongTon;
-            set
-            {
-                _soLuongTon = value;
-                OnPropertyChanged();
-            }
-        }
 
+        [ObservableProperty]
         private ObservableCollection<DonViTinh> _donViTinhs = [];
-        public ObservableCollection<DonViTinh> DonViTinhs
-        {
-            get => _donViTinhs;
-            set
-            {
-                _donViTinhs = value;
-                OnPropertyChanged();
-            }
-        }
 
+        [ObservableProperty]
         private DonViTinh _selectedDonViTinh = null!;
-        public DonViTinh SelectedDonViTinh
-        {
-            get => _selectedDonViTinh;
-            set
-            {
-                _selectedDonViTinh = value;
-                OnPropertyChanged();
-            }
-        }
-
-        // Commands
-        public ICommand CloseWindowCommand { get; }
-        public ICommand TiepNhanMatHangCommand { get; }
-        public ICommand MatHangMoiCommand { get; }
-
-        // Event to notify parent view when data changes
-        public event EventHandler? DataChanged;
-        public event PropertyChangedEventHandler? PropertyChanged;
 
         private async Task LoadDonViTinh()
         {
@@ -112,12 +58,14 @@ namespace QuanLyDaiLy.ViewModels.MatHangViewModels
             }
         }
 
+        [RelayCommand]
         private void CloseWindow()
         {
-            DataChanged?.Invoke(this, EventArgs.Empty);
+            WeakReferenceMessenger.Default.Send(new DataReloadMessage());
             Application.Current.Windows.OfType<ThemMatHangWindow>().FirstOrDefault()?.Close();
         }
 
+        [RelayCommand]
         private async Task TiepNhanMatHang()
         {
             if (string.IsNullOrWhiteSpace(TenMatHang))
@@ -126,7 +74,7 @@ namespace QuanLyDaiLy.ViewModels.MatHangViewModels
                 return;
             }
 
-            if (string.IsNullOrEmpty(SelectedDonViTinh.TenDonViTinh))
+            if (SelectedDonViTinh == null || string.IsNullOrEmpty(SelectedDonViTinh.TenDonViTinh))
             {
                 MessageBox.Show("Vui lòng chọn đơn vị tính!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
@@ -146,7 +94,6 @@ namespace QuanLyDaiLy.ViewModels.MatHangViewModels
 
                 await _matHangService.AddMatHang(matHang);
                 MessageBox.Show("Thêm mặt hàng thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
-                DataChanged?.Invoke(this, EventArgs.Empty);
             }
             catch (Exception ex)
             {
@@ -154,6 +101,7 @@ namespace QuanLyDaiLy.ViewModels.MatHangViewModels
             }
         }
 
+        [RelayCommand]
         private void MatHangMoi()
         {
             try
@@ -167,11 +115,6 @@ namespace QuanLyDaiLy.ViewModels.MatHangViewModels
             {
                 MessageBox.Show($"Lỗi khi tạo mặt hàng mới: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-        }
-
-        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

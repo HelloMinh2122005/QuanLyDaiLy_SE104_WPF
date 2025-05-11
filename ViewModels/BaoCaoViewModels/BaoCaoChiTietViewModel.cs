@@ -1,53 +1,64 @@
 ﻿using LiveCharts.Wpf;
 using LiveCharts;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Windows.Input;
 using System.Windows.Media;
-using Microsoft.Extensions.DependencyInjection;
-using QuanLyDaiLy.Commands;
 using QuanLyDaiLy.Views.BaoCaoViews;
 using QuanLyDaiLy.Services;
 using QuanLyDaiLy.Models;
-using System.Windows;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 
 namespace QuanLyDaiLy.ViewModels.BaoCaoViewModels
 {
-    public class BaoCaoChiTietViewModel : INotifyPropertyChanged
+    public partial class BaoCaoChiTietViewModel : ObservableObject
     {
         private readonly IServiceProvider _serviceProvider;
         private readonly IDaiLyService _daiLyService;
         private readonly IPhieuXuatService _phieuXuatService;
         private readonly IPhieuThuService _phieuThuService;
+        private readonly Func<string, int, BaoCaoDoanhSoViewModel> _monthYearDoanhSoFactory;
+        private readonly Func<string, int, BaoCaoCongNoViewModel> _monthYearCongNoFactory;
 
         public BaoCaoChiTietViewModel(
             IServiceProvider serviceProvider,
             IDaiLyService daiLyService,
             IPhieuXuatService phieuXuatService,
-            IPhieuThuService phieuThuService
+            IPhieuThuService phieuThuService,
+            Func<string, int, BaoCaoDoanhSoViewModel> monthYearDoanhSoFactory,
+            Func<string, int, BaoCaoCongNoViewModel> monthYearCongNoFactory
             )
         {
             _daiLyService = daiLyService;
             _serviceProvider = serviceProvider;
             _phieuXuatService = phieuXuatService;
             _phieuThuService = phieuThuService;
+            _monthYearDoanhSoFactory = monthYearDoanhSoFactory;
+            _monthYearCongNoFactory = monthYearCongNoFactory;
 
-            DoanhSoCommand = new RelayCommand(OpenDoanhSoWindow);
-            CongNoCommand = new RelayCommand(OpenCongNoWindow);
 
             InitializeMonthYearOptions();
             _ = InitializeDoanhSoData();
             _ = InitializeCongNoData();
         }
 
-        public SeriesCollection DoanhSoSeries { get; set; } = [];
-        public SeriesCollection CongNoSeries { get; set; } = [];
-        public string[] DoanhSoLabels { get; set; } = null!;
-        public string[] CongNoLabels { get; set; } = null!;
+        [ObservableProperty]
+        private SeriesCollection _doanhSoSeries = [];
+
+        [ObservableProperty]
+        private SeriesCollection _congNoSeries = [];
+
+        [ObservableProperty]
+        private string[] _doanhSoLabels = null!;
+
+        [ObservableProperty]
+        private string[] _congNoLabels = null!;
+
         public Func<double, string> CurrencyFormatter { get; set; } = value => value.ToString("N0") + " đ";
 
-        public List<string> MonthOptions { get; set; } = [];
-        public List<int> YearOptions { get; set; } = [];
+        [ObservableProperty]
+        private List<string> _monthOptions = [];
+
+        [ObservableProperty]
+        private List<int> _yearOptions = [];
 
         // Tooltips for the charts
         public DefaultTooltip DoanhSoTooltip { get; set; } = new DefaultTooltip
@@ -70,83 +81,60 @@ namespace QuanLyDaiLy.ViewModels.BaoCaoViewModels
             BorderBrush = new SolidColorBrush(Color.FromRgb(200, 200, 200))
         };
 
+        [ObservableProperty]
         private string _selectedDoanhSoMonth = $"Tháng {DateTime.Now.Month}";
-        public string SelectedDoanhSoMonth
+
+        partial void OnSelectedDoanhSoMonthChanged(string value)
         {
-            get => _selectedDoanhSoMonth;
-            set
-            {
-                if (_selectedDoanhSoMonth != value)
-                {
-                    _selectedDoanhSoMonth = value;
-                    OnPropertyChanged();
-                    UpdateDoanhSoData(); 
-                }
-            }
+            UpdateDoanhSoData();
         }
 
+        [ObservableProperty]
         private int _selectedDoanhSoYear = DateTime.Now.Year;
-        public int SelectedDoanhSoYear
+
+        partial void OnSelectedDoanhSoYearChanged(int value)
         {
-            get => _selectedDoanhSoYear;
-            set
-            {
-                if (_selectedDoanhSoYear != value)
-                {
-                    _selectedDoanhSoYear = value;
-                    OnPropertyChanged();
-                    UpdateDoanhSoData();
-                }
-            }
+            UpdateDoanhSoData();
         }
 
+        [ObservableProperty]
         private string _selectedCongNoMonth = $"Tháng {DateTime.Now.Month}";
-        public string SelectedCongNoMonth
+
+        partial void OnSelectedCongNoMonthChanged(string value)
         {
-            get => _selectedCongNoMonth;
-            set
-            {
-                if (_selectedCongNoMonth != value)
-                {
-                    _selectedCongNoMonth = value;
-                    OnPropertyChanged();
-                    UpdateCongNoData(); 
-                }
-            }
+            UpdateCongNoData();
         }
 
+        [ObservableProperty]
         private int _selectedCongNoYear = DateTime.Now.Year;
-        public int SelectedCongNoYear
+
+        partial void OnSelectedCongNoYearChanged(int value)
         {
-            get => _selectedCongNoYear;
-            set
-            {
-                if (_selectedCongNoYear != value)
-                {
-                    _selectedCongNoYear = value;
-                    OnPropertyChanged();
-                    UpdateCongNoData(); 
-                }
-            }
+            UpdateCongNoData();
         }
 
-        // Commands 
-        public ICommand DoanhSoCommand { get; }
-        public ICommand CongNoCommand { get; }
+        // Event for data changes
+        public event EventHandler? DataChanged;
 
-        private void OpenDoanhSoWindow()
+        [RelayCommand]
+        private void DoanhSo()
         {
-            var doanhSoWindow = _serviceProvider.GetRequiredService<BaoCaoDoanhSoWindow>();
+            var viewModel_DoanhSo = _monthYearDoanhSoFactory(SelectedDoanhSoMonth, SelectedDoanhSoYear);
+            viewModel_DoanhSo.DataChanged += async (sender, e) => await InitializeDoanhSoData();
+            var doanhSoWindow = new BaoCaoDoanhSoWindow(viewModel_DoanhSo);
             doanhSoWindow?.Show();
         }
 
-        private void OpenCongNoWindow()
+        [RelayCommand]
+        private void CongNo()
         {
-            var congNoWindow = _serviceProvider.GetRequiredService<BaoCaoCongNoWindow>();
+            var viewModel_CongNow = _monthYearCongNoFactory(SelectedCongNoMonth, SelectedCongNoYear);
+            viewModel_CongNow.DataChanged += async (sender, e) => await InitializeCongNoData();
+            var congNoWindow = new BaoCaoCongNoWindow(viewModel_CongNow);
             congNoWindow?.Show();
         }
 
-        private void InitializeMonthYearOptions()
+        public void InitializeMonthYearOptions()
         {
             var currentDate = DateTime.Now;
             var currentMonth = currentDate.Month;
@@ -170,7 +158,8 @@ namespace QuanLyDaiLy.ViewModels.BaoCaoViewModels
             SelectedCongNoMonth = MonthOptions[currentMonth - 1];
             SelectedCongNoYear = currentYear;
         }
-        private async Task InitializeDoanhSoData()
+
+        public async Task InitializeDoanhSoData()
         {
             if (!int.TryParse(new string(SelectedDoanhSoMonth?.Where(char.IsDigit).ToArray()), out int selectedMonth))
                 return;
@@ -212,15 +201,9 @@ namespace QuanLyDaiLy.ViewModels.BaoCaoViewModels
                     MaxColumnWidth = 50
                 }
             };
-
-            OnPropertyChanged(nameof(DoanhSoSeries));
-            OnPropertyChanged(nameof(DoanhSoLabels));
         }
 
-
-
-
-        private async Task InitializeCongNoData()
+        public async Task InitializeCongNoData()
         {
             var selectedMonth = int.Parse(new string(SelectedCongNoMonth.Where(char.IsDigit).ToArray()));
             var selectedYear = SelectedCongNoYear;
@@ -256,20 +239,15 @@ namespace QuanLyDaiLy.ViewModels.BaoCaoViewModels
 
             var daiLyCongNoList = await Task.WhenAll(tasks);
 
-            // Lọc các đại lý có CongNo > 0
             var filteredData = daiLyCongNoList
-                //.Where(d => d.CongNo >= 0)
                 .OrderByDescending(d => d.CongNo)
                 .Take(10)
                 .ToArray();
 
-            // Nếu không có đại lý nào có CongNo > 0, không hiển thị gì
             if (!filteredData.Any())
             {
                 CongNoLabels = Array.Empty<string>();
                 CongNoSeries = new SeriesCollection();
-                OnPropertyChanged(nameof(CongNoSeries));
-                OnPropertyChanged(nameof(CongNoLabels));
                 return;
             }
 
@@ -288,13 +266,7 @@ namespace QuanLyDaiLy.ViewModels.BaoCaoViewModels
                     MaxColumnWidth = 50
                 }
             };
-
-            OnPropertyChanged(nameof(CongNoSeries));
-            OnPropertyChanged(nameof(CongNoLabels));
         }
-
-
-
 
         private async void UpdateDoanhSoData()
         {
@@ -304,13 +276,6 @@ namespace QuanLyDaiLy.ViewModels.BaoCaoViewModels
         private async void UpdateCongNoData()
         {
             await InitializeCongNoData();
-        }
-
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

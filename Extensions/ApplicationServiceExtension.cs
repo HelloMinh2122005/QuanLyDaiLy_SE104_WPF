@@ -4,6 +4,7 @@ using QuanLyDaiLy.Helpers;
 using QuanLyDaiLy.Repositories;
 using QuanLyDaiLy.Services;
 using QuanLyDaiLy.ViewModels;
+using QuanLyDaiLy.ViewModels.BaoCaoViewModels;
 using QuanLyDaiLy.Views;
 
 namespace QuanLyDaiLy.Extensions;
@@ -32,16 +33,27 @@ public static class ApplicationServiceExtensions
         // Register ViewModels
         services.AddTransient<MainWindowViewModel>();
         services.AddTransient<HoSoDaiLyViewModel>();
-        services.AddTransient<Func<int, ChinhSuaDaiLyViewModel>>(sp => dailyId =>
-            new ChinhSuaDaiLyViewModel(
-                sp.GetRequiredService<IDaiLyService>(),
-                sp.GetRequiredService<IQuanService>(),
-                sp.GetRequiredService<ILoaiDaiLyService>(),
-                dailyId,
-                sp.GetRequiredService<IThamSoService>()
-            )
-        );
+        services.AddTransient<ChinhSuaDaiLyViewModel>();
         services.AddTransient<TraCuuDaiLyViewModel>();
+
+        services.AddSingleton<Func<string, int, BaoCaoDoanhSoViewModel>>(sp => (month, year) =>
+        {
+            var daiLyService = sp.GetRequiredService<IDaiLyService>();
+            var phieuXuatService = sp.GetRequiredService<IPhieuXuatService>();
+
+            var vm = new BaoCaoDoanhSoViewModel(month, year, daiLyService, phieuXuatService);
+            return vm;
+        });
+
+        services.AddSingleton<Func<string, int, BaoCaoCongNoViewModel>>(sp => (month, year) =>
+        {
+            var daiLyService = sp.GetRequiredService<IDaiLyService>();
+            var phieuXuatService = sp.GetRequiredService<IPhieuXuatService>();
+            var phieuThuService = sp.GetRequiredService<IPhieuThuService>();
+
+            var vm = new BaoCaoCongNoViewModel(month, year, daiLyService, phieuXuatService, phieuThuService);
+            return vm;
+        });
 
         // Register Views
         services.AddTransient<MainWindow>();
@@ -68,6 +80,7 @@ public static class ApplicationServiceExtensions
         services.AddTransient<Views.MatHangViews.MatHangPage>();
         services.AddTransient<Views.MatHangViews.ThemMatHangWindow>();
         services.AddTransient<Views.MatHangViews.CapNhatMatHangWindow>();
+        services.AddTransient<Views.MatHangViews.TraCuuMatHangWindow>();
 
         services.AddTransient<Views.PhieuThuViews.PhieuThuPage>();
         services.AddTransient<Views.PhieuThuViews.ThemPhieuThuWindow>();
@@ -113,13 +126,8 @@ public static class ApplicationServiceExtensions
 
         services.AddTransient<ViewModels.MatHangViewModels.MatHangPageViewModel>();
         services.AddTransient<ViewModels.MatHangViewModels.ThemMatHangWindowViewModel>();
-        services.AddTransient<Func<int, ViewModels.MatHangViewModels.CapNhatMatHangWindowViewModel>>(sp => matHangId =>
-            new ViewModels.MatHangViewModels.CapNhatMatHangWindowViewModel(
-                sp.GetRequiredService<IMatHangService>(),
-                sp.GetRequiredService<IDonViTinhService>(),
-                matHangId
-            )
-        );
+        services.AddTransient<ViewModels.MatHangViewModels.CapNhatMatHangWindowViewModel>();
+        services.AddTransient<ViewModels.MatHangViewModels.TraCuuMatHangWindowViewModel>();
 
         services.AddTransient<ViewModels.PhieuThuViewModels.PhieuThuPageViewModel>();
         services.AddTransient<ViewModels.PhieuThuViewModels.ThemPhieuThuWindowViewModel>();

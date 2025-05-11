@@ -1,173 +1,81 @@
-﻿using QuanLyDaiLy.Commands;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+using QuanLyDaiLy.Commands;
+using QuanLyDaiLy.Messages;
 using QuanLyDaiLy.Models;
 using QuanLyDaiLy.Services;
 using QuanLyDaiLy.Views;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Windows;
-using System.Windows.Input;
 
 namespace QuanLyDaiLy.ViewModels
 {
-    public class ChinhSuaDaiLyViewModel : INotifyPropertyChanged
+    public partial class ChinhSuaDaiLyViewModel :
+        ObservableObject,
+        IRecipient<SelectedIdMessage>
     {
+        // Services
         private readonly IDaiLyService _daiLyService;
         private readonly IQuanService _quanService;
         private readonly ILoaiDaiLyService _loaiDaiLyService;
-        private readonly int _daiLyId;
+        private int _daiLyId;
         private readonly IThamSoService _thamSoService;
 
         public ChinhSuaDaiLyViewModel(
             IDaiLyService daiLyService,
             IQuanService quanService,
             ILoaiDaiLyService loaiDaiLyService,
-            int dailyId,
             IThamSoService thamSoService
         )
         {
             _daiLyService = daiLyService;
             _quanService = quanService;
             _loaiDaiLyService = loaiDaiLyService;
-            _daiLyId = dailyId;
             _thamSoService = thamSoService;
 
-            CloseWindowCommand = new RelayCommand(CloseWindow);
-            CapNhatDaiLyCommand = new RelayCommand(async () => await CapNhatDaiLy());
+            WeakReferenceMessenger.Default.RegisterAll(this);
+        }
 
+        public void Receive(SelectedIdMessage message)
+        {
+            _daiLyId = message.Value;
+            // Load data
             _ = LoadDataAsync();
         }
 
-        public event EventHandler? DataChanged;
-
         #region Binding Properties
+        [ObservableProperty]
         private string _maDaiLy = string.Empty;
-        public string MaDaiLy
-        {
-            get => _maDaiLy;
-            set
-            {
-                _maDaiLy = value;
-                OnPropertyChanged();
-            }
-        }
-
+        [ObservableProperty]
         private string _tenDaiLy = string.Empty;
-        public string TenDaiLy
-        {
-            get => _tenDaiLy;
-            set
-            {
-                _tenDaiLy = value;
-                OnPropertyChanged();
-            }
-        }
-
+        [ObservableProperty]
         private string _soDienThoai = string.Empty;
-        public string SoDienThoai
-        {
-            get => _soDienThoai;
-            set
-            {
-                _soDienThoai = value;
-                OnPropertyChanged();
-            }
-        }
-
+        [ObservableProperty]
         private string _email = string.Empty;
-        public string Email
-        {
-            get => _email;
-            set
-            {
-                _email = value;
-                OnPropertyChanged();
-            }
-        }
-
+        [ObservableProperty]
         private DateTime _ngayTiepNhan;
-        public DateTime NgayTiepNhan
-        {
-            get => _ngayTiepNhan;
-            set
-            {
-                _ngayTiepNhan = value;
-                OnPropertyChanged();
-            }
-        }
-
+        [ObservableProperty]
         private string _diaChi = string.Empty;
-        public string DiaChi
-        {
-            get => _diaChi;
-            set
-            {
-                _diaChi = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private LoaiDaiLy _selectedLoaiDaiLy = new();
-        public LoaiDaiLy SelectedLoaiDaiLy
-        {
-            get => _selectedLoaiDaiLy;
-            set
-            {
-                _selectedLoaiDaiLy = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private Quan _selectedQuan = new();
-        public Quan SelectedQuan
-        {
-            get => _selectedQuan;
-            set
-            {
-                _selectedQuan = value;
-                OnPropertyChanged();
-            }
-        }
-
+        [ObservableProperty]
+        private LoaiDaiLy _selectedLoaiDaiLy = null!;
+        [ObservableProperty]
+        private Quan _selectedQuan = null!;
+        [ObservableProperty]
         private ObservableCollection<LoaiDaiLy> _loaiDaiLies = [];
-        public ObservableCollection<LoaiDaiLy> LoaiDaiLies
-        {
-            get => _loaiDaiLies;
-            set
-            {
-                _loaiDaiLies = value;
-                OnPropertyChanged();
-            }
-        }
-
+        [ObservableProperty]
         private ObservableCollection<Quan> _quans = [];
-        public ObservableCollection<Quan> Quans
-        {
-            get => _quans;
-            set
-            {
-                _quans = value;
-                OnPropertyChanged();
-            }
-        }
         #endregion
-
-        // Commands
-        public ICommand CloseWindowCommand { get; }
-        public ICommand CapNhatDaiLyCommand { get; }
 
         private async Task LoadDataAsync()
         {
             var listLoaiDaiLy = await _loaiDaiLyService.GetAllLoaiDaiLy();
             var listQuan = await _quanService.GetAllQuan();
 
-            LoaiDaiLies.Clear();
-            Quans.Clear();
             LoaiDaiLies = [.. listLoaiDaiLy];
             Quans = [.. listQuan];
 
-            // Load the DaiLy data
             try
             {
                 var daiLy = await _daiLyService.GetDaiLyById(_daiLyId);
@@ -179,9 +87,8 @@ namespace QuanLyDaiLy.ViewModels
                 NgayTiepNhan = daiLy.NgayTiepNhan;
 
                 // Set selected values
-                SelectedLoaiDaiLy = LoaiDaiLies.FirstOrDefault(l => l.MaLoaiDaiLy == daiLy.MaLoaiDaiLy) ??
-                                    new LoaiDaiLy();
-                SelectedQuan = Quans.FirstOrDefault(q => q.MaQuan == daiLy.MaQuan) ?? new Quan();
+                SelectedLoaiDaiLy = LoaiDaiLies.FirstOrDefault(l => l.MaLoaiDaiLy == daiLy.MaLoaiDaiLy) ?? LoaiDaiLies.FirstOrDefault()!;
+                SelectedQuan = Quans.FirstOrDefault(q => q.MaQuan == daiLy.MaQuan) ?? Quans.FirstOrDefault()!;
             }
             catch (Exception ex)
             {
@@ -191,12 +98,15 @@ namespace QuanLyDaiLy.ViewModels
 
         }
 
+        #region RelayCommand
+        [RelayCommand]
         private void CloseWindow()
         {
-            DataChanged?.Invoke(this, EventArgs.Empty);
+            WeakReferenceMessenger.Default.Send(new DataReloadMessage());
             Application.Current.Windows.OfType<ChinhSuaDaiLyWindow>().FirstOrDefault()?.Close();
         }
 
+        [RelayCommand]
         private async Task CapNhatDaiLy()
         {
             if (string.IsNullOrWhiteSpace(TenDaiLy))
@@ -258,7 +168,7 @@ namespace QuanLyDaiLy.ViewModels
                 if (quyDinhSoLuongDaiLyToiDa == true)
                 {
                     var soLuongDaiLyToiDaTrongQuan = thamSo.SoLuongDaiLyToiDa;
-                    var soLuongDaiLyTrongQuan = await _quanService.GetSoLuongDaiLyTrongQuan(SelectedQuan.MaQuan);
+                    var soLuongDaiLyTrongQuan = (await _quanService.GetQuanById(SelectedQuan.MaQuan)).DsDaiLy.Count;
                     if (soLuongDaiLyTrongQuan >= soLuongDaiLyToiDaTrongQuan)
                     {
                         MessageBox.Show("Quận đã đạt số lượng đại lý tối đa!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
@@ -282,15 +192,9 @@ namespace QuanLyDaiLy.ViewModels
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "SHIT", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Lỗi khi cập nhật đại lý: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
     }
+    #endregion
 }

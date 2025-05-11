@@ -3,17 +3,19 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Input;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 using Microsoft.Extensions.DependencyInjection;
-using QuanLyDaiLy.Commands;
 using QuanLyDaiLy.Models;
 using QuanLyDaiLy.Services;
 using QuanLyDaiLy.ViewModels.PhieuThuViewModels;
 using QuanLyDaiLy.Views;
 using QuanLyDaiLy.Views.PhieuThuViews;
+using RelayCommand = QuanLyDaiLy.Commands.RelayCommand;
 
 namespace QuanLyDaiLy.ViewModels.PhieuThuViewModels
 {
-    public class PhieuThuPageViewModel : INotifyPropertyChanged
+    public partial class PhieuThuPageViewModel : ObservableObject
     {
         private readonly IPhieuThuService _phieuThuService;
         private readonly IServiceProvider _serviceProvider;
@@ -42,16 +44,8 @@ namespace QuanLyDaiLy.ViewModels.PhieuThuViewModels
             SearchPhieuThuCommand = new RelayCommand(SearchPhieuThu);
         }
 
+        [ObservableProperty]
         private ObservableCollection<PhieuThu> _danhSachPhieuThu = [];
-        public ObservableCollection<PhieuThu> DanhSachPhieuThu
-        {
-            get => _danhSachPhieuThu;
-            set
-            {
-                _danhSachPhieuThu = value;
-                OnPropertyChanged();
-            }
-        }
 
         private PhieuThu _selectedPhieuThu = null!;
         public PhieuThu SelectedPhieuThu
@@ -135,14 +129,6 @@ namespace QuanLyDaiLy.ViewModels.PhieuThuViewModels
             }
 
             traCuuPhieuThuWindow.Show();
-        }
-
-
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }
