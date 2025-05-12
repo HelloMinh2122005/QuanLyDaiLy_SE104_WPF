@@ -13,6 +13,10 @@
     WindowStartupLocation="CenterScreen"
     mc:Ignorable="d">
 
+    <Window.DataContext>
+        <Binding Path="TraCuuPhieuXuatWindowViewModel" />
+    </Window.DataContext>
+
     <Border Style="{StaticResource WindowPopUpBorder}">
         <Grid>
             <Grid.RowDefinitions>
@@ -188,7 +192,7 @@
                             <ComboBox
                                 Grid.Row="1"
                                 ItemsSource="{Binding LoaiDaiLies}"
-                                SelectedItem="{Binding SelectedLoaiDaiLy}"
+                                SelectedItem="{Binding SelectedLoaiDaiLies}"
                                 Style="{StaticResource StandardComboBoxStyle}">
                                 <ComboBox.ItemTemplate>
                                     <DataTemplate>
