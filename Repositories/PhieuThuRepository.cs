@@ -104,5 +104,23 @@ namespace QuanLyDaiLy.Repositories
             int maxId = await _context.DsPhieuThu.MaxAsync(d => d.MaPhieuThu);
             return maxId + 1;
         }
+        public async Task<IEnumerable<PhieuThu>> GetPhieuThuPage(int offset, int size = 20)
+        {
+            return await _context.DsPhieuThu
+                .Include(m => m.DaiLy)
+                .Skip(offset * size)
+                .Take(size)
+                .ToListAsync();
+        }
+        public async Task<int> GetTotalPages(int size = 20)
+        {
+            int leftover = await _context.DsPhieuThu.CountAsync() % size;
+            int totalPages = await _context.DsPhieuThu.CountAsync() / size;
+            if (leftover > 0)
+            {
+                totalPages++;
+            }
+            return totalPages;
+        }
     }
 }
