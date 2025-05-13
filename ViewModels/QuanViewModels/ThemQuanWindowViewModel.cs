@@ -1,70 +1,45 @@
-﻿using QuanLyDaiLy.Commands;
-using QuanLyDaiLy.Models;
+﻿using QuanLyDaiLy.Models;
 using QuanLyDaiLy.Services;
 using QuanLyDaiLy.Views.QuanViews;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
+using QuanLyDaiLy.Messages;
 using System.Windows;
-using System.Windows.Input;
+using System.Collections.ObjectModel;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+using QuanLyDaiLy.Views.MatHangViews;
 
 namespace QuanLyDaiLy.ViewModels.QuanViewModels
 {
-    public class ThemQuanViewModel : INotifyPropertyChanged
+    public partial class ThemQuanViewModel : ObservableObject
     {
         private readonly IQuanService _quanService;
 
         public ThemQuanViewModel(IQuanService quanService)
         {
             _quanService = quanService;
-
-            // Initialize commands
-            CloseWindowCommand = new RelayCommand(CloseWindow);
-            TiepNhanQuanCommand = new RelayCommand(async () => await TiepNhanQuan());
-            QuanMoiCommand = new RelayCommand(QuanMoi);
         }
 
-        // Event to notify parent view when data changes
-        public event EventHandler? DataChanged;
+        // Binding properties with ObservableProperty attribute
+        [ObservableProperty]
+        private string _maQuan = "";
 
-        // Properties for binding
-        private string _maQuan = string.Empty;
-        public string MaQuan
-        {
-            get => _maQuan;
-            set
-            {
-                _maQuan = value;
-                OnPropertyChanged();
-            }
-        }
+        [ObservableProperty]
+        private string _tenQuan = "";
 
-        private string _tenQuan = string.Empty;
-        public string TenQuan
-        {
-            get => _tenQuan;
-            set
-            {
-                _tenQuan = value;
-                OnPropertyChanged();
-            }
-        }
-
-        // Commands
-        public ICommand CloseWindowCommand { get; }
-        public ICommand TiepNhanQuanCommand { get; }
-        public ICommand QuanMoiCommand { get; }
-
+        [RelayCommand]
         private void CloseWindow()
         {
-            DataChanged?.Invoke(this, EventArgs.Empty);
+            WeakReferenceMessenger.Default.Send(new DataReloadMessage());
             Application.Current.Windows.OfType<ThemQuanWindow>().FirstOrDefault()?.Close();
         }
 
+        [RelayCommand]
         private async Task TiepNhanQuan()
         {
             if (string.IsNullOrWhiteSpace(TenQuan))
             {
-                MessageBox.Show("Tên quận không được để trống!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Tên quận không được để trống!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
@@ -79,26 +54,26 @@ namespace QuanLyDaiLy.ViewModels.QuanViewModels
                 };
 
                 await _quanService.AddQuan(quan);
-                MessageBox.Show("Thêm quận thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
-                DataChanged?.Invoke(this, EventArgs.Empty);
+                MessageBox.Show("Thêm quận thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Thêm quận không thành công", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Lỗi khi thêm quận: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
+        [RelayCommand]
         private void QuanMoi()
         {
-            MaQuan = string.Empty;
-            TenQuan = string.Empty;
-        }
-
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            try
+            {
+                MaQuan = string.Empty;
+                TenQuan = string.Empty;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi tạo quận mới: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
     }
 }

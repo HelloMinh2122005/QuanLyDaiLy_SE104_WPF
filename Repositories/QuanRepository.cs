@@ -67,5 +67,25 @@ namespace QuanLyDaiLy.Repositories
             var quan = await _context.DsQuan.OrderByDescending(q => q.MaQuan).FirstOrDefaultAsync();
             return quan?.MaQuan + 1 ?? 1;
         }
+
+        public async Task<IEnumerable<Quan>> GetQuanPage(int offset, int size = 12)
+        {
+            return await _context.DsQuan
+                .Include(q => q.DsDaiLy)
+                .Skip(offset * size)
+                .Take(size)
+                .ToListAsync();
+        }
+
+        public async Task<int> GetTotalPages(int size = 12)
+        {
+            int leftover = await _context.DsQuan.CountAsync() % size;
+            int totalPages = await _context.DsQuan.CountAsync() / size;
+            if (leftover > 0)
+            {
+                totalPages++;
+            }
+            return totalPages;
+        }
     }
 }
