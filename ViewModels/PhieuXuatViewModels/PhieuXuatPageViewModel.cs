@@ -1,21 +1,30 @@
 ﻿using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
+//using System.ComponentModel;
 using System.Windows;
 using System.Windows.Input;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Extensions.DependencyInjection;
 using QuanLyDaiLy.Commands;
+using QuanLyDaiLy.Messages;
 using QuanLyDaiLy.Models;
 using QuanLyDaiLy.Services;
+using QuanLyDaiLy.ViewModels.QuanViewModels;
 using QuanLyDaiLy.Views.PhieuXuatViews;
+using QuanLyDaiLy.Views.QuanViews;
 
 namespace QuanLyDaiLy.ViewModels.PhieuXuatViewModels
 {
-    public class PhieuXuatPageViewModel : INotifyPropertyChanged
+    public partial class PhieuXuatPageViewModel :
+        ObservableObject,
+        //IRecipient<SearchCompletedMessage<PhieuXuat>>,
+        IRecipient<DataReloadMessage>
     {
         private readonly IPhieuXuatService _phieuXuatService;
         private readonly Func<int, CapNhatPhieuXuatWindowViewModel> _capNhatPhieuXuatFactory;
         private readonly IServiceProvider _serviceProvider;
+
 
         public PhieuXuatPageViewModel(
             IPhieuXuatService phieuXuatService, 
@@ -23,50 +32,27 @@ namespace QuanLyDaiLy.ViewModels.PhieuXuatViewModels
             Func<int, CapNhatPhieuXuatWindowViewModel> capNhatPhieuXuatFactory
         ) {
             _phieuXuatService = phieuXuatService;
-            _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
+            _serviceProvider = serviceProvider ;
             _capNhatPhieuXuatFactory = capNhatPhieuXuatFactory;
 
-            // Initialize commands
-            LoadDataCommand = new RelayCommand(async () => await LoadDataExecuteAsync());
-            AddPhieuXuatCommand = new RelayCommand(AddPhieuXuat);
-            EditPhieuXuatCommand = new RelayCommand(EditPhieuXuat);
-            DeletePhieuXuatCommand = new RelayCommand(DeletePhieuXuat);
-            SearchPhieuXuatCommand = new RelayCommand(SearchPhieuXuat);
-
+            WeakReferenceMessenger.Default.RegisterAll(this);
             // Load initial data
             _ = LoadDataAsync();
         }
 
+        public void Receive(DataReloadMessage message)
+        {
+            _ = LoadDataAsync();
+        }
+
         // Binding properties
+        [ObservableProperty]
         private ObservableCollection<PhieuXuat> _danhSachPhieuXuat = [];
-        public ObservableCollection<PhieuXuat> DanhSachPhieuXuat
-        {
-            get => _danhSachPhieuXuat;
-            set
-            {
-                _danhSachPhieuXuat = value;
-                OnPropertyChanged();
-            }
-        }
 
+        [ObservableProperty]
         private PhieuXuat _selectedPhieuXuat = null!;
-        public PhieuXuat SelectedPhieuXuat
-        {
-            get => _selectedPhieuXuat;
-            set
-            {
-                _selectedPhieuXuat = value;
-                OnPropertyChanged();
-            }
-        }
-
-        // Commands
-        public ICommand LoadDataCommand { get; }
-        public ICommand AddPhieuXuatCommand { get; }
-        public ICommand EditPhieuXuatCommand { get; }
-        public ICommand DeletePhieuXuatCommand { get; }
-        public ICommand SearchPhieuXuatCommand { get; } 
-
+        
+        
         // Command methods
         private async Task LoadDataAsync()
         {
@@ -74,6 +60,7 @@ namespace QuanLyDaiLy.ViewModels.PhieuXuatViewModels
             DanhSachPhieuXuat = [.. list];
         }
 
+        [RelayCommand]
         private async Task LoadDataExecuteAsync()
         {
             SelectedPhieuXuat = null!;
@@ -81,18 +68,16 @@ namespace QuanLyDaiLy.ViewModels.PhieuXuatViewModels
             MessageBox.Show("Tải lại danh sách thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
         }
 
+        [RelayCommand]
         private void AddPhieuXuat()
         {
             SelectedPhieuXuat = null!;
 
             var addPhieuXuatWindow = _serviceProvider.GetRequiredService<ThemPhieuXuatWindow>();
-            if (addPhieuXuatWindow.DataContext is ThemPhieuXuatWindowViewModel viewModel)
-            {
-                viewModel.DataChanged += async (sender, e) => await LoadDataAsync();
-            }
             addPhieuXuatWindow.Show();
         }
 
+        [RelayCommand]
         private void EditPhieuXuat()
         {
             if (SelectedPhieuXuat == null!)
@@ -105,10 +90,10 @@ namespace QuanLyDaiLy.ViewModels.PhieuXuatViewModels
             try
             {
                 var viewmodel = _capNhatPhieuXuatFactory(SelectedPhieuXuat.MaPhieuXuat);
-                viewmodel.DataChanged += async (sender, e) => await LoadDataAsync();
 
                 var window = new CapNhatPhieuXuatWindow(viewmodel);
                 window.Show();
+                WeakReferenceMessenger.Default.Send(new SelectedIdMessage(SelectedPhieuXuat.MaPhieuXuat));
             }
             catch (Exception ex)
             {
@@ -117,11 +102,12 @@ namespace QuanLyDaiLy.ViewModels.PhieuXuatViewModels
             }
         }
 
+        [RelayCommand]
         private void DeletePhieuXuat()
         {
             _ = ExecuteDeletePhieuXuat();
         }
-
+        
         private async Task ExecuteDeletePhieuXuat()
         {
             if (SelectedPhieuXuat == null!)
@@ -143,19 +129,25 @@ namespace QuanLyDaiLy.ViewModels.PhieuXuatViewModels
             }
         }
 
+        [RelayCommand]
         private void SearchPhieuXuat()
         {
             SelectedPhieuXuat = null!;
 
-            var searchPhieuXuat = _serviceProvider.GetRequiredService<TraCuuPhieuXuatWindow>();
-            searchPhieuXuat.Show();
-        }
+            var traCuuPhieuXuatWindow = _serviceProvider.GetRequiredService<TraCuuPhieuXuatWindow>();
 
-        public event PropertyChangedEventHandler? PropertyChanged;
+            if (traCuuPhieuXuatWindow.DataContext is TraCuuPhieuXuatWindowViewModel viewModel)
+            {
+                viewModel.PropertyChanged += (sender, args) =>
+                {
+                    if (args.PropertyName == nameof(viewModel.SearchResults) && viewModel.SearchResults != null)
+                    {
+                        DanhSachPhieuXuat = viewModel.SearchResults;
+                    }
+                };
+            }
 
-        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            traCuuPhieuXuatWindow.Show();
         }
     }
 }

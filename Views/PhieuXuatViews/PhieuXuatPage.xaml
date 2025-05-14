@@ -56,7 +56,7 @@
                     <Button
                         Width="50"
                         Margin="10,0,0,0"
-                        Command="{Binding LoadDataCommand}"
+                        Command="{Binding LoadDataExecuteCommand}"
                         Style="{StaticResource PrimaryButtonStyle}">
                         <fa:FontAwesome VerticalAlignment="Center" Icon="Refresh" />
                     </Button>
