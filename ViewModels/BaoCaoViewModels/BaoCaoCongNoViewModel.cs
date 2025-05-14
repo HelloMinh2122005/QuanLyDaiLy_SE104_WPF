@@ -12,6 +12,8 @@ using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
 using System.IO;
 using QuanLyDaiLy.Views.BaoCaoViews;
+using QuanLyDaiLy.Messages;
+using CommunityToolkit.Mvvm.Messaging;
 
 namespace QuanLyDaiLy.ViewModels.BaoCaoViewModels
 {
@@ -24,15 +26,14 @@ namespace QuanLyDaiLy.ViewModels.BaoCaoViewModels
         public decimal GiaTriGiaoDich { get; set; }
     }
 
-    public partial class BaoCaoCongNoViewModel : ObservableObject
+    public partial class BaoCaoCongNoViewModel : ObservableObject, IRecipient<SelectedDateStringMessage>
     {
         private readonly IDaiLyService _daiLyService;
         private readonly IPhieuXuatService _phieuXuatService;
         private readonly IPhieuThuService _phieuThuService;
-
+        private string _selectedMonth;
+        private int _selectedYear;
         public BaoCaoCongNoViewModel(
-            string selectedMonth,
-            int selectedYear,
             IDaiLyService daiLyService,
             IPhieuXuatService phieuXuatService,
             IPhieuThuService phieuThuService)
@@ -40,6 +41,7 @@ namespace QuanLyDaiLy.ViewModels.BaoCaoViewModels
             _daiLyService = daiLyService;
             _phieuXuatService = phieuXuatService;
             _phieuThuService = phieuThuService;
+            WeakReferenceMessenger.Default.RegisterAll(this);
 
             MonthOptions = new ObservableCollection<string>
             {
@@ -55,8 +57,8 @@ namespace QuanLyDaiLy.ViewModels.BaoCaoViewModels
                 YearOptions.Add(i);
             }
 
-            SelectedMonth = selectedMonth;
-            SelectedYear = selectedYear;
+            SelectedMonth = MonthOptions.First();
+            SelectedYear = YearOptions.Last();
 
             _ = LoadData();
             LapBaoCaoCommand = new RelayCommand(ExportToPDF);
@@ -66,7 +68,7 @@ namespace QuanLyDaiLy.ViewModels.BaoCaoViewModels
         public ObservableCollection<string> MonthOptions { get; }
         public ObservableCollection<int> YearOptions { get; }
 
-        private string _selectedMonth = "Tháng 1";
+        
         public string SelectedMonth
         {
             get => _selectedMonth;
@@ -80,7 +82,7 @@ namespace QuanLyDaiLy.ViewModels.BaoCaoViewModels
             }
         }
 
-        private int _selectedYear = DateTime.Now.Year;
+        
         public int SelectedYear
         {
             get => _selectedYear;
@@ -96,7 +98,6 @@ namespace QuanLyDaiLy.ViewModels.BaoCaoViewModels
 
         [ObservableProperty]
         private ObservableCollection<BaoCaoCongNo> baoCaoCongNoList = new();
-        public event EventHandler? DataChanged;
 
         public ICommand CloseCommand { get; }
         public ICommand LapBaoCaoCommand { get; }
@@ -265,6 +266,12 @@ namespace QuanLyDaiLy.ViewModels.BaoCaoViewModels
         private void CloseWindow()
         {
             Application.Current.Windows.OfType<BaoCaoCongNoWindow>().FirstOrDefault()?.Close();
+        }
+
+        public void Receive(SelectedDateStringMessage message)
+        {
+            (_selectedMonth, _selectedYear) = message.Value;
+            _ = LoadData();
         }
     }
 }
