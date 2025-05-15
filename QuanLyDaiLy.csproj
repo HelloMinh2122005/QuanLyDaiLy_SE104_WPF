@@ -20,6 +20,7 @@
     <PackageReference Include="GemBox.Spreadsheet" Version="2025.4.107" />
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
     <PackageReference Include="FontAwesome.WPF" Version="4.7.0.9" />
+    <PackageReference Include="LightImage.DragDrop" Version="0.5.5" />
     <PackageReference Include="LiveCharts.Wpf" Version="0.9.7" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.3" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.3" />
