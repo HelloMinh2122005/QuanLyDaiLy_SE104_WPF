@@ -3,7 +3,6 @@ using QuanLyDaiLy.Configs;
 using QuanLyDaiLy.Data;
 using QuanLyDaiLy.Models;
 using QuanLyDaiLy.Services;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace QuanLyDaiLy.Repositories
 {

@@ -28,7 +28,7 @@ namespace QuanLyDaiLy.ViewModels.DashboardViewModels
         private SeriesCollection _topDaiLySeries = new SeriesCollection();
 
         [ObservableProperty]
-        private string[] _topDaiLyLabels = new string[0];
+        private string[] _topDebtDaiLyLabels = new string[0];
 
         [ObservableProperty]
         private SeriesCollection _topDebtDaiLySeries = new SeriesCollection();
@@ -39,8 +39,6 @@ namespace QuanLyDaiLy.ViewModels.DashboardViewModels
         [ObservableProperty]
         private SeriesCollection _quanDaiLySeries = new SeriesCollection();
 
-        [ObservableProperty]
-        private string[] _topDebtDaiLyLabels = new string[0];
 
         [ObservableProperty]
         private List<string> _monthOptions = new List<string>();
@@ -143,7 +141,6 @@ namespace QuanLyDaiLy.ViewModels.DashboardViewModels
                 InitializeLineChart(),
                 InitializeDoanhSoChart(),
                 InitializePieChart(),
-                InitializeColumnChart(),
                 InitializeDebtColumnChart(),
                 UpdateWidgetDoanhThuTrongNgay(),
                 UpdateWidgetDoanhThuThang(),
@@ -310,75 +307,6 @@ namespace QuanLyDaiLy.ViewModels.DashboardViewModels
             OnPropertyChanged(nameof(DaiLyDistributionSeries));
 
         }
-
-        private async Task InitializeColumnChart()
-        {
-            // 1. Lấy tháng/năm đang chọn
-            int selectedMonth = GetSelectedMonthNumber(_topAgentChartMonth);
-            int selectedYear = _topAgentChartYear;
-
-            // 2. Lấy tổng TongTriGia của mỗi đại lý
-            var totalDic = await _phieuXuatService
-                .GetTotalValueByDaiLyAsync(selectedMonth, selectedYear);
-
-            // 3. Sắp xếp giảm dần và chỉ lấy 5 đại lý đầu tiên
-            var top5Dic = totalDic
-                .OrderByDescending(kv => kv.Value)
-                .Take(5)
-                .ToList();
-
-            // 4. Lấy thông tin DaiLy cho top 5
-            var topIds = top5Dic.Select(kv => kv.Key).ToList();
-            var daiLyList = await _daiLyService.GetDaiLysByIdsAsync(topIds);
-
-            // 5. Chuẩn bị mảng tên và giá trị (giữ đúng thứ tự top5Dic)
-            var dailyNames = new List<string>();
-            var dailyValues = new List<double>();
-            foreach (var kv in top5Dic)
-            {
-                var d = daiLyList.FirstOrDefault(x => x.MaDaiLy == kv.Key);
-                if (d != null)
-                {
-                    dailyNames.Add(d.TenDaiLy);
-                    dailyValues.Add(kv.Value);
-                }
-            }
-
-            // 6. Tính bước trục Y (YAxisStepColumnChart) chia đều 5 đoạn và làm tròn “đẹp”
-            double maxValue = dailyValues.Any() ? dailyValues.Max() : 0;
-            double rawStep = maxValue / 5.0;
-            if (rawStep <= 0)
-            {
-                // Không có dữ liệu hoặc tất cả bằng 0 → dùng mặc định 1 triệu
-                YAxisStepColumnChart = 1_000_000;
-            }
-            else
-            {
-                double magnitude = Math.Pow(10, Math.Floor(Math.Log10(rawStep)));
-                YAxisStepColumnChart = Math.Ceiling(rawStep / magnitude) * magnitude;
-            }
-            OnPropertyChanged(nameof(YAxisStepColumnChart));
-
-            // 6. Cập nhật nhãn X và notify
-            TopDaiLyLabels = dailyNames.ToArray();
-            OnPropertyChanged(nameof(TopDaiLyLabels));
-
-            // 7. Khởi tạo lại SeriesCollection cho chart
-            TopDaiLySeries = new SeriesCollection
-            {
-                new ColumnSeries
-                {
-                    Title          = "Tổng giá trị",
-                    Values         = new ChartValues<double>(dailyValues),
-                    DataLabels     = true,
-                    LabelPoint     = p => p.Y.ToString("N0") + " đ",
-                    Fill           = new SolidColorBrush(Color.FromRgb(76, 175, 80)),
-                    MaxColumnWidth = 70
-                }
-            };
-            OnPropertyChanged(nameof(TopDaiLySeries));
-        }
-
         private async Task InitializeDebtColumnChart()
         {
             // 1. Lấy tháng/năm đang chọn
@@ -499,14 +427,14 @@ namespace QuanLyDaiLy.ViewModels.DashboardViewModels
             _topAgentChartYear = currentYear;
             _debtChartMonth = MonthOptions[currentMonth - 1];
             _debtChartYear = currentYear;
-            _DoanhSoChartMonth = MonthOptions[currentMonth - 1];
-            _DoanhSoChartYear = currentYear;
+            _doanhSoChartMonth = MonthOptions[currentMonth - 1];
+            _doanhSoChartYear = currentYear;
         }
 
         private async Task InitializeDoanhSoChart()
         {
             // 1. Lấy tháng/năm hiện tại và năm trước
-            int currentYear = _DoanhSoChartYear;
+            int currentYear = _doanhSoChartYear;
             int lastYear = currentYear - 1;
 
             // 2. Khởi tạo labels & formatter
@@ -969,8 +897,8 @@ namespace QuanLyDaiLy.ViewModels.DashboardViewModels
             var currentYear = currentDate.Year;
             DateTime currentDay = currentDate;
 
-            var selectedMonth = GetSelectedMonthNumber(_DoanhSoChartMonth);
-            var selectedYear = _DoanhSoChartYear;
+            var selectedMonth = GetSelectedMonthNumber(_doanhSoChartMonth);
+            var selectedYear = _doanhSoChartYear;
             // Kiểm tra nếu tháng hoặc năm đã thay đổi so với giá trị đã chọn
             if (currentMonth != selectedMonth || currentYear != selectedYear)
             {
@@ -1006,8 +934,8 @@ namespace QuanLyDaiLy.ViewModels.DashboardViewModels
         private async Task UpdateWidgetDoanhSoTrongThang()
         {
             // 1. Lấy tháng/năm hiện tại và tháng/năm trước
-            var currentMonth = GetSelectedMonthNumber(_DoanhSoChartMonth);
-            var currentYear = _DoanhSoChartYear;
+            var currentMonth = GetSelectedMonthNumber(_doanhSoChartMonth);
+            var currentYear = _doanhSoChartYear;
             int prevMonth, prevYear;
 
             if (currentMonth == 1)
@@ -1046,7 +974,7 @@ namespace QuanLyDaiLy.ViewModels.DashboardViewModels
         private async Task UpdateWidgetDoanhSoTrongNam()
         {
             // 1. Lấy năm hiện tại
-            var currentYear = _DoanhSoChartYear;
+            var currentYear = _doanhSoChartYear;
 
             // 2. Lấy tổng doanh số cho năm hiện tại
             long currTotal = await _phieuXuatService.GetTotalPhieuXuatByYear(currentYear);
@@ -1314,76 +1242,76 @@ namespace QuanLyDaiLy.ViewModels.DashboardViewModels
 
         // Widget properties
         [ObservableProperty]
-        private string _WidgetTongCongNoDauThang = "0 đ";
+        private string _widgetTongCongNoDauThang = "0 đ";
         [ObservableProperty]
-        private string _WidgetTongCongNoDauThangDeltaText = "0%";
+        private string _widgetTongCongNoDauThangDeltaText = "0%";
         [ObservableProperty]
-        private bool _WidgetTongCongNoDauThangIsUp = true;
+        private bool _widgetTongCongNoDauThangIsUp = true;
 
         [ObservableProperty]
-        private string _WidgetTongCongNoCuoiThang = "0 đ";
+        private string _widgetTongCongNoCuoiThang = "0 đ";
         [ObservableProperty]
-        private string _WidgetTongCongNoCuoiThangDeltaText = "0%";
+        private string _widgetTongCongNoCuoiThangDeltaText = "0%";
         [ObservableProperty]
-        private bool _WidgetTongCongNoCuoiThangIsUp = true;
+        private bool _widgetTongCongNoCuoiThangIsUp = true;
         [ObservableProperty]
-        private string _WidgetTongNoCuoiThangText= "";
+        private string _widgetTongNoCuoiThangText= "";
 
         [ObservableProperty]
-        private string _WidgetSoLuongDaiLyDangNo = "0";
+        private string _widgetSoLuongDaiLyDangNo = "0";
         [ObservableProperty]
-        private string _WidgetSoLuongDaiLyDangNoDeltaText = "0%";
+        private string _widgetSoLuongDaiLyDangNoDeltaText = "0%";
         [ObservableProperty]
-        private bool _WidgetSoLuongDaiLyDangNoIsUp = true;
+        private bool _widgetSoLuongDaiLyDangNoIsUp = true;
 
         [ObservableProperty]
-        private string _WidgetDoanhSoTrongNgay = "0 đ";
+        private string _widgetDoanhSoTrongNgay = "0 đ";
         [ObservableProperty]
-        private string _WidgetDoanhSoTrongNgayDeltaText = "0%";
+        private string _widgetDoanhSoTrongNgayDeltaText = "0%";
         [ObservableProperty]
-        private bool _WidgetDoanhSoTrongNgayIsUp = true;
+        private bool _widgetDoanhSoTrongNgayIsUp = true;
 
         [ObservableProperty]
-        private string _WidgetDoanhSoTrongThang = "0 đ";
+        private string _widgetDoanhSoTrongThang = "0 đ";
         [ObservableProperty]
-        private string _WidgetDoanhSoTrongThangDeltaText = "0%";
+        private string _widgetDoanhSoTrongThangDeltaText = "0%";
         [ObservableProperty]
-        private bool _WidgetDoanhSoTrongThangIsUp = true;
+        private bool _widgetDoanhSoTrongThangIsUp = true;
 
         [ObservableProperty]
-        private string _WidgetDoanhSoTrongNam = "0 đ";
+        private string _widgetDoanhSoTrongNam = "0 đ";
         [ObservableProperty]
-        private string _WidgetDoanhSoTrongNamDeltaText = "0%";
+        private string _widgetDoanhSoTrongNamDeltaText = "0%";
         [ObservableProperty]
-        private bool _WidgetDoanhSoTrongNamIsUp = true;
+        private bool _widgetDoanhSoTrongNamIsUp = true;
 
 
         [ObservableProperty]
-        private string _WidgetDoanhThuTrongNamDeltaText = "0";
+        private string _widgetDoanhThuTrongNamDeltaText = "0";
 
         [ObservableProperty]
-        private bool _WidgetDoanhThuTrongNamIsUp = true;
+        private bool _widgetDoanhThuTrongNamIsUp = true;
 
         [ObservableProperty]
-        private string _WidgetDoanhThuTrongNam = "";
+        private string _widgetDoanhThuTrongNam = "";
 
         [ObservableProperty]
-        private string _WidgetDoanhThuTrongNgayDeltaText = "0";
+        private string _widgetDoanhThuTrongNgayDeltaText = "0";
 
         [ObservableProperty]
-        private bool _WidgetDoanhThuTrongNgayIsUp = true;
+        private bool _widgetDoanhThuTrongNgayIsUp = true;
 
         [ObservableProperty]
-        private string _WidgetDoanhThuTrongNgay = "";
+        private string _widgetDoanhThuTrongNgay = "";
 
         [ObservableProperty]
-        private string _WidgetDoanhThuThangDeltaText = "0";
+        private string _widgetDoanhThuThangDeltaText = "0";
 
         [ObservableProperty]
-        private bool _WidgetDoanhThuThangIsUp = true;
+        private bool _widgetDoanhThuThangIsUp = true;
 
         [ObservableProperty]
-        private string _WidgetDoanhThuThang = "";
+        private string _widgetDoanhThuThang = "";
 
 
 
@@ -1400,19 +1328,19 @@ namespace QuanLyDaiLy.ViewModels.DashboardViewModels
         private bool _widgetPhieuXuatIsUp = true;
 
         [ObservableProperty]
-        private string _WidgetTongGiaTriPhieuThu = "0 đ";
+        private string _widgetTongGiaTriPhieuThu = "0 đ";
 
         [ObservableProperty]
-        private string _WidgetTongGiaTriPhieuXuat = "0 đ";
+        private string _widgetTongGiaTriPhieuXuat = "0 đ";
 
 
 
 
         [ObservableProperty]
-        private string _DoanhSoChartMonth= "Tháng 1";
+        private string _doanhSoChartMonth= "Tháng 1";
 
         [ObservableProperty]
-        private int _DoanhSoChartYear = 1;
+        private int _doanhSoChartYear = 1;
 
         [ObservableProperty]
         private double _yAxisStepLineChart;
