@@ -1,13 +1,13 @@
-﻿//using QuanLyDaiLy.Commands;
-using QuanLyDaiLy.Models;
-using QuanLyDaiLy.Services;
-using QuanLyDaiLy.Views.QuanViews;
-using System.Windows;
+﻿using System.Windows;
 using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
 using QuanLyDaiLy.Messages;
+using QuanLyDaiLy.Helpers;
+using QuanLyDaiLy.Models;
+using QuanLyDaiLy.Services;
+using QuanLyDaiLy.Views.QuanViews;
 
 namespace QuanLyDaiLy.ViewModels.QuanViewModels
 {
@@ -68,10 +68,8 @@ namespace QuanLyDaiLy.ViewModels.QuanViewModels
 
                 if (!string.IsNullOrEmpty(TenQuan))
                 {
-                    var ten = RemoveDiacritics(TenQuan.Trim().ToLower());
-                    filteredResults = [.. filteredResults.Where(d => RemoveDiacritics(d.TenQuan.ToLower()).Contains(ten))];
-
-                    // filteredResults = filteredResults.Where(d => d.TenQuan.Normalize().Contains(TenQuan.Normalize()));
+                    var ten = StringHelper.RemoveDiacritics(TenQuan.Trim().ToLower());
+                    filteredResults = filteredResults.Where(d => StringHelper.RemoveDiacritics(d.TenQuan.ToLower()).Contains(ten));
                 }
 
                 SearchResults = [.. filteredResults];
@@ -87,26 +85,6 @@ namespace QuanLyDaiLy.ViewModels.QuanViewModels
             {
                 MessageBox.Show($"Lỗi khi tìm kiếm: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-        }
-
-        public static string RemoveDiacritics(string text)
-        {
-            if (string.IsNullOrWhiteSpace(text))
-                return string.Empty;
-
-            var normalized = text.Normalize(System.Text.NormalizationForm.FormD);
-            var builder = new System.Text.StringBuilder();
-
-            foreach (var c in normalized)
-            {
-                var unicodeCategory = System.Globalization.CharUnicodeInfo.GetUnicodeCategory(c);
-                if (unicodeCategory != System.Globalization.UnicodeCategory.NonSpacingMark)
-                {
-                    builder.Append(c);
-                }
-            }
-
-            return builder.ToString().Normalize(System.Text.NormalizationForm.FormC);
         }
 
         private void ApplySearchResults()

@@ -34,13 +34,6 @@ namespace QuanLyDaiLy.ViewModels.MatHangViewModels
             _matHangService = matHangService;
             _serviceProvider = serviceProvider;
 
-            // Initialize non-nullable fields with default values
-            _buttonStyleFirst = new Style();
-            _buttonStyleSecond = new Style();
-            _buttonStyleThird = new Style();
-            _buttonStyleForth = new Style();
-            _buttonStyleFith = new Style();
-
             // Only keep the parameterized command that can't use RelayCommand attribute
             PageSelectionCommand = new RelayCommand<string>(SelectPage);
 
