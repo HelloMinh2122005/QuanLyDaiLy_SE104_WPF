@@ -1,44 +1,39 @@
-﻿using QuanLyDaiLy.Commands;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using QuanLyDaiLy.Services;
+using System;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
-using QuanLyDaiLy.Views.BaoCaoViews;
-using QuanLyDaiLy.Services;
-using System.Collections.ObjectModel;
-using Microsoft.Win32;
-using System.IO;
-using OfficeOpenXml;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
+using System.IO;
+using QuanLyDaiLy.Views.BaoCaoViews;
+using QuanLyDaiLy.Messages;
+using CommunityToolkit.Mvvm.Messaging;
+using QuanLyDaiLy.Models.dto;
 
 namespace QuanLyDaiLy.ViewModels.BaoCaoViewModels
 {
-    public class BaoCaoCongNo
-    {
-        public int STT { get; set; }
-        public string TenDaiLy { get; set; }
-        public decimal NoDauThang { get; set; }
-        public decimal NoCuoiThang { get; set; }
-        public decimal GiaTriGiaoDich { get; set; }
-    }
-    public class BaoCaoCongNoViewModel : INotifyPropertyChanged
+    public partial class BaoCaoCongNoViewModel : ObservableObject, IRecipient<SelectedDateMessage>
     {
         private readonly IDaiLyService _daiLyService;
         private readonly IPhieuXuatService _phieuXuatService;
         private readonly IPhieuThuService _phieuThuService;
+        private string _selectedMonth;
+        private int _selectedYear;
         public BaoCaoCongNoViewModel(
-            string selectedMonth,
-            int selectedYear,
             IDaiLyService daiLyService,
             IPhieuXuatService phieuXuatService,
-            IPhieuThuService phieuThuService
-        )
+            IPhieuThuService phieuThuService)
         {
             _daiLyService = daiLyService;
             _phieuXuatService = phieuXuatService;
             _phieuThuService = phieuThuService;
+            WeakReferenceMessenger.Default.RegisterAll(this);
 
             MonthOptions = new ObservableCollection<string>
             {
@@ -54,18 +49,16 @@ namespace QuanLyDaiLy.ViewModels.BaoCaoViewModels
                 YearOptions.Add(i);
             }
 
-            SelectedMonth = selectedMonth;
-            SelectedYear = selectedYear;
+            SelectedMonth = MonthOptions.First();
+            SelectedYear = YearOptions.Last();
 
             _ = LoadData();
-            LapBaoCaoCommand = new RelayCommand(ExportToPDF);
-            CloseCommand = new RelayCommand(CloseWindow);
         }
-        public event EventHandler? DataChanged;
-        public ObservableCollection<string> MonthOptions { get; set; }
-        public ObservableCollection<int> YearOptions { get; set; }
 
-        private string _selectedMonth = "Tháng 1";
+        public ObservableCollection<string> MonthOptions { get; }
+        public ObservableCollection<int> YearOptions { get; }
+
+        
         public string SelectedMonth
         {
             get => _selectedMonth;
@@ -73,14 +66,13 @@ namespace QuanLyDaiLy.ViewModels.BaoCaoViewModels
             {
                 if (_selectedMonth != value)
                 {
-                    _selectedMonth = value;
+                    SetProperty(ref _selectedMonth, value);
                     _ = LoadData();
-                    OnPropertyChanged();
                 }
             }
         }
 
-        private int _selectedYear = DateTime.Now.Year;
+        
         public int SelectedYear
         {
             get => _selectedYear;
@@ -88,84 +80,54 @@ namespace QuanLyDaiLy.ViewModels.BaoCaoViewModels
             {
                 if (_selectedYear != value)
                 {
-                    _selectedYear = value;
+                    SetProperty(ref _selectedYear, value);
                     _ = LoadData();
-                    OnPropertyChanged();
                 }
             }
         }
 
-        private ObservableCollection<BaoCaoCongNo> _baoCaoCongNoList = new();
-        public ObservableCollection<BaoCaoCongNo> BaoCaoCongNoList
+        [ObservableProperty]
+        private ObservableCollection<BaoCaoCongNo> baoCaoCongNoList = new ObservableCollection<BaoCaoCongNo>();
+        [RelayCommand]
+        private void Close()
         {
-            get => _baoCaoCongNoList;
-            set
-            {
-                _baoCaoCongNoList = value;
-                OnPropertyChanged();
-            }
+            WeakReferenceMessenger.Default.Send(new DataReloadMessage());
+            Application.Current.Windows.OfType<BaoCaoCongNoWindow>().FirstOrDefault()?.Close();
         }
-
-        public ICommand CloseCommand { get; }
-        public ICommand LapBaoCaoCommand { get; }
         private async Task LoadData()
         {
             BaoCaoCongNoList.Clear();
-
             var allDaiLy = await _daiLyService.GetAllDaiLy();
 
             int month = int.Parse(SelectedMonth.Replace("Tháng ", ""));
             int year = SelectedYear;
 
             DateTime dauThang = new DateTime(year, month, 1);
-            DateTime cuoiThang = dauThang.AddMonths(1).AddDays(-1); // cuối tháng đang xét
-
             foreach (var daiLy in allDaiLy)
             {
                 int maDaiLy = daiLy.MaDaiLy;
-
-                // Lấy phiếu xuất và phiếu thu của đại lý
                 var phieuXuat = await _phieuXuatService.GetPhieuXuatByDaiLyId(maDaiLy);
                 var phieuThu = await _phieuThuService.GetPhieuThuByDaiLyId(maDaiLy);
 
-                // Tổng giá trị phiếu xuất trước tháng hiện tại (nợ đầu)
-                decimal tongPhieuXuatTruoc = phieuXuat
-                    .Where(p => p.NgayLapPhieu < dauThang)
-                    .Sum(p => p.TongTriGia);
+                decimal noDauThang = phieuXuat.Where(p => p.NgayLapPhieu < dauThang).Sum(p => p.TongTriGia) -
+                                     phieuThu.Where(p => p.NgayThuTien < dauThang).Sum(p => p.SoTienThu);
 
-                // Tổng giá trị phiếu thu trước tháng hiện tại (nợ đầu)
-                decimal tongPhieuThuTruoc = phieuThu
-                    .Where(p => p.NgayThuTien < dauThang)
-                    .Sum(p => p.SoTienThu);
+                decimal giaTriGiaoDich = phieuXuat.Where(p => p.NgayLapPhieu.Month == month && p.NgayLapPhieu.Year == year).Sum(p => p.TongTriGia);
+                decimal noCuoiThang = noDauThang + giaTriGiaoDich - phieuThu.Where(p => p.NgayThuTien.Month == month && p.NgayThuTien.Year == year).Sum(p => p.SoTienThu);
 
-                // Nợ đầu tháng
-                decimal noDauThang = tongPhieuXuatTruoc - tongPhieuThuTruoc;
-
-                // Giá trị giao dịch = tổng phiếu xuất trong tháng
-                decimal tongPhieuXuatTrongThang = phieuXuat
-                    .Where(p => p.NgayLapPhieu.Month == month && p.NgayLapPhieu.Year == year)
-                    .Sum(p => p.TongTriGia);
-
-                // Tổng thu trong tháng
-                decimal tongPhieuThuTrongThang = phieuThu
-                    .Where(p => p.NgayThuTien.Month == month && p.NgayThuTien.Year == year)
-                    .Sum(p => p.SoTienThu);
-
-                // Nợ cuối tháng = Nợ đầu - tổng phiếu thu trong tháng
-                decimal noCuoiThang = noDauThang + tongPhieuXuatTrongThang - tongPhieuThuTrongThang;
-
-                // Thêm vào danh sách báo cáo
                 BaoCaoCongNoList.Add(new BaoCaoCongNo
                 {
                     STT = BaoCaoCongNoList.Count + 1,
                     TenDaiLy = daiLy.TenDaiLy,
                     NoDauThang = noDauThang,
-                    GiaTriGiaoDich = tongPhieuXuatTrongThang,
+                    GiaTriGiaoDich = giaTriGiaoDich,
                     NoCuoiThang = noCuoiThang
                 });
+
             }
         }
-        private void ExportToPDF()
+        [RelayCommand]
+        private void LapBaoCao()
         {
             if (BaoCaoCongNoList == null || BaoCaoCongNoList.Count == 0)
             {
@@ -299,11 +261,12 @@ namespace QuanLyDaiLy.ViewModels.BaoCaoViewModels
             Application.Current.Windows.OfType<BaoCaoCongNoWindow>().FirstOrDefault()?.Close();
         }
 
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+        public void Receive(SelectedDateMessage message)
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            (int month, int year) = message.Value;
+            _selectedMonth = $"Tháng {month}";
+            _selectedYear = year;
+            _ = LoadData();
         }
     }
 }
