@@ -144,6 +144,6 @@ namespace QuanLyDaiLy.ViewModels.PhieuThuViewModels
                     "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-        #endregion
     }
+    #endregion
 }
