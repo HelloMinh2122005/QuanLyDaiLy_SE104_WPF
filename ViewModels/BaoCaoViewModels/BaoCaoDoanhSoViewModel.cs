@@ -1,31 +1,24 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using CommunityToolkit.Mvvm.Input;
-using CommunityToolkit.Mvvm.Messaging;
-using QuanLyDaiLy.Messages;
-using QuanLyDaiLy.Services;
-using QuanLyDaiLy.Views.BaoCaoViews;
-using QuestPDF.Fluent;
-using QuestPDF.Helpers;
-using QuestPDF.Infrastructure;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+using QuanLyDaiLy.Messages;
+using QuanLyDaiLy.Models.dto;
+using QuanLyDaiLy.Services;
+using QuanLyDaiLy.Views.BaoCaoViews;
+using QuanLyDaiLy.Views.MatHangViews;
+using QuestPDF.Fluent;
+using QuestPDF.Helpers;
+using QuestPDF.Infrastructure;
 
 namespace QuanLyDaiLy.ViewModels.BaoCaoViewModels
 {
-    public class BaoCaoDoanhSo
-    {
-        public int STT { get; set; }
-        public string TenDaiLy { get; set; }
-        public int SoLuongPhieuXuat { get; set; }
-        public decimal TongGiaTriGiaoDich { get; set; }
-        public double TiLe { get; set; }
-    }
-
-    public class BaoCaoDoanhSoViewModel : ObservableObject, IRecipient<SelectedDateStringMessage>
+    public partial class BaoCaoDoanhSoViewModel : ObservableObject, IRecipient<SelectedDateMessage>
     {
         private readonly IDaiLyService _daiLyService;
         private readonly IPhieuXuatService _phieuXuatService;
@@ -59,9 +52,6 @@ namespace QuanLyDaiLy.ViewModels.BaoCaoViewModels
             SelectedYear = YearOptions.Last();
 
             _ = LoadData();
-
-            ExportToPDFCommand = new RelayCommand(ExportToPDF);
-            CloseCommand = new RelayCommand(CloseWindow);
         }
 
         public ObservableCollection<string> MonthOptions { get; set; }
@@ -158,8 +148,13 @@ namespace QuanLyDaiLy.ViewModels.BaoCaoViewModels
             }
         }
 
-        public ICommand ExportToPDFCommand { get; }
-        public ICommand CloseCommand { get; }
+        [RelayCommand]
+        private void Close()
+        {
+            WeakReferenceMessenger.Default.Send(new DataReloadMessage());
+            Application.Current.Windows.OfType<BaoCaoDoanhSoWindow>().FirstOrDefault()?.Close();
+        }
+        [RelayCommand]
         private void ExportToPDF()
         {
             if (BaoCaoDoanhSoList == null || BaoCaoDoanhSoList.Count == 0)
@@ -291,15 +286,12 @@ namespace QuanLyDaiLy.ViewModels.BaoCaoViewModels
             }
         }
 
-        private void CloseWindow()
+        public void Receive(SelectedDateMessage message)
         {
-            Application.Current.Windows.OfType<BaoCaoDoanhSoWindow>().FirstOrDefault()?.Close();
-        }
-
-        public void Receive(SelectedDateStringMessage message)
-        {
-            (_selectedMonth, _selectedYear) = message.Value;
-            LoadData();
+            (int month, int year) = message.Value;
+            _selectedMonth = $"Tháng {month}";
+            _selectedYear = year;
+            _ = LoadData();
         }
     }
 }

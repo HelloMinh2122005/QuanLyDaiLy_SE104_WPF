@@ -116,9 +116,10 @@ namespace QuanLyDaiLy.ViewModels.BaoCaoViewModels
             try
             {
                 var window = _serviceProvider.GetRequiredService<BaoCaoDoanhSoWindow>();
-                WeakReferenceMessenger.Default.Send(new SelectedDateStringMessage(SelectedDoanhSoMonth, SelectedDoanhSoYear));
+                int month = int.Parse(SelectedDoanhSoMonth.Replace("Tháng ", ""));
+                int year = SelectedDoanhSoYear;
+                WeakReferenceMessenger.Default.Send(new SelectedDateMessage(month, year));
                 window.Show();
-
             }
             catch (Exception ex)
             {
@@ -126,15 +127,17 @@ namespace QuanLyDaiLy.ViewModels.BaoCaoViewModels
             }
         }
 
+
         [RelayCommand]
         private void CongNo()
         {
             try
             {
                 var window = _serviceProvider.GetRequiredService<BaoCaoCongNoWindow>();
-                WeakReferenceMessenger.Default.Send(new SelectedDateStringMessage(SelectedCongNoMonth, SelectedCongNoYear));
+                int month = int.Parse(SelectedCongNoMonth.Replace("Tháng ", ""));
+                int year = SelectedCongNoYear;
+                WeakReferenceMessenger.Default.Send(new SelectedDateMessage(month, year));
                 window.Show();
-
             }
             catch (Exception ex)
             {

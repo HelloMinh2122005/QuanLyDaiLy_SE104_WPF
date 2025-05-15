@@ -14,19 +14,11 @@ using System.IO;
 using QuanLyDaiLy.Views.BaoCaoViews;
 using QuanLyDaiLy.Messages;
 using CommunityToolkit.Mvvm.Messaging;
+using QuanLyDaiLy.Models.dto;
 
 namespace QuanLyDaiLy.ViewModels.BaoCaoViewModels
 {
-    public partial class BaoCaoCongNo : ObservableObject
-    {
-        public int STT { get; set; }
-        public string TenDaiLy { get; set; }
-        public decimal NoDauThang { get; set; }
-        public decimal NoCuoiThang { get; set; }
-        public decimal GiaTriGiaoDich { get; set; }
-    }
-
-    public partial class BaoCaoCongNoViewModel : ObservableObject, IRecipient<SelectedDateStringMessage>
+    public partial class BaoCaoCongNoViewModel : ObservableObject, IRecipient<SelectedDateMessage>
     {
         private readonly IDaiLyService _daiLyService;
         private readonly IPhieuXuatService _phieuXuatService;
@@ -61,8 +53,6 @@ namespace QuanLyDaiLy.ViewModels.BaoCaoViewModels
             SelectedYear = YearOptions.Last();
 
             _ = LoadData();
-            LapBaoCaoCommand = new RelayCommand(ExportToPDF);
-            CloseCommand = new RelayCommand(CloseWindow);
         }
 
         public ObservableCollection<string> MonthOptions { get; }
@@ -97,11 +87,13 @@ namespace QuanLyDaiLy.ViewModels.BaoCaoViewModels
         }
 
         [ObservableProperty]
-        private ObservableCollection<BaoCaoCongNo> baoCaoCongNoList = new();
-
-        public ICommand CloseCommand { get; }
-        public ICommand LapBaoCaoCommand { get; }
-
+        private ObservableCollection<BaoCaoCongNo> baoCaoCongNoList = new ObservableCollection<BaoCaoCongNo>();
+        [RelayCommand]
+        private void Close()
+        {
+            WeakReferenceMessenger.Default.Send(new DataReloadMessage());
+            Application.Current.Windows.OfType<BaoCaoCongNoWindow>().FirstOrDefault()?.Close();
+        }
         private async Task LoadData()
         {
             BaoCaoCongNoList.Clear();
@@ -131,10 +123,11 @@ namespace QuanLyDaiLy.ViewModels.BaoCaoViewModels
                     GiaTriGiaoDich = giaTriGiaoDich,
                     NoCuoiThang = noCuoiThang
                 });
+
             }
         }
-
-        private void ExportToPDF()
+        [RelayCommand]
+        private void LapBaoCao()
         {
             if (BaoCaoCongNoList == null || BaoCaoCongNoList.Count == 0)
             {
@@ -268,9 +261,11 @@ namespace QuanLyDaiLy.ViewModels.BaoCaoViewModels
             Application.Current.Windows.OfType<BaoCaoCongNoWindow>().FirstOrDefault()?.Close();
         }
 
-        public void Receive(SelectedDateStringMessage message)
+        public void Receive(SelectedDateMessage message)
         {
-            (_selectedMonth, _selectedYear) = message.Value;
+            (int month, int year) = message.Value;
+            _selectedMonth = $"Tháng {month}";
+            _selectedYear = year;
             _ = LoadData();
         }
     }
