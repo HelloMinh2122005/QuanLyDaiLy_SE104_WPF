@@ -133,8 +133,6 @@ public static class ApplicationServiceExtensions
         services.AddTransient<ViewModels.PhieuThuViewModels.ThemPhieuThuWindowViewModel>();
         services.AddTransient<ViewModels.PhieuThuViewModels.TraCuuPhieuThuWindowViewModel>();
 
-
-        // PHIẾU XUẤT CỦA THÀNH
         services.AddTransient<ViewModels.PhieuXuatViewModels.PhieuXuatPageViewModel>();
         services.AddTransient<ViewModels.PhieuXuatViewModels.ThemPhieuXuatWindowViewModel>();
         services.AddTransient<Func<int, ViewModels.PhieuXuatViewModels.CapNhatPhieuXuatWindowViewModel>>(px => phieuXuatId =>
@@ -143,8 +141,7 @@ public static class ApplicationServiceExtensions
                 px.GetRequiredService<IChiTietPhieuXuatService>(),
                 px.GetRequiredService<IDaiLyService>(),
                 px.GetRequiredService<IMatHangService>(),
-                px.GetRequiredService<ILoaiDaiLyService>(),
-                phieuXuatId
+                px.GetRequiredService<ILoaiDaiLyService>()
             )
         );
         services.AddTransient<ViewModels.PhieuXuatViewModels.TraCuuPhieuXuatWindowViewModel>();
