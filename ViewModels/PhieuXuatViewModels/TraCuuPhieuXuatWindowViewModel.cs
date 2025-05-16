@@ -191,125 +191,115 @@ namespace QuanLyDaiLy.ViewModels.PhieuXuatViewModels
             try
             {
                 var phieuXuats = await _phieuXuatService.GetAllPhieuXuat();
-                ObservableCollection<PhieuXuat> filteredResults = [.. phieuXuats];
 
                 if (!string.IsNullOrEmpty(MaPhieuXuat))
                 {
-                    filteredResults = [.. filteredResults.Where(d => d.MaPhieuXuat.ToString().Contains(MaPhieuXuat))];
+                    phieuXuats = phieuXuats.Where(px => px.MaPhieuXuat.ToString().Contains(MaPhieuXuat));
                 }
 
                 if (SelectedDaiLies.MaDaiLy != 0)
                 {
-                    filteredResults = [.. filteredResults.Where(d => d.MaDaiLy == SelectedDaiLies.MaDaiLy)];
+                    phieuXuats = phieuXuats.Where(px => px.MaDaiLy == SelectedDaiLies.MaDaiLy);
                 }
 
                 if (!string.IsNullOrEmpty(DienThoai))
                 {
-                    filteredResults = [.. filteredResults.Where(d => d.DaiLy.DienThoai.Contains(DienThoai))];
+                    phieuXuats = phieuXuats.Where(px => px.DaiLy.DienThoai.Contains(DienThoai));
                 }
 
                 if (!string.IsNullOrEmpty(DiaChi))
                 {
-                    filteredResults = [.. filteredResults.Where(d => d.DaiLy.DiaChi.Contains(DiaChi))];
+                    phieuXuats = phieuXuats.Where(px => px.DaiLy.DiaChi.Contains(DiaChi));
                 }
 
                 if (!string.IsNullOrEmpty(Email))
                 {
-                    filteredResults = [.. filteredResults.Where(d => d.DaiLy.Email.Contains(Email))];
+                    phieuXuats = phieuXuats.Where(px => px.DaiLy.Email.Contains(Email));
                 }
 
                 if (SelectedLoaiDaiLies.MaLoaiDaiLy != 0)
                 {
-                    filteredResults = [.. filteredResults.Where(d => d.DaiLy.MaLoaiDaiLy == SelectedLoaiDaiLies.MaLoaiDaiLy)];
+                    phieuXuats = phieuXuats.Where(px => px.DaiLy.MaLoaiDaiLy == SelectedLoaiDaiLies.MaLoaiDaiLy);
                 }
 
                 if (SelectedQuans.MaQuan != 0)
                 {
-                    filteredResults = [.. filteredResults.Where(d => d.DaiLy.MaQuan == SelectedQuans.MaQuan)];
+                    phieuXuats = phieuXuats.Where(px => px.DaiLy.MaQuan == SelectedQuans.MaQuan);
                 }
                                 
                 if (NgayTiepNhanFrom != DateTime.MinValue && NgayTiepNhanTo != DateTime.MinValue)
                 {
-                    filteredResults = [.. filteredResults
-                        .Where(d => d.DaiLy.NgayTiepNhan >= NgayTiepNhanFrom && d.DaiLy.NgayTiepNhan <= NgayTiepNhanTo)];
+                    phieuXuats = phieuXuats.Where(d => d.DaiLy.NgayTiepNhan >= NgayTiepNhanFrom && d.DaiLy.NgayTiepNhan <= NgayTiepNhanTo);
                 }
                 else
                 {
                     if (NgayTiepNhanFrom != DateTime.MinValue)
                     {
-                        filteredResults = [.. filteredResults
-                            .Where(d => d.DaiLy.NgayTiepNhan >= NgayTiepNhanFrom)];
+
+                        phieuXuats = phieuXuats.Where(d => d.DaiLy.NgayTiepNhan >= NgayTiepNhanFrom);
                     }
                     if (NgayTiepNhanTo != DateTime.MinValue)
                     {
-                        filteredResults = [.. filteredResults
-                            .Where(d => d.DaiLy.NgayTiepNhan <= NgayTiepNhanTo)];
+
+                        phieuXuats = phieuXuats.Where(d => d.DaiLy.NgayTiepNhan <= NgayTiepNhanTo);
                     }
                 }
                 
                 if (!string.IsNullOrEmpty(NoDaiLyFrom) && !string.IsNullOrEmpty(NoDaiLyTo)
                     && long.TryParse(NoDaiLyFrom, out var fromNo) && long.TryParse(NoDaiLyTo, out var toNo))
                 {
-                    filteredResults = [.. filteredResults
-                        .Where(d => d.DaiLy.TienNo >= fromNo && d.DaiLy.TienNo <= toNo)];
+                    phieuXuats = phieuXuats.Where(d => d.DaiLy.TienNo >= fromNo && d.DaiLy.TienNo <= toNo);
                 }
                 else
                 {
                     if (!string.IsNullOrEmpty(NoDaiLyFrom) && long.TryParse(NoDaiLyFrom, out fromNo))
                     {
-                        filteredResults = [.. filteredResults
-                            .Where(d => d.DaiLy.TienNo >= fromNo)];
+                        phieuXuats = phieuXuats.Where(d => d.DaiLy.TienNo >= fromNo);
                     }
                     if (!string.IsNullOrEmpty(NoDaiLyTo) && long.TryParse(NoDaiLyTo, out toNo))
                     {
-                        filteredResults = [.. filteredResults
-                            .Where(d => d.DaiLy.TienNo <= toNo)];
+                        phieuXuats = phieuXuats.Where(d => d.DaiLy.TienNo <= toNo);
                     }
                 }                
                 
                 if (NgayLapPhieuXuatFrom != DateTime.MinValue && NgayLapPhieuXuatTo != DateTime.MinValue)
                 {
-                    filteredResults = [.. filteredResults
-                        .Where(d => d.NgayLapPhieu >= NgayLapPhieuXuatFrom && d.NgayLapPhieu <= NgayLapPhieuXuatTo)];
+                    phieuXuats = phieuXuats.Where(d => d.NgayLapPhieu >= NgayLapPhieuXuatFrom && d.NgayLapPhieu <= NgayLapPhieuXuatTo);
                 }
                 else
                 {
                     
                     if (NgayLapPhieuXuatFrom != DateTime.MinValue)
                     {
-                        filteredResults = [.. filteredResults
-                            .Where(d => d.NgayLapPhieu >= NgayLapPhieuXuatFrom)];
+                        phieuXuats = phieuXuats.Where(d => d.NgayLapPhieu >= NgayLapPhieuXuatFrom);
                     }
                     if (NgayLapPhieuXuatTo != DateTime.MinValue)
                     {
-                        filteredResults = [.. filteredResults
-                            .Where(d => d.NgayLapPhieu <= NgayLapPhieuXuatTo)];
+                        phieuXuats = phieuXuats.Where(d => d.NgayLapPhieu <= NgayLapPhieuXuatTo);
                     }
                 }
                 
                 if (!string.IsNullOrEmpty(TongGiaTriPhieuXuatFrom) && !string.IsNullOrEmpty(TongGiaTriPhieuXuatTo)
                     && long.TryParse(TongGiaTriPhieuXuatFrom, out var fromTongGiaTri) && long.TryParse(TongGiaTriPhieuXuatTo, out var toTongGiaTri))
                 {
-                    filteredResults = [.. filteredResults
-                        .Where(d => d.TongTriGia >= fromTongGiaTri && d.TongTriGia <= toTongGiaTri)];
+                    phieuXuats = phieuXuats.Where(d => d.TongTriGia >= fromTongGiaTri && d.TongTriGia <= toTongGiaTri);
                 }
                 else
                 {
                     if (!string.IsNullOrEmpty(TongGiaTriPhieuXuatFrom) && long.TryParse(TongGiaTriPhieuXuatFrom, out fromTongGiaTri))
                     {
-                        filteredResults = [.. filteredResults
-                            .Where(d => d.TongTriGia >= fromTongGiaTri)];
+                        phieuXuats = phieuXuats.Where(d => d.TongTriGia >= fromTongGiaTri);
                     }
                     if (!string.IsNullOrEmpty(TongGiaTriPhieuXuatTo) && long.TryParse(TongGiaTriPhieuXuatTo, out toTongGiaTri))
                     {
-                        filteredResults = [.. filteredResults
-                            .Where(d => d.TongTriGia <= toTongGiaTri)];
+                        phieuXuats = phieuXuats.Where(d => d.TongTriGia <= toTongGiaTri);
                     }
                 }
 
                 if (SelectedMatHangXuats.MaMatHang != 0)
                 {
-                    filteredResults = [.. filteredResults.Where(d => d.DsChiTietPhieuXuat.Any(ct => ct.MaMatHang == SelectedMatHangXuats.MaMatHang))];
+                    phieuXuats = phieuXuats.Where(d => d.DsChiTietPhieuXuat.Any(ct => ct.MatHang.MaMatHang == SelectedMatHangXuats.MaMatHang));
+
                 }
 
                 if (SelectedDonViTinhs.MaDonViTinh != 0)
@@ -317,95 +307,82 @@ namespace QuanLyDaiLy.ViewModels.PhieuXuatViewModels
 
                     if (SelectedDonViTinhs.MaDonViTinh != 0)
                     {
-                        filteredResults = [.. filteredResults.Where(d =>
-                            d.DsChiTietPhieuXuat.Any(ct => ct.MatHang.MaDonViTinh == SelectedDonViTinhs.MaDonViTinh))];
+                        phieuXuats = phieuXuats.Where(d => d.DsChiTietPhieuXuat.Any(ct => ct.MatHang.MaDonViTinh == SelectedDonViTinhs.MaDonViTinh));
                     }
                 }
                 
                 if (!string.IsNullOrEmpty(SoLuongXuatCuaMatHangXuatFrom) && !string.IsNullOrEmpty(SoLuongXuatCuaMatHangXuatTo)
                     && int.TryParse(SoLuongXuatCuaMatHangXuatFrom, out var fromSoLuong) && int.TryParse(SoLuongXuatCuaMatHangXuatTo, out var toSoLuong))
                 {
-                    filteredResults = [.. filteredResults
-                        .Where(d => d.DsChiTietPhieuXuat.Any(ct => ct.SoLuongXuat >= fromSoLuong && ct.SoLuongXuat <= toSoLuong))];
+                    phieuXuats = phieuXuats.Where(d => d.DsChiTietPhieuXuat.Any(ct => ct.SoLuongXuat >= fromSoLuong && ct.SoLuongXuat <= toSoLuong));
                 }
                 else
                 {
                     if (!string.IsNullOrEmpty(SoLuongXuatCuaMatHangXuatFrom) && int.TryParse(SoLuongXuatCuaMatHangXuatFrom, out fromSoLuong))
                     {
-                        filteredResults = [.. filteredResults
-                            .Where(d => d.DsChiTietPhieuXuat.Any(ct => ct.SoLuongXuat >= fromSoLuong))];
+                        phieuXuats = phieuXuats.Where(d => d.DsChiTietPhieuXuat.Any(ct => ct.SoLuongXuat >= fromSoLuong));
                     }
                     if (!string.IsNullOrEmpty(SoLuongXuatCuaMatHangXuatTo) && int.TryParse(SoLuongXuatCuaMatHangXuatTo, out toSoLuong))
                     {
-                        filteredResults = [.. filteredResults
-                            .Where(d => d.DsChiTietPhieuXuat.Any(ct => ct.SoLuongXuat <= toSoLuong))];
+                        phieuXuats = phieuXuats.Where(d => d.DsChiTietPhieuXuat.Any(ct => ct.SoLuongXuat <= toSoLuong));
                     }
                 }
                 
                 if (!string.IsNullOrEmpty(DonGiaXuatCuaMatHangXuatFrom) && !string.IsNullOrEmpty(DonGiaXuatCuaMatHangXuatTo)
                     && long.TryParse(DonGiaXuatCuaMatHangXuatFrom, out var fromDonGia) && long.TryParse(DonGiaXuatCuaMatHangXuatTo, out var toDonGia))
                 {
-                    filteredResults = [.. filteredResults
-                        .Where(d => d.DsChiTietPhieuXuat.Any(ct => ct.DonGia >= fromDonGia && ct.DonGia <= toDonGia))];
+                    phieuXuats = phieuXuats.Where(d => d.DsChiTietPhieuXuat.Any(ct => ct.DonGia >= fromDonGia && ct.DonGia <= toDonGia));
                 }
                 else
                 {
                     if (!string.IsNullOrEmpty(DonGiaXuatCuaMatHangXuatFrom) && long.TryParse(DonGiaXuatCuaMatHangXuatFrom, out fromDonGia))
                     {
-                        filteredResults = [.. filteredResults
-                            .Where(d => d.DsChiTietPhieuXuat.Any(ct => ct.DonGia >= fromDonGia))];
+                        phieuXuats = phieuXuats.Where(d => d.DsChiTietPhieuXuat.Any(ct => ct.DonGia >= fromDonGia));
                     }
                     if (!string.IsNullOrEmpty(DonGiaXuatCuaMatHangXuatTo) && long.TryParse(DonGiaXuatCuaMatHangXuatTo, out toDonGia))
                     {
-                        filteredResults = [.. filteredResults
-                            .Where(d => d.DsChiTietPhieuXuat.Any(ct => ct.DonGia <= toDonGia))];
+                        phieuXuats = phieuXuats.Where(d => d.DsChiTietPhieuXuat.Any(ct => ct.DonGia <= toDonGia));
                     }
                 }
                 
                 if (!string.IsNullOrEmpty(ThanhTienCuaMatHangXuatFrom) && !string.IsNullOrEmpty(ThanhTienCuaMatHangXuatTo)
                     && int.TryParse(ThanhTienCuaMatHangXuatFrom, out var fromThanhTien) && int.TryParse(ThanhTienCuaMatHangXuatTo, out var toThanhTien))
                 {
-                    filteredResults = [.. filteredResults
-                        .Where(d => d.DsChiTietPhieuXuat.Any(ct => ct.ThanhTien >= fromThanhTien && ct.ThanhTien <= toThanhTien))];
+                    phieuXuats = phieuXuats.Where(d => d.DsChiTietPhieuXuat.Any(ct => ct.ThanhTien >= fromThanhTien && ct.ThanhTien <= toThanhTien));
                 }
                 else
                 {
                     if (!string.IsNullOrEmpty(ThanhTienCuaMatHangXuatFrom) && int.TryParse(ThanhTienCuaMatHangXuatFrom, out fromThanhTien))
                     {
-                        filteredResults = [.. filteredResults
-                            .Where(d => d.DsChiTietPhieuXuat.Any(ct => ct.ThanhTien >= fromThanhTien))];
+                        phieuXuats = phieuXuats.Where(d => d.DsChiTietPhieuXuat.Any(ct => ct.ThanhTien >= fromThanhTien));
                     }
                     if (!string.IsNullOrEmpty(ThanhTienCuaMatHangXuatTo) && int.TryParse(ThanhTienCuaMatHangXuatTo, out toThanhTien))
                     {
-                        filteredResults = [.. filteredResults
-                            .Where(d => d.DsChiTietPhieuXuat.Any(ct => ct.ThanhTien <= toThanhTien))];
+                        phieuXuats = phieuXuats.Where(d => d.DsChiTietPhieuXuat.Any(ct => ct.ThanhTien <= toThanhTien));
                     }
                 }
                 
                 if (!string.IsNullOrEmpty(SoLuongTonCuaMatHangXuatFrom) && !string.IsNullOrEmpty(SoLuongTonCuaMatHangXuatTo)
                     && int.TryParse(SoLuongTonCuaMatHangXuatFrom, out var fromSoLuongTon) && int.TryParse(SoLuongTonCuaMatHangXuatTo, out var toSoLuongTon))
                 {
-                    filteredResults = [.. filteredResults
-                        .Where(d => d.DsChiTietPhieuXuat.Any(ct => ct.MatHang.SoLuongTon >= fromSoLuongTon && ct.MatHang.SoLuongTon <= toSoLuongTon))];
+                    phieuXuats = phieuXuats.Where(d => d.DsChiTietPhieuXuat.Any(ct => ct.MatHang.SoLuongTon >= fromSoLuongTon && ct.MatHang.SoLuongTon <= toSoLuongTon));
                 }
                 else
                 {
                     if (!string.IsNullOrEmpty(SoLuongTonCuaMatHangXuatFrom) && int.TryParse(SoLuongTonCuaMatHangXuatFrom, out fromSoLuongTon))
                     {
-                        filteredResults = [.. filteredResults
-                            .Where(d => d.DsChiTietPhieuXuat.Any(ct => ct.MatHang.SoLuongTon >= fromSoLuongTon))];
+                        phieuXuats = phieuXuats.Where(d => d.DsChiTietPhieuXuat.Any(ct => ct.MatHang.SoLuongTon >= fromSoLuongTon));
                     }
                     if (!string.IsNullOrEmpty(SoLuongTonCuaMatHangXuatTo) && int.TryParse(SoLuongTonCuaMatHangXuatTo, out toSoLuongTon))
                     {
-                        filteredResults = [.. filteredResults
-                            .Where(d => d.DsChiTietPhieuXuat.Any(ct => ct.MatHang.SoLuongTon <= toSoLuongTon))];
+                        phieuXuats = phieuXuats.Where(d => d.DsChiTietPhieuXuat.Any(ct => ct.MatHang.SoLuongTon <= toSoLuongTon));
                     }
                 }
 
-                SearchResults = [.. filteredResults];
+                SearchResults = [.. phieuXuats];
                 ApplySearchResults();
 
-                if (filteredResults.Count == 0)
+                if (SearchResults.Count == 0)
                 {
                     MessageBox.Show("Không tìm thấy kết quả nào phù hợp!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
