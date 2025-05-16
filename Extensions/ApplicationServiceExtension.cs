@@ -116,12 +116,7 @@ public static class ApplicationServiceExtensions
 
         services.AddTransient<ViewModels.QuanViewModels.QuanPageViewModel>();
         services.AddTransient<ViewModels.QuanViewModels.ThemQuanViewModel>();
-        services.AddTransient<Func<int, ViewModels.QuanViewModels.ChinhSuaQuanViewModel>>(sp => quanId =>
-            new ViewModels.QuanViewModels.ChinhSuaQuanViewModel(
-                sp.GetRequiredService<IQuanService>(),
-                quanId
-            )
-        );
+        services.AddTransient<ViewModels.QuanViewModels.ChinhSuaQuanViewModel>();
         services.AddTransient<ViewModels.QuanViewModels.TraCuuQuanWindowViewModel>();
 
         services.AddTransient<ViewModels.MatHangViewModels.MatHangPageViewModel>();
