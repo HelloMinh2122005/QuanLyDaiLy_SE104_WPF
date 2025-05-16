@@ -98,7 +98,7 @@
                                     <TextBlock
                                         Grid.Column="0"
                                         Style="{StaticResource SmallWidgetContentTextBlockStyle}"
-                                        Text="{Binding WidgetSoLuongDaiLy}" />
+                                        Text="{Binding WidgetDoanhThuTrongNgay}" />
 
                                     <StackPanel
                                         Grid.Column="1"
@@ -110,7 +110,7 @@
                                             FontSize="20"
                                             FontWeight="Regular"
                                             LineHeight="16"
-                                            Text="{Binding WidgetSoLuongDaiLyDeltaText}" />
+                                            Text="{Binding WidgetDoanhThuTrongNgayDeltaText}" />
                                         <Image
                                             Width="20"
                                             Height="20"
@@ -122,7 +122,7 @@
                                                     <Setter Property="Source" Value="pack://application:,,,/QuanLyDaiLy;component/Resources/up.png" />
                                                     <Style.Triggers>
                                                         <!--  Nếu WidgetPhiXuatIsUp == False thì chuyển sang mũi tên xuống  -->
-                                                        <DataTrigger Binding="{Binding WidgetSoLuongDaiLyIsUp}" Value="False">
+                                                        <DataTrigger Binding="{Binding WidgetDoanhThuTrongNgayIsUp}" Value="False">
                                                             <Setter Property="Source" Value="pack://application:,,,/QuanLyDaiLy;component/Resources/image-removebg-preview.png" />
                                                         </DataTrigger>
                                                     </Style.Triggers>
@@ -170,7 +170,7 @@
                                     <TextBlock
                                         Grid.Column="0"
                                         Style="{StaticResource SmallWidgetContentTextBlockStyle}"
-                                        Text="{Binding WidgetSoLuongDaiLy}" />
+                                        Text="{Binding WidgetDoanhThuThang}" />
 
                                     <StackPanel
                                         Grid.Column="1"
@@ -182,7 +182,7 @@
                                             FontSize="20"
                                             FontWeight="Regular"
                                             LineHeight="16"
-                                            Text="{Binding WidgetSoLuongDaiLyDeltaText}" />
+                                            Text="{Binding WidgetDoanhThuThangDeltaText}" />
                                         <Image
                                             Width="20"
                                             Height="20"
@@ -194,7 +194,7 @@
                                                     <Setter Property="Source" Value="pack://application:,,,/QuanLyDaiLy;component/Resources/up.png" />
                                                     <Style.Triggers>
                                                         <!--  Nếu WidgetPhiXuatIsUp == False thì chuyển sang mũi tên xuống  -->
-                                                        <DataTrigger Binding="{Binding WidgetSoLuongDaiLyIsUp}" Value="False">
+                                                        <DataTrigger Binding="{Binding WidgetDoanhThuThangIsUp}" Value="False">
                                                             <Setter Property="Source" Value="pack://application:,,,/QuanLyDaiLy;component/Resources/image-removebg-preview.png" />
                                                         </DataTrigger>
                                                     </Style.Triggers>
@@ -243,7 +243,7 @@
                                     <TextBlock
                                         Grid.Column="0"
                                         Style="{StaticResource SmallWidgetContentTextBlockStyle}"
-                                        Text="{Binding WidgetSoLuongDaiLy}" />
+                                        Text="{Binding WidgetDoanhThuTrongNam}" />
 
                                     <StackPanel
                                         Grid.Column="1"
@@ -255,7 +255,7 @@
                                             FontSize="20"
                                             FontWeight="Regular"
                                             LineHeight="16"
-                                            Text="{Binding WidgetSoLuongDaiLyDeltaText}" />
+                                            Text="{Binding WidgetDoanhThuTrongNamDeltaText}" />
                                         <Image
                                             Width="20"
                                             Height="20"
@@ -267,7 +267,7 @@
                                                     <Setter Property="Source" Value="pack://application:,,,/QuanLyDaiLy;component/Resources/up.png" />
                                                     <Style.Triggers>
                                                         <!--  Nếu WidgetPhiXuatIsUp == False thì chuyển sang mũi tên xuống  -->
-                                                        <DataTrigger Binding="{Binding WidgetSoLuongDaiLyIsUp}" Value="False">
+                                                        <DataTrigger Binding="{Binding WidgetDoanhThuTrongNamIsUp}" Value="False">
                                                             <Setter Property="Source" Value="pack://application:,,,/QuanLyDaiLy;component/Resources/image-removebg-preview.png" />
                                                         </DataTrigger>
                                                     </Style.Triggers>
@@ -425,7 +425,7 @@
                                     <TextBlock
                                         Grid.Column="0"
                                         Style="{StaticResource SmallWidgetContentTextBlockStyle}"
-                                        Text="{Binding WidgetSoLuongDaiLy}" />
+                                        Text="{Binding WidgetDoanhSoTrongNgay}" />
 
                                     <StackPanel
                                         Grid.Column="1"
@@ -437,7 +437,7 @@
                                             FontSize="20"
                                             FontWeight="Regular"
                                             LineHeight="16"
-                                            Text="{Binding WidgetSoLuongDaiLyDeltaText}" />
+                                            Text="{Binding WidgetDoanhSoTrongNgayDeltaText}" />
                                         <Image
                                             Width="20"
                                             Height="20"
@@ -449,7 +449,7 @@
                                                     <Setter Property="Source" Value="pack://application:,,,/QuanLyDaiLy;component/Resources/up.png" />
                                                     <Style.Triggers>
                                                         <!--  Nếu WidgetPhiXuatIsUp == False thì chuyển sang mũi tên xuống  -->
-                                                        <DataTrigger Binding="{Binding WidgetSoLuongDaiLyIsUp}" Value="False">
+                                                        <DataTrigger Binding="{Binding WidgetDoanhSoTrongNgayIsUp}" Value="False">
                                                             <Setter Property="Source" Value="pack://application:,,,/QuanLyDaiLy;component/Resources/image-removebg-preview.png" />
                                                         </DataTrigger>
                                                     </Style.Triggers>
@@ -497,7 +497,7 @@
                                     <TextBlock
                                         Grid.Column="0"
                                         Style="{StaticResource SmallWidgetContentTextBlockStyle}"
-                                        Text="{Binding WidgetSoLuongDaiLy}" />
+                                        Text="{Binding WidgetDoanhSoTrongThang}" />
 
                                     <StackPanel
                                         Grid.Column="1"
@@ -509,7 +509,7 @@
                                             FontSize="20"
                                             FontWeight="Regular"
                                             LineHeight="16"
-                                            Text="{Binding WidgetSoLuongDaiLyDeltaText}" />
+                                            Text="{Binding WidgetDoanhSoTrongThangDeltaText}" />
                                         <Image
                                             Width="20"
                                             Height="20"
@@ -521,7 +521,7 @@
                                                     <Setter Property="Source" Value="pack://application:,,,/QuanLyDaiLy;component/Resources/up.png" />
                                                     <Style.Triggers>
                                                         <!--  Nếu WidgetPhiXuatIsUp == False thì chuyển sang mũi tên xuống  -->
-                                                        <DataTrigger Binding="{Binding WidgetSoLuongDaiLyIsUp}" Value="False">
+                                                        <DataTrigger Binding="{Binding WidgetDoanhSoTrongThangIsUp}" Value="False">
                                                             <Setter Property="Source" Value="pack://application:,,,/QuanLyDaiLy;component/Resources/image-removebg-preview.png" />
                                                         </DataTrigger>
                                                     </Style.Triggers>
@@ -570,7 +570,7 @@
                                     <TextBlock
                                         Grid.Column="0"
                                         Style="{StaticResource SmallWidgetContentTextBlockStyle}"
-                                        Text="{Binding WidgetSoLuongDaiLy}" />
+                                        Text="{Binding WidgetDoanhSoTrongNam}" />
 
                                     <StackPanel
                                         Grid.Column="1"
@@ -582,7 +582,7 @@
                                             FontSize="20"
                                             FontWeight="Regular"
                                             LineHeight="16"
-                                            Text="{Binding WidgetSoLuongDaiLyDeltaText}" />
+                                            Text="{Binding WidgetDoanhSoTrongNamDeltaText}" />
                                         <Image
                                             Width="20"
                                             Height="20"
@@ -594,7 +594,7 @@
                                                     <Setter Property="Source" Value="pack://application:,,,/QuanLyDaiLy;component/Resources/up.png" />
                                                     <Style.Triggers>
                                                         <!--  Nếu WidgetPhiXuatIsUp == False thì chuyển sang mũi tên xuống  -->
-                                                        <DataTrigger Binding="{Binding WidgetSoLuongDaiLyIsUp}" Value="False">
+                                                        <DataTrigger Binding="{Binding WidgetDoanhSoTrongNamIsUp}" Value="False">
                                                             <Setter Property="Source" Value="pack://application:,,,/QuanLyDaiLy;component/Resources/image-removebg-preview.png" />
                                                         </DataTrigger>
                                                     </Style.Triggers>
@@ -645,7 +645,7 @@
                                                 Height="25"
                                                 Margin="0"
                                                 ItemsSource="{Binding MonthOptions}"
-                                                SelectedItem="{Binding RevenueChartMonth}"
+                                                SelectedItem="{Binding DoanhSoChartMonth}"
                                                 Style="{StaticResource SmallComboBoxStyle}" />
                                         </Grid>
 
@@ -664,7 +664,7 @@
                                                 Height="25"
                                                 Margin="0"
                                                 ItemsSource="{Binding YearOptions}"
-                                                SelectedItem="{Binding RevenueChartYear}"
+                                                SelectedItem="{Binding DoanhSoChartYear}"
                                                 Style="{StaticResource SmallComboBoxStyle}" />
                                         </Grid>
                                     </StackPanel>
@@ -752,7 +752,7 @@
                                     <TextBlock
                                         Grid.Column="0"
                                         Style="{StaticResource SmallWidgetContentTextBlockStyle}"
-                                        Text="{Binding WidgetSoLuongDaiLy}" />
+                                        Text="{Binding WidgetTongCongNoDauThang}" />
 
                                     <StackPanel
                                         Grid.Column="1"
@@ -764,7 +764,7 @@
                                             FontSize="20"
                                             FontWeight="Regular"
                                             LineHeight="16"
-                                            Text="{Binding WidgetSoLuongDaiLyDeltaText}" />
+                                            Text="{Binding WidgetTongCongNoDauThangDeltaText}" />
                                         <Image
                                             Width="20"
                                             Height="20"
@@ -776,7 +776,7 @@
                                                     <Setter Property="Source" Value="pack://application:,,,/QuanLyDaiLy;component/Resources/up.png" />
                                                     <Style.Triggers>
                                                         <!--  Nếu WidgetPhiXuatIsUp == False thì chuyển sang mũi tên xuống  -->
-                                                        <DataTrigger Binding="{Binding WidgetSoLuongDaiLyIsUp}" Value="False">
+                                                        <DataTrigger Binding="{Binding WidgetTongCongNoDauThangIsUp}" Value="False">
                                                             <Setter Property="Source" Value="pack://application:,,,/QuanLyDaiLy;component/Resources/image-removebg-preview.png" />
                                                         </DataTrigger>
                                                     </Style.Triggers>
@@ -807,7 +807,7 @@
                                     <TextBlock
                                         Grid.Column="0"
                                         Style="{StaticResource SmallWidgetTextBlockStyle}"
-                                        Text="Tổng công nợ cuối tháng" />
+                                        Text="{Binding WidgetTongNoCuoiThangText}" />
 
                                     <Button
                                         Grid.Column="1"
@@ -824,7 +824,7 @@
                                     <TextBlock
                                         Grid.Column="0"
                                         Style="{StaticResource SmallWidgetContentTextBlockStyle}"
-                                        Text="{Binding WidgetSoLuongDaiLy}" />
+                                        Text="{Binding WidgetTongCongNoCuoiThang}" />
 
                                     <StackPanel
                                         Grid.Column="1"
@@ -836,7 +836,7 @@
                                             FontSize="20"
                                             FontWeight="Regular"
                                             LineHeight="16"
-                                            Text="{Binding WidgetSoLuongDaiLyDeltaText}" />
+                                            Text="{Binding WidgetTongCongNoCuoiThangDeltaText}" />
                                         <Image
                                             Width="20"
                                             Height="20"
@@ -848,7 +848,7 @@
                                                     <Setter Property="Source" Value="pack://application:,,,/QuanLyDaiLy;component/Resources/up.png" />
                                                     <Style.Triggers>
                                                         <!--  Nếu WidgetPhiXuatIsUp == False thì chuyển sang mũi tên xuống  -->
-                                                        <DataTrigger Binding="{Binding WidgetSoLuongDaiLyIsUp}" Value="False">
+                                                        <DataTrigger Binding="{Binding WidgetTongCongNoCuoiThangIsUp}" Value="False">
                                                             <Setter Property="Source" Value="pack://application:,,,/QuanLyDaiLy;component/Resources/image-removebg-preview.png" />
                                                         </DataTrigger>
                                                     </Style.Triggers>
@@ -897,7 +897,7 @@
                                     <TextBlock
                                         Grid.Column="0"
                                         Style="{StaticResource SmallWidgetContentTextBlockStyle}"
-                                        Text="{Binding WidgetSoLuongDaiLy}" />
+                                        Text="{Binding WidgetSoLuongDaiLyDangNo}" />
 
                                     <StackPanel
                                         Grid.Column="1"
@@ -909,7 +909,7 @@
                                             FontSize="20"
                                             FontWeight="Regular"
                                             LineHeight="16"
-                                            Text="{Binding WidgetSoLuongDaiLyDeltaText}" />
+                                            Text="{Binding WidgetSoLuongDaiLyDangNoDeltaText}" />
                                         <Image
                                             Width="20"
                                             Height="20"
@@ -921,7 +921,7 @@
                                                     <Setter Property="Source" Value="pack://application:,,,/QuanLyDaiLy;component/Resources/up.png" />
                                                     <Style.Triggers>
                                                         <!--  Nếu WidgetPhiXuatIsUp == False thì chuyển sang mũi tên xuống  -->
-                                                        <DataTrigger Binding="{Binding WidgetSoLuongDaiLyIsUp}" Value="False">
+                                                        <DataTrigger Binding="{Binding WidgetSoLuongDaiLyDangNoIsUp}" Value="False">
                                                             <Setter Property="Source" Value="pack://application:,,,/QuanLyDaiLy;component/Resources/image-removebg-preview.png" />
                                                         </DataTrigger>
                                                     </Style.Triggers>

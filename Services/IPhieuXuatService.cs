@@ -15,8 +15,12 @@ namespace QuanLyDaiLy.Services
         Task<IEnumerable<PhieuXuat>> GetPhieuXuatByDateRange(DateTime startDate, DateTime endDate);
         Task<int> GenerateAvailableId();
 
+        Task<IEnumerable<PhieuXuat>> GetPhieuXuatByCurrentYearAndLastYear(int currentYear, int lastYear);
+
+        Task<long> GetTotalPhieuXuatByYear(int year);
         Task<Dictionary<int, long>> GetTotalValueByDaiLyAsync(int month, int year);
         Task<long> GetTotalPhieuXuatByCurrentMonthYear(int month, int year);
+        Task<long> GetToltalPhieuXuatBySingleDate(DateTime date);
 
     }
 }

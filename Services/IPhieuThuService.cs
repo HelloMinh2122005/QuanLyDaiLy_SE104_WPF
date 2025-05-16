@@ -16,6 +16,7 @@ namespace QuanLyDaiLy.Services
         Task<int> GenerateAvailableId();
         Task<IEnumerable<PhieuThu>> GetPhieuThuByCurrentYearAndLastYear(int currentYear,int lastYear);
         Task<long> GetTotalPhieuThuUpToMonthYear(int month, int year);
-        Task<long> GetTotalPhieuThuByCurrentMonthYear(int month, int year);
+        Task<long> GetTotalPhieuThuByYear(int year);
+        Task<long> GetToltalPhieuThuBySingleDate(DateTime date);
     }
 }
