@@ -30,11 +30,32 @@ namespace QuanLyDaiLy.Repositories
                 .SumAsync(p => p.TongTriGia);
         }
 
+        public async Task<IEnumerable<PhieuXuat>> GetPhieuXuatPage(int offset, int size = 20)
+        {
+            return await _context.DsPhieuXuat
+                .Include(m => m.DaiLy)
+                .Skip(offset * size)
+                .Take(size)
+                .ToListAsync();
+        }
+
+        public async Task<int> GetTotalPages(int size = 20)
+        {
+            int leftover = await _context.DsPhieuXuat.CountAsync() % size;
+            int totalPages = await _context.DsPhieuXuat.CountAsync() / size;
+            if (leftover > 0)
+            {
+                totalPages++;
+            }
+            return totalPages;
+        }
+
         public async Task AddPhieuXuat(PhieuXuat phieuXuat)
         {
             _context.DsPhieuXuat.Add(phieuXuat);
             await _context.SaveChangesAsync();
         }
+
         public async Task<Dictionary<int, long>> GetTotalValueByDaiLyAsync(int month, int year)
         {
             // Lấy tổng TongTriGia của mỗi đại lý trong tháng/năm, không giới hạn số lượng

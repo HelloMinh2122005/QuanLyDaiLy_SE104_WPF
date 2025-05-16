@@ -6,6 +6,8 @@ namespace QuanLyDaiLy.Services
     {
         Task<PhieuXuat> GetPhieuXuatById(int id);
         Task<IEnumerable<PhieuXuat>> GetAllPhieuXuat();
+        Task<IEnumerable<PhieuXuat>> GetPhieuXuatPage(int offset, int size = 20);
+        Task<int> GetTotalPages(int size = 20);
         Task AddPhieuXuat(PhieuXuat phieuXuat);
         Task UpdatePhieuXuat(PhieuXuat phieuXuat);
         Task DeletePhieuXuat(int id);
