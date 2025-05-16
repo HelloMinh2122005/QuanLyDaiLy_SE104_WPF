@@ -372,28 +372,28 @@
                             <Button
                                 Command="{Binding PageSelectionCommand}"
                                 CommandParameter="{Binding ButtonParamFirst}"
-                                Content="1"
-                                Style="{StaticResource PageButtonSelectedStyle}" />
-                            <Button
+                                Content="{Binding ButtonContentFirst}"
+                                Style="{Binding ButtonStyleFirst}" />
+                             <Button
                                 Command="{Binding PageSelectionCommand}"
                                 CommandParameter="{Binding ButtonParamSecond}"
-                                Content="2"
-                                Style="{StaticResource PageButtonUnSelectedStyle}" />
-                            <Button
+                                Content="{Binding ButtonContentSecond}"
+                                Style="{Binding ButtonStyleSecond}" />
+                             <Button
                                 Command="{Binding PageSelectionCommand}"
                                 CommandParameter="{Binding ButtonParamThird}"
-                                Content="3"
-                                Style="{StaticResource PageButtonUnSelectedStyle}" />
-                            <Button
+                                Content="{Binding ButtonContentThird}"
+                                Style="{Binding ButtonStyleThird}" />
+                             <Button
                                 Command="{Binding PageSelectionCommand}"
                                 CommandParameter="{Binding ButtonParamForth}"
-                                Content="4"
-                                Style="{StaticResource PageButtonUnSelectedStyle}" />
-                            <Button
+                                Content="{Binding ButtonContentForth}"
+                                Style="{Binding ButtonStyleForth}" />
+                             <Button
                                 Command="{Binding PageSelectionCommand}"
                                 CommandParameter="{Binding ButtonParamFith}"
-                                Content="5"
-                                Style="{StaticResource PageButtonUnSelectedStyle}" />
+                                Content="{Binding ButtonContentFith}"
+                                Style="{Binding ButtonStyleFith}" />
                             <Border
                                 Width="1"
                                 Margin="4,0"

@@ -57,13 +57,24 @@ namespace QuanLyDaiLy.ViewModels.PhieuXuatViewModels
             }
         }
 
-        private ObservableCollection<DaiLy> _daiLies = [];
+        private ObservableCollection<DaiLy> _daiLies = new ObservableCollection<DaiLy>();
         public ObservableCollection<DaiLy> DaiLies
         {
             get => _daiLies;
             set
             {
                 _daiLies = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public string _tenDaiLy = string.Empty;
+        public string TenDaiLy
+        {
+            get => _tenDaiLy;
+            set
+            {
+                _tenDaiLy = value;
                 OnPropertyChanged();
             }
         }
@@ -101,7 +112,7 @@ namespace QuanLyDaiLy.ViewModels.PhieuXuatViewModels
             }
         }
 
-        private ObservableCollection<LoaiDaiLy> _loaiDaiLies = [];
+        private ObservableCollection<LoaiDaiLy> _loaiDaiLies = new ObservableCollection<LoaiDaiLy>();
         public ObservableCollection<LoaiDaiLy> LoaiDaiLies
         {
             get => _loaiDaiLies;
@@ -112,7 +123,7 @@ namespace QuanLyDaiLy.ViewModels.PhieuXuatViewModels
             }
         }
 
-        private ObservableCollection<Quan> _quans = [];
+        private ObservableCollection<Quan> _quans = new ObservableCollection<Quan>();
         public ObservableCollection<Quan> Quans
         {
             get => _quans;
@@ -134,7 +145,7 @@ namespace QuanLyDaiLy.ViewModels.PhieuXuatViewModels
             }
         }
 
-        private DateTime _ngayTiepNhanFrom;
+        private DateTime _ngayTiepNhanFrom = DateTime.MinValue;
         public DateTime NgayTiepNhanFrom
         {
             get => _ngayTiepNhanFrom;
@@ -145,7 +156,7 @@ namespace QuanLyDaiLy.ViewModels.PhieuXuatViewModels
             }
         }
 
-        private DateTime _ngayTiepNhanTo;
+        private DateTime _ngayTiepNhanTo = DateTime.Now;
         public DateTime NgayTiepNhanTo
         {
             get => _ngayTiepNhanTo;
@@ -200,7 +211,7 @@ namespace QuanLyDaiLy.ViewModels.PhieuXuatViewModels
             }
         }
 
-        private DateTime _ngayLapPhieuXuatFrom;
+        private DateTime _ngayLapPhieuXuatFrom = DateTime.MinValue;
         public DateTime NgayLapPhieuXuatFrom
         {
             get => _ngayLapPhieuXuatFrom;
@@ -211,7 +222,7 @@ namespace QuanLyDaiLy.ViewModels.PhieuXuatViewModels
             }
         }
 
-        private DateTime _ngayLapPhieuXuatTo;
+        private DateTime _ngayLapPhieuXuatTo = DateTime.Now;
         public DateTime NgayLapPhieuXuatTo
         {
             get => _ngayLapPhieuXuatTo;
@@ -401,8 +412,6 @@ namespace QuanLyDaiLy.ViewModels.PhieuXuatViewModels
         // Search Results
         private ObservableCollection<PhieuXuat> _searchResults = [];
         // Fix for CS1503: Update the type of the `SearchCompleted` event to match the type of `SearchResults`.
-
-        public event EventHandler<ObservableCollection<PhieuXuat>>? SearchCompleted;
         public ObservableCollection<PhieuXuat> SearchResults
         {
             get => _searchResults;
@@ -419,6 +428,7 @@ namespace QuanLyDaiLy.ViewModels.PhieuXuatViewModels
 
         private void CloseWindow()
         {
+            DataChanged?.Invoke(this, EventArgs.Empty);
             Application.Current.Windows.OfType<TraCuuPhieuXuatWindow>().FirstOrDefault()?.Close();
         }
 
@@ -437,14 +447,15 @@ namespace QuanLyDaiLy.ViewModels.PhieuXuatViewModels
                 Quans.Clear();
                 MatHangXuats.Clear();
                 DonViTinhs.Clear();
-                
+
 
                 // Populate the collections
-                LoaiDaiLies = [.. listLoaiDaiLy];
-                DaiLies = [.. listDaiLy];
-                Quans = [.. listQuan];
-                MatHangXuats = [.. listMatHang];
-                DonViTinhs = [.. listDonViTinh];
+                LoaiDaiLies = new ObservableCollection<LoaiDaiLy>(listLoaiDaiLy);
+                DaiLies = new ObservableCollection<DaiLy>(listDaiLy);
+                Quans = new ObservableCollection<Quan>(listQuan);
+                MatHangXuats = new ObservableCollection<MatHang>(listMatHang);
+                DonViTinhs = new ObservableCollection<DonViTinh>(listDonViTinh);
+
             }
             catch (Exception ex)
             {
@@ -456,46 +467,6 @@ namespace QuanLyDaiLy.ViewModels.PhieuXuatViewModels
         {
             try
             {
-                // 1. Kiểm tra nếu chưa nhập gì hết thì hỏi xác nhận
-                bool isFilterEmpty =
-                    string.IsNullOrEmpty(MaPhieuXuat) &&
-                    SelectedDaiLies.MaDaiLy == 0 &&
-                    string.IsNullOrEmpty(DienThoai) &&
-                    string.IsNullOrEmpty(Email) &&
-                    string.IsNullOrEmpty(DiaChi) &&
-                    SelectedLoaiDaiLies.MaLoaiDaiLy == 0 &&
-                    SelectedQuans.MaQuan == 0 &&
-                    NgayTiepNhanFrom == DateTime.MinValue &&
-                    NgayTiepNhanTo == DateTime.MinValue &&
-                    string.IsNullOrEmpty(NoDaiLyFrom) &&
-                    string.IsNullOrEmpty(NoDaiLyTo) &&
-                    NgayLapPhieuXuatFrom == DateTime.MinValue &&
-                    NgayLapPhieuXuatTo == DateTime.MinValue &&
-                    string.IsNullOrEmpty(TongGiaTriPhieuXuatFrom) &&
-                    string.IsNullOrEmpty(TongGiaTriPhieuXuatTo) &&
-                    SelectedMatHangXuats.MaMatHang == 0 &&
-                    SelectedDonViTinhs.MaDonViTinh == 0 &&
-                    string.IsNullOrEmpty(SoLuongXuatCuaMatHangXuatFrom) &&
-                    string.IsNullOrEmpty(SoLuongXuatCuaMatHangXuatTo) &&
-                    string.IsNullOrEmpty(DonGiaXuatCuaMatHangXuatFrom) &&
-                    string.IsNullOrEmpty(DonGiaXuatCuaMatHangXuatTo) &&
-                    string.IsNullOrEmpty(ThanhTienCuaMatHangXuatFrom) &&
-                    string.IsNullOrEmpty(ThanhTienCuaMatHangXuatTo) &&
-                    string.IsNullOrEmpty(SoLuongTonCuaMatHangXuatFrom) &&
-                    string.IsNullOrEmpty(SoLuongTonCuaMatHangXuatTo);
-
-                if (isFilterEmpty)
-                {
-                    var result = MessageBox.Show(
-                        "Bạn chưa nhập thông tin tìm kiếm mặt hàng.\nBạn có chắc muốn tiếp tục tra cứu không?",
-                        "Xác nhận",
-                        MessageBoxButton.YesNo,
-                        MessageBoxImage.Question);
-
-                    if (result == MessageBoxResult.No)
-                        return;  // Dừng hàm, không thực hiện search
-                }
-
                 var phieuXuats = await _phieuXuatService.GetAllPhieuXuat();
                 ObservableCollection<PhieuXuat> filteredResults = [.. phieuXuats];
 
@@ -589,31 +560,19 @@ namespace QuanLyDaiLy.ViewModels.PhieuXuatViewModels
                 }
                 else
                 {
-                    // Nếu chỉ nhập From
+                    
+                    // If only From is provided
                     if (NgayLapPhieuXuatFrom != DateTime.MinValue)
-                        // Fix for CS1061: Corrected the property name 'PhieuXuat.NgayLapPhieuXuat' to 'PhieuXuat.NgayLapPhieu' 
-                        // as per the provided type signature of 'PhieuXuat'.
-
-                        if (NgayLapPhieuXuatFrom != DateTime.MinValue && NgayLapPhieuXuatTo != DateTime.MinValue)
-                        {
-                            filteredResults = [.. filteredResults
-                                .Where(d => d.NgayLapPhieu >= NgayLapPhieuXuatFrom && d.NgayLapPhieu <= NgayLapPhieuXuatTo)];
-                        }
-                        else
-                        {
-                            // If only From is provided
-                            if (NgayLapPhieuXuatFrom != DateTime.MinValue)
-                            {
-                                filteredResults = [.. filteredResults
-                                    .Where(d => d.NgayLapPhieu >= NgayLapPhieuXuatFrom)];
-                            }
-                            // If only To is provided
-                            if (NgayLapPhieuXuatTo != DateTime.MinValue)
-                            {
-                                filteredResults = [.. filteredResults
-                                    .Where(d => d.NgayLapPhieu <= NgayLapPhieuXuatTo)];
-                            }
-                        }
+                    {
+                        filteredResults = [.. filteredResults
+                            .Where(d => d.NgayLapPhieu >= NgayLapPhieuXuatFrom)];
+                    }
+                    // If only To is provided
+                    if (NgayLapPhieuXuatTo != DateTime.MinValue)
+                    {
+                        filteredResults = [.. filteredResults
+                            .Where(d => d.NgayLapPhieu <= NgayLapPhieuXuatTo)];
+                    }
                 }
                 //—— hết phần lọc ngày lập phiếu xuất ——
 
@@ -758,12 +717,10 @@ namespace QuanLyDaiLy.ViewModels.PhieuXuatViewModels
                 //—— hết phần lọc số lượng tồn của mặt hàng xuất ——
 
                 SearchResults = [.. filteredResults];
-
                 // Raise the event with the search results
-                SearchCompleted?.Invoke(this, SearchResults);
                 ApplySearchResults();
 
-                if (SearchResults.Count == 0)
+                if (filteredResults.Count == 0)
                 {
                     MessageBox.Show("Không tìm thấy kết quả nào phù hợp!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
@@ -773,6 +730,8 @@ namespace QuanLyDaiLy.ViewModels.PhieuXuatViewModels
                 MessageBox.Show($"Lỗi khi tìm kiếm: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+
+        public event EventHandler<ObservableCollection<PhieuXuat>>? SearchCompleted;
 
         private void ApplySearchResults()
         {
@@ -785,6 +744,7 @@ namespace QuanLyDaiLy.ViewModels.PhieuXuatViewModels
 
         
         public event PropertyChangedEventHandler? PropertyChanged;
+        public event EventHandler? DataChanged;
 
         protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
         {

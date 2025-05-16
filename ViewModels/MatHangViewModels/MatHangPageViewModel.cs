@@ -57,7 +57,6 @@ namespace QuanLyDaiLy.ViewModels.MatHangViewModels
             {
                 _ = LoadDataAsync();
             }
-            
         }
 
         public void Receive(DataReloadMessage message)

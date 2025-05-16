@@ -3,9 +3,12 @@ using LiveCharts;
 using System.Windows.Media;
 using QuanLyDaiLy.Views.BaoCaoViews;
 using QuanLyDaiLy.Services;
-using QuanLyDaiLy.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+using QuanLyDaiLy.Messages;
+using Microsoft.Extensions.DependencyInjection;
+using System.Windows;
 
 namespace QuanLyDaiLy.ViewModels.BaoCaoViewModels
 {
@@ -15,29 +18,23 @@ namespace QuanLyDaiLy.ViewModels.BaoCaoViewModels
         private readonly IDaiLyService _daiLyService;
         private readonly IPhieuXuatService _phieuXuatService;
         private readonly IPhieuThuService _phieuThuService;
-        private readonly Func<string, int, BaoCaoDoanhSoViewModel> _monthYearDoanhSoFactory;
-        private readonly Func<string, int, BaoCaoCongNoViewModel> _monthYearCongNoFactory;
 
         public BaoCaoChiTietViewModel(
             IServiceProvider serviceProvider,
             IDaiLyService daiLyService,
             IPhieuXuatService phieuXuatService,
-            IPhieuThuService phieuThuService,
-            Func<string, int, BaoCaoDoanhSoViewModel> monthYearDoanhSoFactory,
-            Func<string, int, BaoCaoCongNoViewModel> monthYearCongNoFactory
+            IPhieuThuService phieuThuService
             )
         {
             _daiLyService = daiLyService;
             _serviceProvider = serviceProvider;
             _phieuXuatService = phieuXuatService;
             _phieuThuService = phieuThuService;
-            _monthYearDoanhSoFactory = monthYearDoanhSoFactory;
-            _monthYearCongNoFactory = monthYearCongNoFactory;
 
+            WeakReferenceMessenger.Default.RegisterAll(this);
 
             InitializeMonthYearOptions();
-            _ = InitializeDoanhSoData();
-            _ = InitializeCongNoData();
+            _ = InitializeAllData();
         }
 
         [ObservableProperty]
@@ -86,7 +83,7 @@ namespace QuanLyDaiLy.ViewModels.BaoCaoViewModels
 
         partial void OnSelectedDoanhSoMonthChanged(string value)
         {
-            UpdateDoanhSoData();
+            _ = UpdateDoanhSoData();
         }
 
         [ObservableProperty]
@@ -94,7 +91,7 @@ namespace QuanLyDaiLy.ViewModels.BaoCaoViewModels
 
         partial void OnSelectedDoanhSoYearChanged(int value)
         {
-            UpdateDoanhSoData();
+            _ = UpdateDoanhSoData();
         }
 
         [ObservableProperty]
@@ -102,7 +99,7 @@ namespace QuanLyDaiLy.ViewModels.BaoCaoViewModels
 
         partial void OnSelectedCongNoMonthChanged(string value)
         {
-            UpdateCongNoData();
+            _ = UpdateCongNoData();
         }
 
         [ObservableProperty]
@@ -110,28 +107,42 @@ namespace QuanLyDaiLy.ViewModels.BaoCaoViewModels
 
         partial void OnSelectedCongNoYearChanged(int value)
         {
-            UpdateCongNoData();
+            _ = UpdateCongNoData();
         }
-
-        // Event for data changes
-        public event EventHandler? DataChanged;
 
         [RelayCommand]
         private void DoanhSo()
         {
-            var viewModel_DoanhSo = _monthYearDoanhSoFactory(SelectedDoanhSoMonth, SelectedDoanhSoYear);
-            viewModel_DoanhSo.DataChanged += async (sender, e) => await InitializeDoanhSoData();
-            var doanhSoWindow = new BaoCaoDoanhSoWindow(viewModel_DoanhSo);
-            doanhSoWindow?.Show();
+            try
+            {
+                var window = _serviceProvider.GetRequiredService<BaoCaoDoanhSoWindow>();
+                int month = int.Parse(SelectedDoanhSoMonth.Replace("Tháng ", ""));
+                int year = SelectedDoanhSoYear;
+                WeakReferenceMessenger.Default.Send(new SelectedDateMessage(month, year));
+                window.Show();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi mở cửa sổ báo cáo doanh số: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
+
 
         [RelayCommand]
         private void CongNo()
         {
-            var viewModel_CongNow = _monthYearCongNoFactory(SelectedCongNoMonth, SelectedCongNoYear);
-            viewModel_CongNow.DataChanged += async (sender, e) => await InitializeCongNoData();
-            var congNoWindow = new BaoCaoCongNoWindow(viewModel_CongNow);
-            congNoWindow?.Show();
+            try
+            {
+                var window = _serviceProvider.GetRequiredService<BaoCaoCongNoWindow>();
+                int month = int.Parse(SelectedCongNoMonth.Replace("Tháng ", ""));
+                int year = SelectedCongNoYear;
+                WeakReferenceMessenger.Default.Send(new SelectedDateMessage(month, year));
+                window.Show();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi mở cửa sổ báo cáo công nợ: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         public void InitializeMonthYearOptions()
@@ -158,124 +169,179 @@ namespace QuanLyDaiLy.ViewModels.BaoCaoViewModels
             SelectedCongNoMonth = MonthOptions[currentMonth - 1];
             SelectedCongNoYear = currentYear;
         }
+        private async Task InitializeAllData()
+        {
+            try
+            {
+                // Chạy song song các hàm khởi tạo
+                await Task.WhenAll(
+                    InitializeDoanhSoData(),
+                    InitializeCongNoData()
+                );
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Lỗi khi khởi tạo dữ liệu: {ex.Message}");
+            }
+        }
 
         public async Task InitializeDoanhSoData()
         {
-            if (!int.TryParse(new string(SelectedDoanhSoMonth?.Where(char.IsDigit).ToArray()), out int selectedMonth))
+            // Kiểm tra và lấy tháng từ chuỗi "Tháng x"
+            if (string.IsNullOrEmpty(SelectedDoanhSoMonth) ||
+                !int.TryParse(new string(SelectedDoanhSoMonth.Where(char.IsDigit).ToArray()), out int selectedMonth))
                 return;
 
             int selectedYear = SelectedDoanhSoYear;
 
-            var allPhieuXuatsTask = _phieuXuatService.GetAllPhieuXuat();
-            var allDaiLysTask = _daiLyService.GetAllDaiLy();
-            await Task.WhenAll(allPhieuXuatsTask, allDaiLysTask);
-
-            var allPhieuXuats = allPhieuXuatsTask.Result
-                .Where(p => p.NgayLapPhieu.Month == selectedMonth && p.NgayLapPhieu.Year == selectedYear)
-                .ToList();
-
-            var doanhSoDict = allPhieuXuats
-                .GroupBy(p => p.MaDaiLy)
-                .ToDictionary(g => g.Key, g => g.Sum(p => p.TongTriGia));
-
-            var daiLyDoanhSoList = allDaiLysTask.Result
-                .Select(d => new
-                {
-                    d.TenDaiLy,
-                    TongDoanhSo = doanhSoDict.TryGetValue(d.MaDaiLy, out var value) ? value : 0
-                })
-                .OrderByDescending(d => d.TongDoanhSo)
-                .Take(10)
-                .ToList();
-
-            DoanhSoLabels = daiLyDoanhSoList.Select(d => d.TenDaiLy).ToArray();
-            DoanhSoSeries = new SeriesCollection
+            try
             {
-                new ColumnSeries
-                {
-                    Title = "Doanh số",
-                    Values = new ChartValues<double>(daiLyDoanhSoList.Select(d => (double)d.TongDoanhSo)),
-                    DataLabels = true,
-                    LabelPoint = point => point.Y.ToString("N0") + " đ",
-                    Fill = new SolidColorBrush(Color.FromRgb(76, 175, 80)),
-                    MaxColumnWidth = 50
-                }
-            };
-        }
+                // Khởi tạo các Task lấy dữ liệu đồng thời
+                var allPhieuXuatsTask = _phieuXuatService.GetAllPhieuXuat();
+                var allDaiLysTask = _daiLyService.GetAllDaiLy();
 
+                // Chờ cả hai tác vụ hoàn thành
+                var allPhieuXuats = await allPhieuXuatsTask;
+                var allDaiLys = await allDaiLysTask;
+
+                // Lọc phiếu xuất theo tháng và năm đã chọn
+                var filteredPhieuXuats = allPhieuXuats
+                    .Where(p => p.NgayLapPhieu.Month == selectedMonth && p.NgayLapPhieu.Year == selectedYear)
+                    .GroupBy(p => p.MaDaiLy)
+                    .ToDictionary(g => g.Key, g => g.Sum(p => p.TongTriGia));
+
+                // Tạo danh sách đại lý với doanh số tương ứng
+                var daiLyDoanhSoList = allDaiLys
+                    .Select(d => new
+                    {
+                        d.TenDaiLy,
+                        TongDoanhSo = filteredPhieuXuats.TryGetValue(d.MaDaiLy, out var value) ? value : 0
+                    })
+                    .OrderByDescending(d => d.TongDoanhSo)
+                    .Take(10)
+                    .ToList();
+
+                // Cập nhật label và series cho biểu đồ doanh số
+                DoanhSoLabels = daiLyDoanhSoList.Select(d => d.TenDaiLy).ToArray();
+                DoanhSoSeries = new SeriesCollection
+        {
+            new ColumnSeries
+            {
+                Title = "Doanh số",
+                Values = new ChartValues<double>(daiLyDoanhSoList.Select(d => (double)d.TongDoanhSo)),
+                DataLabels = true,
+                LabelPoint = point => point.Y.ToString("N0") + " đ",
+                Fill = new SolidColorBrush(Color.FromRgb(76, 175, 80)),
+                MaxColumnWidth = 50
+            }
+        };
+            }
+            catch (Exception ex)
+            {
+                // Log lỗi hoặc xử lý ngoại lệ tùy theo yêu cầu
+                Console.WriteLine($"Lỗi khi khởi tạo dữ liệu doanh số: {ex.Message}");
+            }
+        }
         public async Task InitializeCongNoData()
         {
-            var selectedMonth = int.Parse(new string(SelectedCongNoMonth.Where(char.IsDigit).ToArray()));
-            var selectedYear = SelectedCongNoYear;
-
-            var daiLyList = (await _daiLyService.GetAllDaiLy())?.ToList();
-
-            if (daiLyList == null || !daiLyList.Any())
+            try
             {
-                CongNoLabels = Array.Empty<string>();
-                CongNoSeries = new SeriesCollection();
-                return;
-            }
+                // Lấy tháng từ chuỗi "Tháng x"
+                if (!int.TryParse(new string(SelectedCongNoMonth.Where(char.IsDigit).ToArray()), out int selectedMonth))
+                    return;
 
-            var tasks = daiLyList.Select(async daiLy =>
-            {
-                var phieuThuTask = _phieuThuService.GetPhieuThuByDaiLyId(daiLy.MaDaiLy);
-                var phieuXuatTask = _phieuXuatService.GetPhieuXuatByDaiLyId(daiLy.MaDaiLy);
+                int selectedYear = SelectedCongNoYear;
 
-                await Task.WhenAll(phieuThuTask, phieuXuatTask);
+                // Lấy danh sách đại lý
+                var daiLyList = await _daiLyService.GetAllDaiLy();
 
-                var phieuThus = (phieuThuTask.Result ?? Enumerable.Empty<PhieuThu>())
-                    .Where(p => p.NgayThuTien.Month == selectedMonth && p.NgayThuTien.Year == selectedYear);
-
-                var phieuXuats = (phieuXuatTask.Result ?? Enumerable.Empty<PhieuXuat>())
-                    .Where(p => p.NgayLapPhieu.Month == selectedMonth && p.NgayLapPhieu.Year == selectedYear);
-
-                double tongThu = phieuThus.Sum(p => p.SoTienThu);
-                double tongXuat = phieuXuats.Sum(p => p.TongTriGia);
-                double congNo = tongXuat - tongThu;
-
-                return (TenDaiLy: daiLy.TenDaiLy, CongNo: congNo);
-            });
-
-            var daiLyCongNoList = await Task.WhenAll(tasks);
-
-            var filteredData = daiLyCongNoList
-                .OrderByDescending(d => d.CongNo)
-                .Take(10)
-                .ToArray();
-
-            if (!filteredData.Any())
-            {
-                CongNoLabels = Array.Empty<string>();
-                CongNoSeries = new SeriesCollection();
-                return;
-            }
-
-            CongNoLabels = filteredData.Select(d => d.TenDaiLy).ToArray();
-            var sortedDebts = filteredData.Select(d => d.CongNo).ToArray();
-
-            CongNoSeries = new SeriesCollection
-            {
-                new ColumnSeries
+                // Trường hợp không có đại lý
+                if (daiLyList == null || !daiLyList.Any())
                 {
-                    Title = "Công nợ",
-                    Values = new ChartValues<double>(sortedDebts),
-                    DataLabels = true,
-                    LabelPoint = point => point.Y.ToString("N0") + " đ",
-                    Fill = new SolidColorBrush(Color.FromRgb(233, 30, 99)),
-                    MaxColumnWidth = 50
+                    CongNoLabels = Array.Empty<string>();
+                    CongNoSeries = new SeriesCollection();
+                    return;
                 }
-            };
+
+                // Khởi tạo danh sách các tác vụ bất đồng bộ cho các đại lý
+                var tasks = daiLyList.Select(async daiLy =>
+                {
+                    try
+                    {
+                        // Lấy dữ liệu phiếu thu và phiếu xuất cho đại lý
+                        var phieuThu = await _phieuThuService.GetPhieuThuByDaiLyId(daiLy.MaDaiLy);
+                        var phieuXuat = await _phieuXuatService.GetPhieuXuatByDaiLyId(daiLy.MaDaiLy);
+
+                        var phieuThus = phieuThu
+                            .Where(p => p.NgayThuTien.Month == selectedMonth && p.NgayThuTien.Year == selectedYear);
+                        var phieuXuats = phieuXuat
+                            .Where(p => p.NgayLapPhieu.Month == selectedMonth && p.NgayLapPhieu.Year == selectedYear);
+
+                        double tongThu = phieuThus.Sum(p => p.SoTienThu);
+                        double tongXuat = phieuXuats.Sum(p => p.TongTriGia);
+                        double congNo = tongXuat - tongThu;
+
+                        return (TenDaiLy: daiLy.TenDaiLy, CongNo: congNo);
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Lỗi khi xử lý đại lý {daiLy.TenDaiLy}: {ex.Message}");
+                        return (TenDaiLy: daiLy.TenDaiLy, CongNo: 0);
+                    }
+                }).ToList();
+
+                // Chờ tất cả các tác vụ hoàn thành và lấy kết quả
+                var daiLyCongNoList = await Task.WhenAll(tasks);
+
+                // Sắp xếp và lọc ra top 10 công nợ lớn nhất
+                var filteredData = daiLyCongNoList
+                    .OrderByDescending(d => d.CongNo)
+                    .Take(10)
+                    .ToArray();
+
+                // Trường hợp không có dữ liệu
+                if (!filteredData.Any())
+                {
+                    CongNoLabels = Array.Empty<string>();
+                    CongNoSeries = new SeriesCollection();
+                    return;
+                }
+
+                // Cập nhật label và series cho biểu đồ công nợ
+                CongNoLabels = filteredData.Select(d => d.TenDaiLy).ToArray();
+                var sortedDebts = filteredData.Select(d => d.CongNo).ToArray();
+
+                CongNoSeries = new SeriesCollection
+        {
+            new ColumnSeries
+            {
+                Title = "Công nợ",
+                Values = new ChartValues<double>(sortedDebts),
+                DataLabels = true,
+                LabelPoint = point => point.Y.ToString("N0") + " đ",
+                Fill = new SolidColorBrush(Color.FromRgb(233, 30, 99)),
+                MaxColumnWidth = 50
+            }
+        };
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Lỗi khi khởi tạo dữ liệu công nợ: {ex.Message}");
+            }
         }
 
-        private async void UpdateDoanhSoData()
+
+
+        private async Task UpdateDoanhSoData()
         {
             await InitializeDoanhSoData();
         }
 
-        private async void UpdateCongNoData()
+        private async Task UpdateCongNoData()
         {
             await InitializeCongNoData();
         }
+
     }
 }
+

@@ -118,7 +118,6 @@ namespace QuanLyDaiLy.ViewModels.QuanViewModels
                 SearchResults = [.. filteredResults];
 
                 // Raise the event with the search results
-                SearchCompleted?.Invoke(this, SearchResults);
                 ApplySearchResults();
 
                 if (SearchResults.Count == 0)

@@ -1,48 +1,45 @@
-﻿using QuanLyDaiLy.Views.BaoCaoViews;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
+﻿using System.Collections.ObjectModel;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
-using QuanLyDaiLy.Commands;
-using System.Collections.ObjectModel;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+using QuanLyDaiLy.Messages;
+using QuanLyDaiLy.Models.dto;
 using QuanLyDaiLy.Services;
-using Microsoft.Win32;
-using System.IO;
+using QuanLyDaiLy.Views.BaoCaoViews;
+using QuanLyDaiLy.Views.MatHangViews;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
 
 namespace QuanLyDaiLy.ViewModels.BaoCaoViewModels
 {
-    public class BaoCaoDoanhSo
-    {
-        public int STT { get; set; }
-        public string TenDaiLy { get; set; }
-        public int SoLuongPhieuXuat { get; set; }
-        public decimal TongGiaTriGiaoDich { get; set; }
-        public double TiLe { get; set; }
-    }
-    public class BaoCaoDoanhSoViewModel : INotifyPropertyChanged
+    public partial class BaoCaoDoanhSoViewModel : ObservableObject, IRecipient<SelectedDateMessage>
     {
         private readonly IDaiLyService _daiLyService;
         private readonly IPhieuXuatService _phieuXuatService;
+        private string _selectedMonth;
+        private int _selectedYear;
 
         public BaoCaoDoanhSoViewModel(
-            string selectedMonth,
-            int selectedYear,
             IDaiLyService daiLyService,
             IPhieuXuatService phieuXuatService
         )
         {
             _daiLyService = daiLyService;
             _phieuXuatService = phieuXuatService;
+            WeakReferenceMessenger.Default.RegisterAll(this);
 
-            MonthOptions = 
-            [
+            MonthOptions = new ObservableCollection<string>
+            {
                 "Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4",
                 "Tháng 5", "Tháng 6", "Tháng 7", "Tháng 8",
                 "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"
-            ];
+            };
 
             int currentYear = DateTime.Now.Year;
             YearOptions = new ObservableCollection<int>();
@@ -51,18 +48,15 @@ namespace QuanLyDaiLy.ViewModels.BaoCaoViewModels
                 YearOptions.Add(i);
             }
 
-            SelectedMonth = selectedMonth;
-            SelectedYear = selectedYear;
+            SelectedMonth = MonthOptions.First();
+            SelectedYear = YearOptions.Last();
 
             _ = LoadData();
-            ExportToPDFCommand = new RelayCommand(ExportToPDF);
-            CloseCommand = new RelayCommand(CloseWindow);
         }
 
         public ObservableCollection<string> MonthOptions { get; set; }
         public ObservableCollection<int> YearOptions { get; set; }
 
-        private string _selectedMonth = "Tháng 1";
         public string SelectedMonth
         {
             get => _selectedMonth;
@@ -70,14 +64,12 @@ namespace QuanLyDaiLy.ViewModels.BaoCaoViewModels
             {
                 if (_selectedMonth != value)
                 {
-                    _selectedMonth = value;
-                    OnPropertyChanged();
+                    SetProperty(ref _selectedMonth, value);
                     _ = LoadData();
                 }
             }
         }
 
-        private int _selectedYear = DateTime.Now.Year;
         public int SelectedYear
         {
             get => _selectedYear;
@@ -85,8 +77,7 @@ namespace QuanLyDaiLy.ViewModels.BaoCaoViewModels
             {
                 if (_selectedYear != value)
                 {
-                    _selectedYear = value;
-                    OnPropertyChanged();
+                    SetProperty(ref _selectedYear, value);
                     _ = LoadData();
                 }
             }
@@ -96,31 +87,20 @@ namespace QuanLyDaiLy.ViewModels.BaoCaoViewModels
         public ObservableCollection<BaoCaoDoanhSo> BaoCaoDoanhSoList
         {
             get => _baoCaoDoanhSoList;
-            set
-            {
-                _baoCaoDoanhSoList = value;
-                OnPropertyChanged();
-            }
+            set => SetProperty(ref _baoCaoDoanhSoList, value);
         }
+
         private decimal _totalDoanhSo;
         public decimal TotalDoanhSo
         {
             get => _totalDoanhSo;
-            set
-            {
-                if (_totalDoanhSo != value)
-                {
-                    _totalDoanhSo = value;
-                    OnPropertyChanged();
-                }
-            }
+            set => SetProperty(ref _totalDoanhSo, value);
         }
 
         private async Task LoadData()
         {
             BaoCaoDoanhSoList.Clear();
 
-            // Lấy dữ liệu từ dịch vụ song song
             var allPhieuXuatTask = _phieuXuatService.GetAllPhieuXuat();
             var allDaiLyTask = _daiLyService.GetAllDaiLy();
 
@@ -130,7 +110,6 @@ namespace QuanLyDaiLy.ViewModels.BaoCaoViewModels
             int month = int.Parse(SelectedMonth.Replace("Tháng ", ""));
             int year = SelectedYear;
 
-            // Lọc phiếu xuất trong tháng và năm đã chọn
             var phieuTrongThang = allPhieuXuat
                 .Where(p => p.NgayLapPhieu.Month == month && p.NgayLapPhieu.Year == year)
                 .ToList();
@@ -140,7 +119,6 @@ namespace QuanLyDaiLy.ViewModels.BaoCaoViewModels
 
             foreach (var daiLy in allDaiLy)
             {
-                // Lấy phiếu xuất tương ứng với đại lý này trong tháng
                 var phieuCuaDaiLy = phieuTrongThang
                     .Where(p => p.MaDaiLy == daiLy.MaDaiLy)
                     .ToList();
@@ -165,17 +143,18 @@ namespace QuanLyDaiLy.ViewModels.BaoCaoViewModels
             {
                 foreach (var item in BaoCaoDoanhSoList)
                 {
-                    item.TiLe = Math.Round((double)(item.TongGiaTriGiaoDich / tongTatCa)*100, 2);
+                    item.TiLe = Math.Round((double)(item.TongGiaTriGiaoDich / tongTatCa) * 100, 2);
                 }
             }
         }
 
-
-
-
-
-        public ICommand ExportToPDFCommand { get; }
-        public ICommand CloseCommand { get; }
+        [RelayCommand]
+        private void Close()
+        {
+            WeakReferenceMessenger.Default.Send(new DataReloadMessage());
+            Application.Current.Windows.OfType<BaoCaoDoanhSoWindow>().FirstOrDefault()?.Close();
+        }
+        [RelayCommand]
         private void ExportToPDF()
         {
             if (BaoCaoDoanhSoList == null || BaoCaoDoanhSoList.Count == 0)
@@ -253,7 +232,7 @@ namespace QuanLyDaiLy.ViewModels.BaoCaoViewModels
                                         // Tiêu đề cột (Thêm màu nền xanh nhạt và căn giữa)
                                         table.Header(header =>
                                         {
-                                            header.Cell().Element(CellStyle).AlignCenter().Text("STT").Bold();  
+                                            header.Cell().Element(CellStyle).AlignCenter().Text("STT").Bold();
                                             header.Cell().Element(CellStyle).AlignCenter().Text("Tên Đại Lý").Bold();
                                             header.Cell().Element(CellStyle).AlignCenter().Text("Số Lượng Phiếu Xuất").Bold();
                                             header.Cell().Element(CellStyle).AlignCenter().Text("Tổng Giá Trị Giao Dịch").Bold();
@@ -307,23 +286,12 @@ namespace QuanLyDaiLy.ViewModels.BaoCaoViewModels
             }
         }
 
-
-
-
-
-
-
-        public event EventHandler? DataChanged;
-        private void CloseWindow()
+        public void Receive(SelectedDateMessage message)
         {
-            Application.Current.Windows.OfType<BaoCaoDoanhSoWindow>().FirstOrDefault()?.Close();
-        }
-
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            (int month, int year) = message.Value;
+            _selectedMonth = $"Tháng {month}";
+            _selectedYear = year;
+            _ = LoadData();
         }
     }
 }

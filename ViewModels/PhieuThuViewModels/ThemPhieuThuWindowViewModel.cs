@@ -1,8 +1,10 @@
 ﻿using System.Collections.ObjectModel;
 using System.Windows;
-using System.Windows.Input;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using QuanLyDaiLy.Commands;
+using QuanLyDaiLy.Messages;
 using QuanLyDaiLy.Models;
 using QuanLyDaiLy.Services;
 using QuanLyDaiLy.Views.PhieuThuViews;
@@ -11,6 +13,7 @@ namespace QuanLyDaiLy.ViewModels.PhieuThuViewModels
 {
     public partial class ThemPhieuThuWindowViewModel : ObservableObject
     {
+        // Services
         private readonly IPhieuThuService _phieuThuService;
         private readonly IDaiLyService _daiLyService;
         private readonly IThamSoService _thamSoService;
@@ -25,18 +28,8 @@ namespace QuanLyDaiLy.ViewModels.PhieuThuViewModels
             _daiLyService = daiLyService;
             _thamSoService = thamSoService;
 
-            // Initialize commands
-            CloseCommand = new RelayCommand(CloseWindow);
-            LapPhieuThuTienCommand = new RelayCommand(LapPhieuThu);
-
-            // Load initial data
             _ = LoadDataAsync();
         }
-
-
-        // Commands 
-        public ICommand CloseCommand { get; }
-        public ICommand LapPhieuThuTienCommand { get; }
 
         private async Task LoadDataAsync()
         {
@@ -57,18 +50,57 @@ namespace QuanLyDaiLy.ViewModels.PhieuThuViewModels
                     NoiDung = "Không áp dụng";
             }
         }
+
+        #region Binding Properties
+        [ObservableProperty]
+        private string _maPhieuThu = string.Empty;
+        [ObservableProperty]
+        private ObservableCollection<DaiLy> _daiLies = [];
+
+        private DaiLy _selectedDaiLy = null!;
+        public DaiLy SelectedDaiLy
+        {
+            get => _selectedDaiLy;
+            set
+            {
+                SetProperty(ref _selectedDaiLy, value);
+                if (_selectedDaiLy != null)
+                {
+                    SoDienThoai = _selectedDaiLy.DienThoai;
+                    Email = _selectedDaiLy.Email;
+                    DiaChi = _selectedDaiLy.DiaChi;
+                    NoDaiLy = _selectedDaiLy.TienNo;
+                }
+            }
+        }
+        [ObservableProperty]
+        private string _soDienThoai = string.Empty;
+        [ObservableProperty]
+        private string _email = string.Empty;
+        [ObservableProperty]
+        private string _diaChi = string.Empty;
+        [ObservableProperty]
+        private long _noDaiLy = 0;
+        [ObservableProperty]
+        private DateTime _ngayThuTien = DateTime.Now;
+        [ObservableProperty]
+        private long _soTienThu = 0;
+        [ObservableProperty] 
+        private string _noiDung = string.Empty;
+
+        private bool _quyDinhTienThuTienNo = true;
+        #endregion
+
+        #region RelayCommand
+        [RelayCommand]
         private void CloseWindow()
         {
-            DataChanged?.Invoke(this, EventArgs.Empty);
+            WeakReferenceMessenger.Default.Send(new DataReloadMessage());
             Application.Current.Windows.OfType<ThemPhieuThuWindow>().FirstOrDefault()?.Close();
         }
 
-        private void LapPhieuThu()
-        {
-            _ = LapPhieuThuAsync();
-        }
-
-        private async Task LapPhieuThuAsync()
+        [RelayCommand]
+        private async Task LapPhieuThu()
         {
             try
             {
@@ -112,120 +144,6 @@ namespace QuanLyDaiLy.ViewModels.PhieuThuViewModels
                     "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-
-        #region Binding Properties
-        private string _maPhieuThu = string.Empty;
-        public string MaPhieuThu
-        {
-            get => _maPhieuThu;
-            set
-            {
-                _maPhieuThu = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private ObservableCollection<DaiLy> _daiLies = [];
-        public ObservableCollection<DaiLy> DaiLies
-        {
-            get => _daiLies;
-            set
-            {
-                _daiLies = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private DaiLy _selectedDaiLy = null!;
-        public DaiLy SelectedDaiLy
-        {
-            get => _selectedDaiLy;
-            set
-            {
-                _selectedDaiLy = value;
-                OnPropertyChanged();
-                // Cập nhật lại thông tin đại lý khi chọn
-                if (_selectedDaiLy != null)
-                {
-                    SoDienThoai = _selectedDaiLy.DienThoai;
-                    Email = _selectedDaiLy.Email;
-                    DiaChi = _selectedDaiLy.DiaChi;
-                    NoDaiLy = _selectedDaiLy.TienNo;
-                }
-            }
-        }
-
-        private string _soDienThoai = string.Empty;
-        public string SoDienThoai
-        {
-            get => _soDienThoai;
-            set
-            {
-                _soDienThoai = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private string _email = string.Empty;
-        public string Email
-        {
-            get => _email;
-            set
-            {
-                _email = value;
-                OnPropertyChanged();
-            }
-        }
-        private string _diaChi = string.Empty;
-        public string DiaChi
-        {
-            get => _diaChi;
-            set
-            {
-                _diaChi = value;
-                OnPropertyChanged();
-            }
-        }
-        private long _noDaiLy = 0;
-        public long NoDaiLy
-        {
-            get => _noDaiLy;
-            set
-            {
-                _noDaiLy = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private DateTime _ngayThuTien = DateTime.Now;
-        public DateTime NgayThuTien
-        {
-            get => _ngayThuTien;
-            set
-            {
-                _ngayThuTien = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private long _soTienThu = 0;
-        public long SoTienThu
-        {
-            get => _soTienThu;
-            set
-            {
-                _soTienThu = value;
-                OnPropertyChanged();
-            }
-        }
-
-        [ObservableProperty] private string _noiDung;
-
-        private bool _quyDinhTienThuTienNo = true;
-        #endregion
-
-
-        // Event to notify parent view when data changes
-        public event EventHandler? DataChanged;
     }
+    #endregion
 }
