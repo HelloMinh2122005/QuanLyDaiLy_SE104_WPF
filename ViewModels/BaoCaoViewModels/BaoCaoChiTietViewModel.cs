@@ -3,9 +3,12 @@ using LiveCharts;
 using System.Windows.Media;
 using QuanLyDaiLy.Views.BaoCaoViews;
 using QuanLyDaiLy.Services;
-using QuanLyDaiLy.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+using QuanLyDaiLy.Messages;
+using Microsoft.Extensions.DependencyInjection;
+using System.Windows;
 
 namespace QuanLyDaiLy.ViewModels.BaoCaoViewModels
 {
@@ -15,25 +18,20 @@ namespace QuanLyDaiLy.ViewModels.BaoCaoViewModels
         private readonly IDaiLyService _daiLyService;
         private readonly IPhieuXuatService _phieuXuatService;
         private readonly IPhieuThuService _phieuThuService;
-        private readonly Func<string, int, BaoCaoDoanhSoViewModel> _monthYearDoanhSoFactory;
-        private readonly Func<string, int, BaoCaoCongNoViewModel> _monthYearCongNoFactory;
 
         public BaoCaoChiTietViewModel(
             IServiceProvider serviceProvider,
             IDaiLyService daiLyService,
             IPhieuXuatService phieuXuatService,
-            IPhieuThuService phieuThuService,
-            Func<string, int, BaoCaoDoanhSoViewModel> monthYearDoanhSoFactory,
-            Func<string, int, BaoCaoCongNoViewModel> monthYearCongNoFactory
+            IPhieuThuService phieuThuService
             )
         {
             _daiLyService = daiLyService;
             _serviceProvider = serviceProvider;
             _phieuXuatService = phieuXuatService;
             _phieuThuService = phieuThuService;
-            _monthYearDoanhSoFactory = monthYearDoanhSoFactory;
-            _monthYearCongNoFactory = monthYearCongNoFactory;
 
+            WeakReferenceMessenger.Default.RegisterAll(this);
 
             InitializeMonthYearOptions();
             _ = InitializeAllData();
@@ -85,7 +83,7 @@ namespace QuanLyDaiLy.ViewModels.BaoCaoViewModels
 
         partial void OnSelectedDoanhSoMonthChanged(string value)
         {
-            UpdateDoanhSoData();
+            _ = UpdateDoanhSoData();
         }
 
         [ObservableProperty]
@@ -93,7 +91,7 @@ namespace QuanLyDaiLy.ViewModels.BaoCaoViewModels
 
         partial void OnSelectedDoanhSoYearChanged(int value)
         {
-            UpdateDoanhSoData();
+            _ = UpdateDoanhSoData();
         }
 
         [ObservableProperty]
@@ -101,7 +99,7 @@ namespace QuanLyDaiLy.ViewModels.BaoCaoViewModels
 
         partial void OnSelectedCongNoMonthChanged(string value)
         {
-            UpdateCongNoData();
+            _ = UpdateCongNoData();
         }
 
         [ObservableProperty]
@@ -109,28 +107,42 @@ namespace QuanLyDaiLy.ViewModels.BaoCaoViewModels
 
         partial void OnSelectedCongNoYearChanged(int value)
         {
-            UpdateCongNoData();
+            _ = UpdateCongNoData();
         }
-
-        // Event for data changes
-        public event EventHandler? DataChanged;
 
         [RelayCommand]
         private void DoanhSo()
         {
-            var viewModel_DoanhSo = _monthYearDoanhSoFactory(SelectedDoanhSoMonth, SelectedDoanhSoYear);
-            viewModel_DoanhSo.DataChanged += async (sender, e) => await InitializeDoanhSoData();
-            var doanhSoWindow = new BaoCaoDoanhSoWindow(viewModel_DoanhSo);
-            doanhSoWindow?.Show();
+            try
+            {
+                var window = _serviceProvider.GetRequiredService<BaoCaoDoanhSoWindow>();
+                int month = int.Parse(SelectedDoanhSoMonth.Replace("Tháng ", ""));
+                int year = SelectedDoanhSoYear;
+                WeakReferenceMessenger.Default.Send(new SelectedDateMessage(month, year));
+                window.Show();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi mở cửa sổ báo cáo doanh số: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
+
 
         [RelayCommand]
         private void CongNo()
         {
-            var viewModel_CongNow = _monthYearCongNoFactory(SelectedCongNoMonth, SelectedCongNoYear);
-            viewModel_CongNow.DataChanged += async (sender, e) => await InitializeCongNoData();
-            var congNoWindow = new BaoCaoCongNoWindow(viewModel_CongNow);
-            congNoWindow?.Show();
+            try
+            {
+                var window = _serviceProvider.GetRequiredService<BaoCaoCongNoWindow>();
+                int month = int.Parse(SelectedCongNoMonth.Replace("Tháng ", ""));
+                int year = SelectedCongNoYear;
+                WeakReferenceMessenger.Default.Send(new SelectedDateMessage(month, year));
+                window.Show();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi mở cửa sổ báo cáo công nợ: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         public void InitializeMonthYearOptions()
@@ -230,10 +242,6 @@ namespace QuanLyDaiLy.ViewModels.BaoCaoViewModels
                 Console.WriteLine($"Lỗi khi khởi tạo dữ liệu doanh số: {ex.Message}");
             }
         }
-
-
-
-
         public async Task InitializeCongNoData()
         {
             try
@@ -324,14 +332,16 @@ namespace QuanLyDaiLy.ViewModels.BaoCaoViewModels
 
 
 
-        private async void UpdateDoanhSoData()
+        private async Task UpdateDoanhSoData()
         {
             await InitializeDoanhSoData();
         }
 
-        private async void UpdateCongNoData()
+        private async Task UpdateCongNoData()
         {
             await InitializeCongNoData();
         }
+
     }
 }
+

@@ -41,7 +41,7 @@ public static class ApplicationServiceExtensions
             var daiLyService = sp.GetRequiredService<IDaiLyService>();
             var phieuXuatService = sp.GetRequiredService<IPhieuXuatService>();
 
-            var vm = new BaoCaoDoanhSoViewModel(month, year, daiLyService, phieuXuatService);
+            var vm = new BaoCaoDoanhSoViewModel(daiLyService, phieuXuatService);
             return vm;
         });
 
@@ -51,7 +51,7 @@ public static class ApplicationServiceExtensions
             var phieuXuatService = sp.GetRequiredService<IPhieuXuatService>();
             var phieuThuService = sp.GetRequiredService<IPhieuThuService>();
 
-            var vm = new BaoCaoCongNoViewModel(month, year, daiLyService, phieuXuatService, phieuThuService);
+            var vm = new BaoCaoCongNoViewModel(daiLyService, phieuXuatService, phieuThuService);
             return vm;
         });
 
