@@ -106,12 +106,7 @@ public static class ApplicationServiceExtensions
 
         services.AddTransient<ViewModels.LoaiDaiLyViewModels.LoaiDaiLyPageViewModel>();
         services.AddTransient<ViewModels.LoaiDaiLyViewModels.ThemLoaiDaiLyViewModel>();
-        services.AddTransient<Func<int, ViewModels.LoaiDaiLyViewModels.CapNhatLoaiDaiLyViewModel>>(sp => loaiDaiLyId =>
-            new ViewModels.LoaiDaiLyViewModels.CapNhatLoaiDaiLyViewModel(
-                sp.GetRequiredService<ILoaiDaiLyService>(),
-                loaiDaiLyId
-            )
-        );
+        services.AddTransient<ViewModels.LoaiDaiLyViewModels.CapNhatLoaiDaiLyViewModel>();
         services.AddTransient<ViewModels.LoaiDaiLyViewModels.TraCuuLoaiDaiLyWindowViewModel>();
 
         services.AddTransient<ViewModels.QuanViewModels.QuanPageViewModel>();
