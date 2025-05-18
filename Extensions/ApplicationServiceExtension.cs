@@ -141,12 +141,7 @@ public static class ApplicationServiceExtensions
 
         services.AddTransient<ViewModels.DonViTinhViewModels.DonViTinhPageViewModel>();
         services.AddTransient<ViewModels.DonViTinhViewModels.ThemDonViTinhPageViewModel>();
-        services.AddTransient<Func<int, ViewModels.DonViTinhViewModels.CapNhatDonViTinhPageViewModel>>(dvt => dvtID =>
-            new ViewModels.DonViTinhViewModels.CapNhatDonViTinhPageViewModel(
-                dvt.GetRequiredService<IDonViTinhService>(),
-                dvtID
-            )
-        );
+        services.AddTransient<ViewModels.DonViTinhViewModels.CapNhatDonViTinhPageViewModel>();
 
         services.AddTransient<ViewModels.ThamSoViewModels.ThamSoPageViewModel>();
 
