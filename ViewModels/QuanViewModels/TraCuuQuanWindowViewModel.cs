@@ -15,6 +15,13 @@ namespace QuanLyDaiLy.ViewModels.QuanViewModels
     {
         private readonly IQuanService _quanService;
 
+        public TraCuuQuanWindowViewModel(IQuanService quanService)
+        {
+            _quanService = quanService;
+
+            _ = LoadDataAsync();
+        }
+
         [ObservableProperty]
         private string _maQuan = string.Empty;
 
@@ -25,13 +32,6 @@ namespace QuanLyDaiLy.ViewModels.QuanViewModels
         private ObservableCollection<Quan> _quans = [];
 
         public ObservableCollection<Quan> SearchResults = [];
-
-        public TraCuuQuanWindowViewModel(IQuanService quanService)
-        {
-            _quanService = quanService;
-
-            _ = LoadDataAsync();
-        }
 
         private async Task LoadDataAsync()
         {

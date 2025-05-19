@@ -1,102 +1,78 @@
-﻿using QuanLyDaiLy.Commands;
+﻿using System.Collections.ObjectModel;
+using System.Windows;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+using QuanLyDaiLy.Messages;
 using QuanLyDaiLy.Models;
 using QuanLyDaiLy.Services;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Windows.Input;
-using System.Windows;
+using QuanLyDaiLy.Views.DonViTinhViews;
 
 namespace QuanLyDaiLy.ViewModels.DonViTinhViewModels
 {
-    public class ThemDonViTinhPageViewModel : INotifyPropertyChanged
+    public partial class ThemDonViTinhPageViewModel : ObservableObject
     {
         private readonly IDonViTinhService _donViTinhService;
 
         public ThemDonViTinhPageViewModel(IDonViTinhService donViTinhService)
         {
             _donViTinhService = donViTinhService;
-
-            // Initialize commands
-            CloseWindowCommand = new RelayCommand(CloseWindow);
-            TiepNhanDonViTinhCommand = new RelayCommand(async () => await TiepNhanDonViTinh());
-            DonViTinhMoiCommand = new RelayCommand(DonViTinhMoi);
         }
 
-        // Properties for binding
-        private string _maDonViTinh = string.Empty;
-        public string MaDonViTinh
-        {
-            get => _maDonViTinh;
-            set
-            {
-                _maDonViTinh = value;
-                OnPropertyChanged();
-            }
-        }
+        // Binding properties with ObservableProperty attribute
+        [ObservableProperty]
+        private string _maDonViTinh = "";
 
-        private string _tenDonViTinh = string.Empty;
-        public string TenDonViTinh
-        {
-            get => _tenDonViTinh;
-            set
-            {
-                _tenDonViTinh = value;
-                OnPropertyChanged();
-            }
-        }
+        [ObservableProperty]
+        private string _tenDonViTinh = "";
 
-        // Commands
-        public ICommand CloseWindowCommand { get; }
-        public ICommand TiepNhanDonViTinhCommand { get; }
-        public ICommand DonViTinhMoiCommand { get; }
-
-        // Events
-        public event EventHandler? DataChanged;
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
+        [RelayCommand]
         private void CloseWindow()
         {
-            DataChanged?.Invoke(this, EventArgs.Empty);
-            Application.Current.Windows.OfType<Views.DonViTinhViews.ThemDonViTinhWindow>().FirstOrDefault()?.Close();
+            WeakReferenceMessenger.Default.Send(new DataReloadMessage());
+            Application.Current.Windows.OfType<ThemDonViTinhWindow>().FirstOrDefault()?.Close();
         }
 
+        [RelayCommand]
         private async Task TiepNhanDonViTinh()
         {
             if (string.IsNullOrWhiteSpace(TenDonViTinh))
             {
-                MessageBox.Show("Tên đơn vị tính không được để trống!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Tên đơn vị tính không được để trống!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
-            MaDonViTinh = (await _donViTinhService.GenerateAvailableId()).ToString();
-
-            DonViTinh donViTinh = new()
-            {
-                MaDonViTinh = int.Parse(MaDonViTinh),
-                TenDonViTinh = TenDonViTinh
-            };
-
             try
             {
+                MaDonViTinh = (await _donViTinhService.GenerateAvailableId()).ToString();
+
+                DonViTinh donViTinh = new()
+                {
+                    MaDonViTinh = int.Parse(MaDonViTinh),
+                    TenDonViTinh = TenDonViTinh,
+                };
+
                 await _donViTinhService.AddDonViTinh(donViTinh);
-                MessageBox.Show("Tiếp nhận đơn vị tính thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
-                DataChanged?.Invoke(this, EventArgs.Empty);
+                MessageBox.Show("Thêm đơn vị tính thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Lưu đơn vị tính không thành công", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Lỗi khi thêm đơn vị tính: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
+        [RelayCommand]
         private void DonViTinhMoi()
         {
-            TenDonViTinh = string.Empty;
-            MaDonViTinh = string.Empty;
+            try
+            {
+                MaDonViTinh = string.Empty;
+                TenDonViTinh = string.Empty;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi tạo đơn vị tính mới: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
     }
 }

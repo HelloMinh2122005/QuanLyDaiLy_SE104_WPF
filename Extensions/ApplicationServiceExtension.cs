@@ -106,12 +106,7 @@ public static class ApplicationServiceExtensions
 
         services.AddTransient<ViewModels.LoaiDaiLyViewModels.LoaiDaiLyPageViewModel>();
         services.AddTransient<ViewModels.LoaiDaiLyViewModels.ThemLoaiDaiLyViewModel>();
-        services.AddTransient<Func<int, ViewModels.LoaiDaiLyViewModels.CapNhatLoaiDaiLyViewModel>>(sp => loaiDaiLyId =>
-            new ViewModels.LoaiDaiLyViewModels.CapNhatLoaiDaiLyViewModel(
-                sp.GetRequiredService<ILoaiDaiLyService>(),
-                loaiDaiLyId
-            )
-        );
+        services.AddTransient<ViewModels.LoaiDaiLyViewModels.CapNhatLoaiDaiLyViewModel>();
         services.AddTransient<ViewModels.LoaiDaiLyViewModels.TraCuuLoaiDaiLyWindowViewModel>();
 
         services.AddTransient<ViewModels.QuanViewModels.QuanPageViewModel>();
@@ -143,12 +138,7 @@ public static class ApplicationServiceExtensions
 
         services.AddTransient<ViewModels.DonViTinhViewModels.DonViTinhPageViewModel>();
         services.AddTransient<ViewModels.DonViTinhViewModels.ThemDonViTinhPageViewModel>();
-        services.AddTransient<Func<int, ViewModels.DonViTinhViewModels.CapNhatDonViTinhPageViewModel>>(dvt => dvtID =>
-            new ViewModels.DonViTinhViewModels.CapNhatDonViTinhPageViewModel(
-                dvt.GetRequiredService<IDonViTinhService>(),
-                dvtID
-            )
-        );
+        services.AddTransient<ViewModels.DonViTinhViewModels.CapNhatDonViTinhPageViewModel>();
 
         services.AddTransient<ViewModels.ThamSoViewModels.ThamSoPageViewModel>();
 
