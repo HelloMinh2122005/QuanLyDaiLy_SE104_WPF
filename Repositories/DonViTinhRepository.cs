@@ -70,7 +70,7 @@ namespace QuanLyDaiLy.Repositories
             return maxId + 1;
         }
 
-        public async Task<IEnumerable<DonViTinh>> GetDonViTinhPage(int offset, int size = 12)
+        public async Task<IEnumerable<DonViTinh>> GetDonViTinhPage(int offset, int size = 20)
         {
             return await _context.DsDonViTinh
                 .Include(d => d.DsMatHang)
@@ -79,10 +79,10 @@ namespace QuanLyDaiLy.Repositories
                 .ToListAsync();
         }
 
-        public async Task<int> GetTotalPages(int size = 12)
+        public async Task<int> GetTotalPages(int size = 20)
         {
-            int leftover = await _context.DsQuan.CountAsync() % size;
-            int totalPages = await _context.DsQuan.CountAsync() / size;
+            int leftover = await _context.DsDonViTinh.CountAsync() % size;
+            int totalPages = await _context.DsDonViTinh.CountAsync() / size;
             if (leftover > 0)
             {
                 totalPages++;
