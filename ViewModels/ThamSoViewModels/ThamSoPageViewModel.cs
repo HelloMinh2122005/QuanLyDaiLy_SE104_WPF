@@ -1,13 +1,19 @@
-﻿using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Windows;
-using QuanLyDaiLy.Commands;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+using Microsoft.Extensions.DependencyInjection;
+using QuanLyDaiLy.Messages;
 using QuanLyDaiLy.Models;
 using QuanLyDaiLy.Services;
+using QuanLyDaiLy.Views.ThamSoViews;
+using System.Collections.ObjectModel;
+using System.Runtime.CompilerServices;
+using System.Windows;
+using System.Windows.Input;
 
 namespace QuanLyDaiLy.ViewModels.ThamSoViewModels
 {
-    public class ThamSoPageViewModel : INotifyPropertyChanged
+    public partial class ThamSoPageViewModel : ObservableObject, IRecipient<DataReloadMessage>
     {
         private readonly IThamSoService _thamsoService;
         private readonly IServiceProvider _serviceProvider;
@@ -19,58 +25,30 @@ namespace QuanLyDaiLy.ViewModels.ThamSoViewModels
         )
         {
             _thamsoService = thamSoService;
-            _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
+            _serviceProvider = serviceProvider;
+
+            WeakReferenceMessenger.Default.RegisterAll(this);
 
             // Load tham số từ cơ sở dữ liệu
-            _ = Load();
+            _ = LoadDataAsync();
         }
 
+        public void Receive(DataReloadMessage message)
+        {
+            _ = LoadDataAsync();
+        }
+
+        [ObservableProperty]
         private bool _quyDinhSoLuongDaiLyToiDa = true;
-        public bool QuyDinhSoLuongDaiLyToiDa
-        {
-            get => _quyDinhSoLuongDaiLyToiDa;
-            set
-            {
-                if (_quyDinhSoLuongDaiLyToiDa != value)
-                {
-                    _quyDinhSoLuongDaiLyToiDa = value;
-                    OnPropertyChanged();
-                    _ = SaveChangesToDatabase();
-                }
-            }
-        }
 
+        [ObservableProperty]
         private bool _quyDinhTienThuTienNo = true;
-        public bool QuyDinhTienThuTienNo
-        {
-            get => _quyDinhTienThuTienNo;
-            set
-            {
-                if (_quyDinhTienThuTienNo != value)
-                {
-                    _quyDinhTienThuTienNo = value;
-                    OnPropertyChanged();
-                    _ = SaveChangesToDatabase();
-                }
-            }
-        }
 
+        [ObservableProperty]
         private int _soLuongDaiLyToiDa = 4;
-        public int SoLuongDaiLyToiDa
-        {
-            get => _soLuongDaiLyToiDa;
-            set
-            {
-                if (_soLuongDaiLyToiDa != value)
-                {
-                    _soLuongDaiLyToiDa = value;
-                    OnPropertyChanged();
-                    _ = SaveChangesToDatabase();
-                }
-            }
-        }
 
-        private async Task Load()
+
+        private async Task LoadDataAsync()
         {
             try
             {
@@ -88,7 +66,7 @@ namespace QuanLyDaiLy.ViewModels.ThamSoViewModels
             }
         }
 
-        // Phương thức để lưu thay đổi vào cơ sở dữ liệu
+        [RelayCommand]
         private async Task SaveChangesToDatabase()
         {
             try
@@ -113,20 +91,12 @@ namespace QuanLyDaiLy.ViewModels.ThamSoViewModels
                     thamSo.SoLuongDaiLyToiDa = SoLuongDaiLyToiDa;
 
                     await _thamsoService.UpdateThamSo(thamSo);
-                    //await Load();
                 }
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Có lỗi khi lưu tham số vào cơ sở dữ liệu: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-        }
-
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

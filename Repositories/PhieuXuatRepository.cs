@@ -19,6 +19,41 @@ namespace QuanLyDaiLy.Repositories
             }
         }
 
+        public async Task<long> GetTotalPhieuXuatByYear(int year)
+        {
+            // Xác định ngày bắt đầu và ngày kết thúc của năm
+            var startDate = new DateTime(year, 1, 1); // Ngày 1 tháng 1 của năm
+            var endDate = new DateTime(year, 12, 31); // Ngày 31 tháng 12 của năm
+            // Đếm tất cả phiếu xuất có NgayLapPhieu trong khoảng thời gian này và tính tổng giá trị
+            return await _context.DsPhieuXuat
+                .Where(p => p.NgayLapPhieu >= startDate && p.NgayLapPhieu <= endDate)
+                .SumAsync(p => p.TongTriGia);
+        }
+
+        public async Task<long> GetToltalPhieuXuatBySingleDate(DateTime date)
+        {
+            // Lấy danh sách các phiếu thu cho ngày cụ thể
+            var phieuThus = await _context.DsPhieuXuat
+                .Where(p => p.NgayLapPhieu.Year == date.Year && p.NgayLapPhieu.Month == date.Month && p.NgayLapPhieu.Day == date.Day)
+                .ToListAsync();  // Lấy tất cả phiếu thu trong ngày
+
+            // Nếu không có phiếu thu, trả về 0
+            if (phieuThus == null || !phieuThus.Any())
+            {
+                return 0;
+            }
+
+            // Nếu có phiếu thu, tính tổng số tiền thu
+            return phieuThus.Sum(p => p.TongTriGia);
+        }
+        public async Task<IEnumerable<PhieuXuat>> GetPhieuXuatByCurrentYearAndLastYear(int currentYear, int lastYear)
+        {
+            return await _context.DsPhieuXuat
+                .Include(p => p.DaiLy)
+                .Where(p => new[] { currentYear, lastYear }.Contains(p.NgayLapPhieu.Year))
+                .ToListAsync();
+
+        }
         public async Task<long> GetTotalPhieuXuatByCurrentMonthYear(int month, int year)
         {
             // Xác định ngày đầu và cuối của tháng/year
@@ -30,11 +65,32 @@ namespace QuanLyDaiLy.Repositories
                 .SumAsync(p => p.TongTriGia);
         }
 
+        public async Task<IEnumerable<PhieuXuat>> GetPhieuXuatPage(int offset, int size = 20)
+        {
+            return await _context.DsPhieuXuat
+                .Include(m => m.DaiLy)
+                .Skip(offset * size)
+                .Take(size)
+                .ToListAsync();
+        }
+
+        public async Task<int> GetTotalPages(int size = 20)
+        {
+            int leftover = await _context.DsPhieuXuat.CountAsync() % size;
+            int totalPages = await _context.DsPhieuXuat.CountAsync() / size;
+            if (leftover > 0)
+            {
+                totalPages++;
+            }
+            return totalPages;
+        }
+
         public async Task AddPhieuXuat(PhieuXuat phieuXuat)
         {
             _context.DsPhieuXuat.Add(phieuXuat);
             await _context.SaveChangesAsync();
         }
+
         public async Task<Dictionary<int, long>> GetTotalValueByDaiLyAsync(int month, int year)
         {
             // Lấy tổng TongTriGia của mỗi đại lý trong tháng/năm, không giới hạn số lượng

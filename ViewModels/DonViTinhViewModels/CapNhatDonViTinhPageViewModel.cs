@@ -1,62 +1,45 @@
-﻿using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using QuanLyDaiLy.Commands;
-using System.Windows.Input;
+﻿using System.Collections.ObjectModel;
 using System.Windows;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+using QuanLyDaiLy.Messages;
+using QuanLyDaiLy.Models;
 using QuanLyDaiLy.Services;
 using QuanLyDaiLy.Views.DonViTinhViews;
+using QuanLyDaiLy.Views.MatHangViews;
 
 namespace QuanLyDaiLy.ViewModels.DonViTinhViewModels
 {
-    public class CapNhatDonViTinhPageViewModel : INotifyPropertyChanged
+    public partial class CapNhatDonViTinhPageViewModel :
+        ObservableObject,
+        IRecipient<SelectedIdMessage>
     {
         private readonly IDonViTinhService _donViTinhService;
-        private readonly int _donViTinhId;
+        private int _donViTinhId;
 
-        public CapNhatDonViTinhPageViewModel(
-            IDonViTinhService donViTinhService,
-            int donViTinhId
-        )
+        public CapNhatDonViTinhPageViewModel(IDonViTinhService donViTinhService)
         {
-            _donViTinhId = donViTinhId;
             _donViTinhService = donViTinhService;
 
-            CloseWindowCommand = new RelayCommand(CloseWindow);
-            EditDonViTinhCommand = new RelayCommand(async () => await CapNhatDonViTinh());
+            WeakReferenceMessenger.Default.RegisterAll(this);
+        }
 
+        public void Receive(SelectedIdMessage message)
+        {
+            _donViTinhId = message.Value;
+            // Load data
             _ = LoadDataAsync();
         }
 
-        // Properties for binding
-        private string _maDonViTinh = string.Empty;
-        public string MaDonViTinh
-        {
-            get => _maDonViTinh;
-            set
-            {
-                _maDonViTinh = value;
-                OnPropertyChanged();
-            }
-        }
+        // Binding properties with ObservableProperty attribute
+        [ObservableProperty]
+        private string _maDonViTinh = "";
 
-        private string _tenDonViTinh = string.Empty;
-        public string TenDonViTinh
-        {
-            get => _tenDonViTinh;
-            set
-            {
-                _tenDonViTinh = value;
-                OnPropertyChanged();
-            }
-        }
+        [ObservableProperty]
+        private string _tenDonViTinh = "";
 
-        // Event for notifying parent components
-        public event EventHandler? DataChanged;
-
-        // Commands
-        public ICommand CloseWindowCommand { get; }
-        public ICommand EditDonViTinhCommand { get; }
-
+        // Methods
         private async Task LoadDataAsync()
         {
             try
@@ -71,17 +54,19 @@ namespace QuanLyDaiLy.ViewModels.DonViTinhViewModels
             }
         }
 
+        [RelayCommand]
         private void CloseWindow()
         {
-            DataChanged?.Invoke(this, EventArgs.Empty);
+            WeakReferenceMessenger.Default.Send(new DataReloadMessage());
             Application.Current.Windows.OfType<CapNhatDonViTinhWindow>().FirstOrDefault()?.Close();
         }
 
-        private async Task CapNhatDonViTinh()
+        [RelayCommand]
+        private async Task EditDonViTinh()
         {
             if (string.IsNullOrWhiteSpace(TenDonViTinh))
             {
-                MessageBox.Show("Tên đơn vị tính không được để trống!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Tên đơn vị tính không được để trống!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
@@ -92,20 +77,13 @@ namespace QuanLyDaiLy.ViewModels.DonViTinhViewModels
                 existingDonViTinh.TenDonViTinh = TenDonViTinh;
 
                 await _donViTinhService.UpdateDonViTinh(existingDonViTinh);
-                MessageBox.Show("Cập nhật đơn vị tính thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
-                DataChanged?.Invoke(this, EventArgs.Empty);
+
+                MessageBox.Show("Cập nhật đơn vị tính thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Lỗi khi cập nhật đơn vị tính: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Lỗi khi cập nhật đơn vị tính: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-        }
-
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

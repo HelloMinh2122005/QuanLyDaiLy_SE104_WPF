@@ -44,6 +44,8 @@ namespace QuanLyDaiLy.ViewModels.MatHangViewModels
         {
             try
             {
+                MaMatHang = (await _matHangService.GenerateAvailableId()).ToString();
+
                 var donViTinhs = await _donViTinhService.GetAllDonViTinh();
                 DonViTinhs = [.. donViTinhs];
 
@@ -82,7 +84,7 @@ namespace QuanLyDaiLy.ViewModels.MatHangViewModels
 
             try
             {
-                MaMatHang = (await _matHangService.GenerateAvailableId()).ToString();
+                
 
                 MatHang matHang = new()
                 {

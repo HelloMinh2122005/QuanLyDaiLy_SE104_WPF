@@ -2,15 +2,19 @@
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Input;
-using QuanLyDaiLy.Commands;
 using QuanLyDaiLy.Models;
 using QuanLyDaiLy.Models.dto;
 using QuanLyDaiLy.Services;
 using QuanLyDaiLy.Views.PhieuXuatViews;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+using QuanLyDaiLy.Messages;
+using QuanLyDaiLy.Views.MatHangViews;
 
 namespace QuanLyDaiLy.ViewModels.PhieuXuatViewModels
 {
-    public class ThemPhieuXuatWindowViewModel : INotifyPropertyChanged
+    public partial class ThemPhieuXuatWindowViewModel : ObservableObject
     {
         private readonly IPhieuXuatService _phieuXuatService;
         private readonly IChiTietPhieuXuatService _phieuXuatChiTietService;
@@ -32,14 +36,6 @@ namespace QuanLyDaiLy.ViewModels.PhieuXuatViewModels
             _matHangService = matHangService;
             _loaiDaiLyService = loaiDaiLyService;
 
-            // Initialize commands
-            CloseCommand = new RelayCommand(CloseWindow);
-            LapPhieuXuatCommand = new RelayCommand(LapPhieuXuat);
-            PhieuXuatMoiCommand = new RelayCommand(PhieuXuatMoi);
-            ThemMatHangCommand = new RelayCommand(ThemMatHang);
-            XoaMatHangCommand = new RelayCommand(XoaMatHang);
-            BoChonMatHangCommand = new RelayCommand(BoChonMatHang);
-
             _ = LoadDataAsync();
         }
 
@@ -47,132 +43,43 @@ namespace QuanLyDaiLy.ViewModels.PhieuXuatViewModels
         private List<MatHang> _danhSachMatHang = [];
         private List<MatHang> _danhSachMatHangDaChon = [];
 
-        // Properties for binding
+        [ObservableProperty]
         private string _maPhieuXuat = string.Empty;
-        public string MaPhieuXuat
-        {
-            get => _maPhieuXuat;
-            set
-            {
-                _maPhieuXuat = value;
-                OnPropertyChanged();
-            }
-        }
 
+        [ObservableProperty]
         private ObservableCollection<DisplayMatHangPhieuXuat> _danhSachMatHangPhieuXuat = [];
-        public ObservableCollection<DisplayMatHangPhieuXuat> DanhSachMatHangPhieuXuat
-        {
-            get => _danhSachMatHangPhieuXuat;
-            set
-            {
-                _danhSachMatHangPhieuXuat = value;
-                OnPropertyChanged();
-            }
-        }
 
+        [ObservableProperty]
         private DisplayMatHangPhieuXuat _selectedMatHangPhieuXuat = null!;
-        public DisplayMatHangPhieuXuat SelectedMatHangPhieuXuat
-        {
-            get => _selectedMatHangPhieuXuat;
-            set
-            {
-                _selectedMatHangPhieuXuat = value;
-                OnPropertyChanged();
-                if (value != null)
-                {
-                    TongTien = value.SoLuongXuat * value.DonGiaXuat;
-                    CalculateTongTien();
-                }
-            }
-        }
 
+        [ObservableProperty]
         private ObservableCollection<DaiLy> _daiLies = [];
-        public ObservableCollection<DaiLy> DaiLies
-        {
-            get => _daiLies;
-            set
-            {
-                _daiLies = value;
-                OnPropertyChanged();
-            }
-        }
 
+        [ObservableProperty]
         private DaiLy _selectedDaiLy = null!;
-        public DaiLy SelectedDaiLy
-        {
-            get => _selectedDaiLy;
-            set
-            {
-                _selectedDaiLy = value;
-                OnPropertyChanged();
 
-                if (value != null)
-                {
-                    _ = UpdateTien();
-                }
-            }
-        }
-
+        [ObservableProperty]
         private long _noToiDa = 0;
-        public long NoToiDa
-        {
-            get => _noToiDa;
-            set
-            {
-                _noToiDa = value;
-                OnPropertyChanged();
-            }
-        }
 
+        [ObservableProperty]
         private long _tienNo = 0;
-        public long TienNo
-        {
-            get => _tienNo;
-            set
-            {
-                _tienNo = value;
-                OnPropertyChanged();
-            }
-        }
 
+        [ObservableProperty]
         private DateTime _ngayLap = DateTime.Now;
-        public DateTime NgayLap
-        {
-            get => _ngayLap;
-            set
-            {
-                _ngayLap = value;
-                OnPropertyChanged();
-            }
-        }
 
+        [ObservableProperty]
         private long _tongTien = 0;
-        public long TongTien
-        {
-            get => _tongTien;
-            set
-            {
-                _tongTien = value;
-                OnPropertyChanged();
-            }
-        }
 
-        // Commands 
-        public ICommand CloseCommand { get; }
-        public ICommand LapPhieuXuatCommand { get; }
-        public ICommand PhieuXuatMoiCommand { get; }
-        public ICommand ThemMatHangCommand { get; }
-        public ICommand XoaMatHangCommand { get; }
-        public ICommand BoChonMatHangCommand { get; }
-    
 
         // Methods for commands
+        [RelayCommand]
         private void CloseWindow()
         {
-            DataChanged?.Invoke(this, EventArgs.Empty);
+            WeakReferenceMessenger.Default.Send(new DataReloadMessage());
             Application.Current.Windows.OfType<ThemPhieuXuatWindow>().FirstOrDefault()?.Close();
         }
 
+        [RelayCommand]
         private void LapPhieuXuat()
         {
             // Use Task.Run to execute the async method without awaiting
@@ -281,7 +188,7 @@ namespace QuanLyDaiLy.ViewModels.PhieuXuatViewModels
             }
         }
 
-
+        [RelayCommand]
         private void PhieuXuatMoi()
         {
             SelectedDaiLy = null!;
@@ -290,6 +197,7 @@ namespace QuanLyDaiLy.ViewModels.PhieuXuatViewModels
             _ = LoadDataAsync();
         }
 
+        [RelayCommand]
         private void UpdateAvailableLists()
         {
             var selectedIds = DanhSachMatHangPhieuXuat.Select(r => r.SelectedMatHang.MaMatHang).ToHashSet();
@@ -304,25 +212,7 @@ namespace QuanLyDaiLy.ViewModels.PhieuXuatViewModels
             }
         }
 
-        //private void ThemMatHang()
-        //{
-        //    if (_danhSachMatHang.Any())
-        //    {
-        //        SelectedMatHangPhieuXuat = null!;
-
-        //        var newItem = new DisplayMatHangPhieuXuat(_danhSachMatHang);
-        //        newItem.ThanhTienChanged += (s, e) => CalculateTongTien();
-
-        //        DanhSachMatHangPhieuXuat.Add(newItem);
-        //        _danhSachMatHangDaChon.Add(_danhSachMatHang.First());
-        //        _danhSachMatHang.RemoveAt(0);
-        //    }
-        //    else
-        //    {
-        //        MessageBox.Show("Đã nhập đầy đủ mặt hàng");
-        //    }
-        //}
-
+        [RelayCommand]
         private void ThemMatHang()
         {
             var available = new List<MatHang>(_danhSachMatHang);
@@ -342,6 +232,7 @@ namespace QuanLyDaiLy.ViewModels.PhieuXuatViewModels
             CalculateTongTien();
         }
 
+        [RelayCommand]
         private void XoaMatHang()
         {
             if (SelectedMatHangPhieuXuat == null)
@@ -361,11 +252,13 @@ namespace QuanLyDaiLy.ViewModels.PhieuXuatViewModels
             }
         }
 
+        [RelayCommand]
         private void BoChonMatHang()
         {
             SelectedMatHangPhieuXuat = null!;
         }
 
+        [RelayCommand]
         private void CalculateTongTien()
         {
             TongTien = DanhSachMatHangPhieuXuat.Sum(item => item.ThanhTien);
@@ -386,6 +279,7 @@ namespace QuanLyDaiLy.ViewModels.PhieuXuatViewModels
             }
         }
 
+        [RelayCommand]
         private async Task UpdateTien()
         {
             try
@@ -397,14 +291,6 @@ namespace QuanLyDaiLy.ViewModels.PhieuXuatViewModels
             {
                 MessageBox.Show(ex.Message, "Please god don't go in here" );
             }
-        }
-
-        // Event to notify parent view when data changes
-        public event EventHandler? DataChanged;
-        public event PropertyChangedEventHandler? PropertyChanged;
-        protected virtual void OnPropertyChanged([System.Runtime.CompilerServices.CallerMemberName] string? propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

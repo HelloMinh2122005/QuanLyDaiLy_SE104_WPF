@@ -1,81 +1,42 @@
-﻿using QuanLyDaiLy.Commands;
+﻿using System.Collections.ObjectModel;
+using System.Windows;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+using QuanLyDaiLy.Messages;
 using QuanLyDaiLy.Models;
 using QuanLyDaiLy.Services;
 using QuanLyDaiLy.Views.LoaiDaiLyViews;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
-using System.Windows;
 
 namespace QuanLyDaiLy.ViewModels.LoaiDaiLyViewModels
 {
-    public class ThemLoaiDaiLyViewModel : INotifyPropertyChanged
+    public partial class ThemLoaiDaiLyViewModel : ObservableObject
     {
         private readonly ILoaiDaiLyService _loaiDaiLyService;
 
         public ThemLoaiDaiLyViewModel(ILoaiDaiLyService loaiDaiLyService)
         {
             _loaiDaiLyService = loaiDaiLyService;
-
-            // Initialize commands
-            CloseWindowCommand = new RelayCommand(CloseWindow);
-            TiepNhanLoaiDaiLyCommand = new RelayCommand(async () => await TiepNhanLoaiDaiLy());
-            LoaiDaiLyMoiCommand = new RelayCommand(LoaiDaiLyMoi);
         }
 
-        // Event to notify parent view when data changes
-        public event EventHandler? DataChanged;
+        // Binding properties with ObservableProperty attribute
+        [ObservableProperty]
+        private string _maLoaiDaiLy = "";
 
-        // Properties for binding
-        private string _maLoaiDaiLy = string.Empty;
-        public string MaLoaiDaiLy
-        {
-            get => _maLoaiDaiLy;
-            set
-            {
-                _maLoaiDaiLy = value;
-                OnPropertyChanged();
-            }
-        }
+        [ObservableProperty]
+        private string _tenLoaiDaiLy = "";
 
-        private string _tenLoaiDaiLy = string.Empty;
-        public string TenLoaiDaiLy
-        {
-            get => _tenLoaiDaiLy;
-            set
-            {
-                _tenLoaiDaiLy = value;
-                OnPropertyChanged();
-            }
-        }
+        [ObservableProperty]
+        private string _noToiDa = "";
 
-        private string _noToiDa = string.Empty;
-        public string NoToiDa
-        {
-            get => _noToiDa;
-            set
-            {
-                _noToiDa = value;
-                OnPropertyChanged();
-            }
-        }
-
-        // Commands
-        public ICommand CloseWindowCommand { get; }
-        public ICommand TiepNhanLoaiDaiLyCommand { get; }
-        public ICommand LoaiDaiLyMoiCommand { get; }
-
+        [RelayCommand]
         private void CloseWindow()
         {
-            DataChanged?.Invoke(this, EventArgs.Empty);
+            WeakReferenceMessenger.Default.Send(new DataReloadMessage());
             Application.Current.Windows.OfType<ThemLoaiDaiLyWindow>().FirstOrDefault()?.Close();
         }
 
+        [RelayCommand]
         private async Task TiepNhanLoaiDaiLy()
         {
             if (string.IsNullOrWhiteSpace(TenLoaiDaiLy))
@@ -103,26 +64,26 @@ namespace QuanLyDaiLy.ViewModels.LoaiDaiLyViewModels
 
                 await _loaiDaiLyService.AddLoaiDaiLy(loaiDaiLy);
                 MessageBox.Show("Thêm loại đại lý thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
-                DataChanged?.Invoke(this, EventArgs.Empty);
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Thêm loại đại lý không thành công", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Lỗi khi thêm loại đại lý: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
+        [RelayCommand]
         private void LoaiDaiLyMoi()
         {
-            MaLoaiDaiLy = string.Empty;
-            TenLoaiDaiLy = string.Empty;
-            NoToiDa = string.Empty;
-        }
-
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            try
+            {
+                MaLoaiDaiLy = string.Empty;
+                TenLoaiDaiLy = string.Empty;
+                NoToiDa = string.Empty;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi tạo loại đại lý mới: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
     }
 }

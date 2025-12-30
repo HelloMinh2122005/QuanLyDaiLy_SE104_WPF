@@ -19,12 +19,13 @@ namespace QuanLyDaiLy.Repositories
             }
         }
 
-        public async Task<long> GetTotalPhieuThuByCurrentMonthYear(int month, int year)
+        public async Task<long> GetTotalPhieuThuByYear(int year)
         {
-            // Xác định ngày đầu và cuối của tháng/year
-            var startDate = new DateTime(year, month, 1);
-            var endDate = new DateTime(year, month, DateTime.DaysInMonth(year, month));
-            // Đếm tất cả phiếu thu có NgayThuTien trong khoảng thời gian này
+            // Xác định ngày bắt đầu và ngày kết thúc của năm
+            var startDate = new DateTime(year, 1, 1); // Ngày 1 tháng 1 của năm
+            var endDate = new DateTime(year, 12, 31); // Ngày 31 tháng 12 của năm
+
+            // Đếm tất cả phiếu thu có NgayThuTien trong khoảng thời gian này và tính tổng giá trị
             return await _context.DsPhieuThu
                 .Where(p => p.NgayThuTien >= startDate && p.NgayThuTien <= endDate)
                 .SumAsync(p => p.SoTienThu);
@@ -39,11 +40,13 @@ namespace QuanLyDaiLy.Repositories
 
         public async Task<long> GetTotalPhieuThuUpToMonthYear(int month, int year)
         {
-            // Xác định ngày cuối của tháng/year
-            var endDate = new DateTime(year, month, DateTime.DaysInMonth(year, month));
-            // Đếm tất cả phiếu thu có NgayThuTien <= endDate
+            // Xác định ngày đầu và ngày cuối của tháng/year
+            var startDate = new DateTime(year, month, 1);  // Ngày đầu tháng
+            var endDate = new DateTime(year, month, DateTime.DaysInMonth(year, month));  // Ngày cuối tháng
+
+            // Tính tổng phiếu thu có NgayThuTien trong khoảng từ startDate đến endDate
             return await _context.DsPhieuThu
-                .Where(p => p.NgayThuTien <= endDate)
+                .Where(p => p.NgayThuTien >= startDate && p.NgayThuTien <= endDate)
                 .SumAsync(p => p.SoTienThu);
         }
         public async Task AddPhieuThu(PhieuThu phieuThu)
@@ -89,6 +92,23 @@ namespace QuanLyDaiLy.Repositories
                 .Include(p => p.DaiLy)
                 .Where(p => p.MaDaiLy == maDaiLy)
                 .ToListAsync();
+        }
+
+        public async Task<long> GetToltalPhieuThuBySingleDate(DateTime date)
+        {
+            // Lấy danh sách các phiếu thu cho ngày cụ thể
+            var phieuThus = await _context.DsPhieuThu
+                .Where(p => p.NgayThuTien.Year == date.Year && p.NgayThuTien.Month == date.Month && p.NgayThuTien.Day == date.Day)
+                .ToListAsync();  // Lấy tất cả phiếu thu trong ngày
+
+            // Nếu không có phiếu thu, trả về 0
+            if (phieuThus == null || !phieuThus.Any())
+            {
+                return 0;
+            }
+
+            // Nếu có phiếu thu, tính tổng số tiền thu
+            return phieuThus.Sum(p => p.SoTienThu);
         }
 
         public async Task<IEnumerable<PhieuThu>> GetPhieuThuByDateRange(DateTime startDate, DateTime endDate)

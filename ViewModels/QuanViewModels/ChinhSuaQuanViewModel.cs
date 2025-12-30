@@ -1,56 +1,42 @@
-﻿using QuanLyDaiLy.Commands;
+﻿using System.Collections.ObjectModel;
+using System.Windows;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+using QuanLyDaiLy.Messages;
 using QuanLyDaiLy.Models;
 using QuanLyDaiLy.Services;
 using QuanLyDaiLy.Views.QuanViews;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
-using System.Windows;
-using System.Windows.Input;
 
 namespace QuanLyDaiLy.ViewModels.QuanViewModels
 {
-    public class ChinhSuaQuanViewModel : INotifyPropertyChanged
+    public partial class ChinhSuaQuanViewModel :
+        ObservableObject,
+        IRecipient<SelectedIdMessage>
     {
         private readonly IQuanService _quanService;
-        private readonly int _quanId;
+        private int _quanId;
 
-        public ChinhSuaQuanViewModel(IQuanService quanService, int quanId)
+        public ChinhSuaQuanViewModel(IQuanService quanService)
         {
             _quanService = quanService;
-            _quanId = quanId;
 
-            CloseWindowCommand = new RelayCommand(CloseWindow);
-            EditQuanCommand = new RelayCommand(async () => await CapNhatQuan());
+            WeakReferenceMessenger.Default.RegisterAll(this);
+        }
 
+        public void Receive(SelectedIdMessage message)
+        {
+            _quanId = message.Value;
+            // Load data
             _ = LoadDataAsync();
         }
 
-        public event EventHandler? DataChanged;
+        // Binding properties with ObservableProperty attribute
+        [ObservableProperty]
+        private string _maQuan = "";
 
-        private string _maQuan = string.Empty;
-        public string MaQuan
-        {
-            get => _maQuan;
-            set
-            {
-                _maQuan = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private string _tenQuan = string.Empty;
-        public string TenQuan
-        {
-            get => _tenQuan;
-            set
-            {
-                _tenQuan = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public ICommand CloseWindowCommand { get; }
-        public ICommand EditQuanCommand { get; }
+        [ObservableProperty]
+        private string _tenQuan = "";
 
         private async Task LoadDataAsync()
         {
@@ -66,17 +52,19 @@ namespace QuanLyDaiLy.ViewModels.QuanViewModels
             }
         }
 
+        [RelayCommand]
         private void CloseWindow()
         {
-            DataChanged?.Invoke(this, EventArgs.Empty);
+            WeakReferenceMessenger.Default.Send(new DataReloadMessage());
             Application.Current.Windows.OfType<CapNhatQuanWindow>().FirstOrDefault()?.Close();
         }
 
-        private async Task CapNhatQuan()
+        [RelayCommand]
+        private async Task EditQuan()
         {
             if (string.IsNullOrWhiteSpace(TenQuan))
             {
-                MessageBox.Show("Tên quận không được để trống!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show("Tên quận không được để trống!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
@@ -87,21 +75,14 @@ namespace QuanLyDaiLy.ViewModels.QuanViewModels
                 existingQuan.TenQuan = TenQuan;
 
                 await _quanService.UpdateQuan(existingQuan);
-                MessageBox.Show("Cập nhật quận thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
-                DataChanged?.Invoke(this, EventArgs.Empty);
-                CloseWindow();
+
+                MessageBox.Show("Cập nhật quận thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Lỗi khi cập nhật quận: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Lỗi khi cập nhật quận: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-        }
 
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

@@ -1,152 +1,375 @@
 ﻿using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Input;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Extensions.DependencyInjection;
-using QuanLyDaiLy.Commands;
+using QuanLyDaiLy.Messages;
 using QuanLyDaiLy.Models;
 using QuanLyDaiLy.Services;
 using QuanLyDaiLy.Views.DonViTinhViews;
 
 namespace QuanLyDaiLy.ViewModels.DonViTinhViewModels
 {
-    public class DonViTinhPageViewModel : INotifyPropertyChanged
+    public partial class DonViTinhPageViewModel :
+        ObservableObject,
+        IRecipient<SearchCompletedMessage<DonViTinh>>,
+        IRecipient<DataReloadMessage>
     {
         private readonly IDonViTinhService _iDonViTinhService;
         private readonly IServiceProvider _serviceProvider;
-        private readonly Func<int, CapNhatDonViTinhPageViewModel> _chinhSuaDonViTinhFactory;
+
+        private int TotalPages = 0;
+        private const int VisibleButtons = 5;
+        private const int ItemsPerPage = 12;
+
+        private record struct PaginationButton(string Content, string Parameter, Style Style);
 
         public DonViTinhPageViewModel(
             IDonViTinhService iDonViTinhService,
-            IServiceProvider serviceProvider,
-            Func<int, CapNhatDonViTinhPageViewModel> chinhSuaDonViTinhFactory
+            IServiceProvider serviceProvider
            )
         {
             _iDonViTinhService = iDonViTinhService;
-            _serviceProvider = serviceProvider ?? throw new ArgumentNullException(nameof(serviceProvider));
-            _chinhSuaDonViTinhFactory = chinhSuaDonViTinhFactory;
+            _serviceProvider = serviceProvider;
 
-            // Initialize commands
-            SearchDonViTinhCommand = new RelayCommand(OpenSearchDonViTinhWindow);
-            LoadDataCommand = new RelayCommand(async () => await LoadDataExecute());
-            AddDonViTinhCommand = new RelayCommand(OpenAddDonViTinhWindow);
-            EditDonViTinhCommand = new RelayCommand(OpenEditDonViTinhWindow);
-            DeleteDonViTinhCommand = new RelayCommand(ExecuteDeleteDonViTinh);
+            // Only keep the parameterized command that can't use RelayCommand attribute
+            PageSelectionCommand = new RelayCommand<string>(SelectPage);
 
-            _ = LoadData();
+            WeakReferenceMessenger.Default.RegisterAll(this);
+
+            _ = LoadDataAsync();
+        }
+
+        public void Receive(SearchCompletedMessage<DonViTinh> message)
+        {
+            var searchResults = message.Value;
+
+            if (searchResults.Count > 0)
+            {
+                FilteredDonViTinhs = searchResults;
+                TotalPages = (int)Math.Ceiling((double)FilteredDonViTinhs.Count / ItemsPerPage);
+                CurrentPage = "1";
+                _ = UpdatePagination();
+            }
+            else
+            {
+                _ = LoadDataAsync();
+            }
+
+        }
+
+        public void Receive(DataReloadMessage message)
+        {
+            _ = LoadDataAsync();
         }
 
         // Binding properties
+        private string _currentPage = "1";
+        public string CurrentPage
+        {
+            get => _currentPage;
+            set
+            {
+                _currentPage = value;
+                OnPropertyChanged();
+                _ = UpdatePagination();
+
+                // Update command can-execute state
+                (GoToNextPageCommand as RelayCommand)?.NotifyCanExecuteChanged();
+                (GoToPreviousPageCommand as RelayCommand)?.NotifyCanExecuteChanged();
+            }
+        }
+
+        // Page button content properties
+        [ObservableProperty]
+        private string _buttonContentFirst = "1";
+
+        [ObservableProperty]
+        private string _buttonContentSecond = "2";
+
+        [ObservableProperty]
+        private string _buttonContentThird = "3";
+
+        [ObservableProperty]
+        private string _buttonContentForth = "4";
+
+        [ObservableProperty]
+        private string _buttonContentFith = "5";
+
+        // Page button command parameter properties
+        [ObservableProperty]
+        private string _buttonParamFirst = "1";
+
+        [ObservableProperty]
+        private string _buttonParamSecond = "2";
+
+        [ObservableProperty]
+        private string _buttonParamThird = "3";
+
+        [ObservableProperty]
+        private string _buttonParamForth = "4";
+
+        [ObservableProperty]
+        private string _buttonParamFith = "5";
+
+        [ObservableProperty]
+        private ObservableCollection<DonViTinh> _filteredDonViTinhs = [];
+
+        [ObservableProperty]
         private ObservableCollection<DonViTinh> _danhSachDonViTinh = [];
 
-        public ObservableCollection<DonViTinh> DanhSachDonViTinh
+        [ObservableProperty]
+        private DonViTinh _selectedDonViTinh = null!;
+
+        [ObservableProperty]
+        private Style _buttonStyleFirst;
+
+        [ObservableProperty]
+        private Style _buttonStyleSecond;
+
+        [ObservableProperty]
+        private Style _buttonStyleThird;
+
+        [ObservableProperty]
+        private Style _buttonStyleForth;
+
+        [ObservableProperty]
+        private Style _buttonStyleFith;
+
+        // Keep the RelayCommand<string> as it requires a parameter
+        public ICommand PageSelectionCommand { get; }
+
+        // Methods
+        private async Task LoadDataAsync()
         {
-            get => _danhSachDonViTinh;
-            set
+            try
             {
-                _danhSachDonViTinh = value;
-                OnPropertyChanged();
+                FilteredDonViTinhs.Clear();
+                var list = await _iDonViTinhService.GetDonViTinhPage(0);
+                DanhSachDonViTinh = [.. list];
+
+                TotalPages = await _iDonViTinhService.GetTotalPages();
+                UpdateButtonVisibility();
+
+                // Initialize pagination
+                CurrentPage = "1";
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Lỗi khi tải dữ liệu đơn vị tính: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
-        private DonViTinh _selectedDonViTinh = new();
-        public DonViTinh SelectedDonViTinh
+        private void UpdateButtonVisibility()
         {
-            get => _selectedDonViTinh;
-            set
+            var collapsedStyle = Application.Current.Resources["CollapsedButton"] as Style ?? new Style();
+
+            if (TotalPages < 5)
+                ButtonStyleFith = collapsedStyle;
+            if (TotalPages < 4)
+                ButtonStyleForth = collapsedStyle;
+            if (TotalPages < 3)
+                ButtonStyleThird = collapsedStyle;
+            if (TotalPages < 2)
+                ButtonStyleSecond = collapsedStyle;
+        }
+
+        private void SelectPage(string? pageNumber)
+        {
+            if (int.TryParse(pageNumber, out int page) && page >= 1 && page <= TotalPages)
             {
-                _selectedDonViTinh = value;
-                OnPropertyChanged();
+                CurrentPage = pageNumber;
             }
         }
 
-        // Commands 
-        public ICommand SearchDonViTinhCommand { get; }
-        public ICommand LoadDataCommand { get; }
-        public ICommand AddDonViTinhCommand { get; }
-        public ICommand EditDonViTinhCommand { get; }
-        public ICommand DeleteDonViTinhCommand { get; }
+        private bool CanGoToNextPage() => int.TryParse(CurrentPage, out int current) && current < TotalPages;
 
-        private async Task LoadData()
+        private bool CanGoToPreviousPage() => int.TryParse(CurrentPage, out int current) && current > 1;
+
+        [RelayCommand(CanExecute = nameof(CanGoToNextPage))]
+        private void GoToNextPage()
         {
-            var list = await _iDonViTinhService.GetAllDonViTinh();
-            DanhSachDonViTinh = [.. list];
-            SelectedDonViTinh = null!;
+            if (int.TryParse(CurrentPage, out int current) && current < TotalPages)
+            {
+                CurrentPage = (current + 1).ToString();
+            }
         }
 
-        private async Task LoadDataExecute()
+        [RelayCommand(CanExecute = nameof(CanGoToPreviousPage))]
+        private void GoToPreviousPage()
         {
-            await LoadData();
-            MessageBox.Show("Tải lại danh sách thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+            if (int.TryParse(CurrentPage, out int current) && current > 1)
+            {
+                CurrentPage = (current - 1).ToString();
+            }
         }
 
+        private async Task UpdatePagination()
+        {
+            if (!int.TryParse(CurrentPage, out int currentPage))
+                return;
+            PaginationButton[] buttons = CalculatePaginationButtons(currentPage);
+            ApplyPaginationButtonSettings(buttons);
+            await LoadPageData(currentPage);
+        }
 
-        /// <summary>
-        /// PHẦN CỦA THÀNH CẦN SỬA
-        /// </summary>
-        private void OpenSearchDonViTinhWindow()
+        private PaginationButton[] CalculatePaginationButtons(int currentPage)
+        {
+            var unselectedStyle = Application.Current.Resources["PageButtonUnSelectedStyle"] as Style ?? new Style();
+            var selectedStyle = Application.Current.Resources["PageButtonSelectedStyle"] as Style ?? new Style();
+            var collapsedStyle = Application.Current.Resources["CollapsedButton"] as Style ?? new Style();
+
+            var buttons = new PaginationButton[VisibleButtons];
+            int startPage = 1;
+
+            if (TotalPages <= VisibleButtons)
+            {
+                for (int i = 0; i < VisibleButtons; i++)
+                {
+                    int pageNum = i + 1;
+                    string pageText = pageNum.ToString();
+
+                    Style buttonStyle = pageNum > TotalPages
+                        ? collapsedStyle
+                        : (pageNum == currentPage ? selectedStyle : unselectedStyle);
+
+                    buttons[i] = new PaginationButton(pageText, pageText, buttonStyle);
+                }
+            }
+            else if (currentPage <= 2)
+            {
+                // Near the start
+                for (int i = 0; i < VisibleButtons; i++)
+                {
+                    string pageText = (i + 1).ToString();
+                    Style buttonStyle = (i + 1) == currentPage ? selectedStyle : unselectedStyle;
+                    buttons[i] = new PaginationButton(pageText, pageText, buttonStyle);
+                }
+            }
+            else if (currentPage >= TotalPages - 2)
+            {
+                // Near the end
+                startPage = TotalPages - 4;
+                for (int i = 0; i < VisibleButtons; i++)
+                {
+                    int pageNum = startPage + i;
+                    string pageText = pageNum.ToString();
+                    Style buttonStyle = pageNum == currentPage ? selectedStyle : unselectedStyle;
+                    buttons[i] = new PaginationButton(pageText, pageText, buttonStyle);
+                }
+            }
+            else
+            {
+                // In the middle
+                startPage = currentPage - 2;
+                for (int i = 0; i < VisibleButtons; i++)
+                {
+                    int pageNum = startPage + i;
+                    string pageText = pageNum.ToString();
+                    Style buttonStyle = pageNum == currentPage ? selectedStyle : unselectedStyle;
+                    buttons[i] = new PaginationButton(pageText, pageText, buttonStyle);
+                }
+            }
+
+            return buttons;
+        }
+
+        private void ApplyPaginationButtonSettings(PaginationButton[] buttons)
+        {
+            // First button
+            ButtonContentFirst = buttons[0].Content;
+            ButtonParamFirst = buttons[0].Parameter;
+            ButtonStyleFirst = buttons[0].Style;
+
+            // Second button
+            ButtonContentSecond = buttons[1].Content;
+            ButtonParamSecond = buttons[1].Parameter;
+            ButtonStyleSecond = buttons[1].Style;
+
+            // Third button
+            ButtonContentThird = buttons[2].Content;
+            ButtonParamThird = buttons[2].Parameter;
+            ButtonStyleThird = buttons[2].Style;
+
+            // Fourth button
+            ButtonContentForth = buttons[3].Content;
+            ButtonParamForth = buttons[3].Parameter;
+            ButtonStyleForth = buttons[3].Style;
+
+            // Fifth button
+            ButtonContentFith = buttons[4].Content;
+            ButtonParamFith = buttons[4].Parameter;
+            ButtonStyleFith = buttons[4].Style;
+        }
+
+        private async Task LoadPageData(int currentPage)
+        {
+            if (FilteredDonViTinhs.Count == 0)
+            {
+                // Load from service when no filter is applied
+                var items = await _iDonViTinhService.GetDonViTinhPage(currentPage - 1);
+                DanhSachDonViTinh = [.. items];
+            }
+            else
+            {
+                // Apply pagination to filtered results in memory
+                int skip = (currentPage - 1) * ItemsPerPage;
+                var pagedItems = FilteredDonViTinhs.Skip(skip).Take(ItemsPerPage);
+                DanhSachDonViTinh = [.. pagedItems];
+            }
+        }
+
+        [RelayCommand]
+        private async Task SearchDonViTinh()
         {
             SelectedDonViTinh = null!;
             MessageBox.Show("Tính năng tra cứu đơn vị tính đang được phát triển.", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
         }
-        /// <summary>
-        /// PHẦN CỦA THÀNH CẦN SỬA
-        /// </summary>
-        /// 
 
-
-        private void OpenAddDonViTinhWindow()
+        [RelayCommand]
+        private void AddDonViTinh()
         {
-            SelectedDonViTinh = null!;
             try
             {
                 var addDonViTinhWindow = _serviceProvider.GetRequiredService<ThemDonViTinhWindow>();
-                if (addDonViTinhWindow.DataContext is ThemDonViTinhPageViewModel viewModel)
-                {
-                    viewModel.DataChanged += async (sender, e) => await LoadData();
-                }
                 addDonViTinhWindow.Show();
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Lỗi khi mở cửa sổ thêm đơn vị tính: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Lỗi khi mở cửa sổ thêm đơn vị tính: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-
+            SelectedDonViTinh = null!;
         }
 
-        private void OpenEditDonViTinhWindow()
+        [RelayCommand]
+        private void EditDonViTinh()
         {
             if (SelectedDonViTinh == null || string.IsNullOrEmpty(SelectedDonViTinh.TenDonViTinh))
             {
-                MessageBox.Show("Vui lòng chọn đơn vị tính để chỉnh sửa!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("Vui lòng chọn đơn vị tính để chỉnh sửa!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
 
             try
             {
-                var viewModel = _chinhSuaDonViTinhFactory(SelectedDonViTinh.MaDonViTinh);
-                viewModel.DataChanged += async (sender, e) => await LoadData();
-
-                var window = new CapNhatDonViTinhWindow(viewModel);
+                var window = _serviceProvider.GetRequiredService<CapNhatDonViTinhWindow>();
                 window.Show();
+                WeakReferenceMessenger.Default.Send(new SelectedIdMessage(SelectedDonViTinh.MaDonViTinh));
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Lỗi khi mở cửa sổ chỉnh sửa đơn vị tính: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Lỗi khi mở cửa sổ chỉnh sửa đơn vị tính: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
-        private void ExecuteDeleteDonViTinh()
+        [RelayCommand]
+        private async Task DeleteDonViTinh()
         {
-            _ = DeleteDonViTinhAsync();
-        }
-
-        private async Task DeleteDonViTinhAsync()
-        {
-            if (SelectedDonViTinh == null || string.IsNullOrEmpty(SelectedDonViTinh.TenDonViTinh))
+            if (SelectedDonViTinh == null)
             {
-                MessageBox.Show("Vui lòng chọn đơn vị tính để xóa!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show("Vui lòng chọn đơn vị tính để xóa!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
 
@@ -159,11 +382,10 @@ namespace QuanLyDaiLy.ViewModels.DonViTinhViewModels
                         "Xác nhận xóa",
                         MessageBoxButton.YesNo,
                         MessageBoxImage.Question);
-
                     if (result == MessageBoxResult.Yes)
                     {
                         await _iDonViTinhService.DeleteDonViTinh(SelectedDonViTinh.MaDonViTinh);
-                        await LoadData();
+                        await LoadDataAsync();
                         MessageBox.Show("Đã xóa đơn vị tính thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
                     }
                 }
@@ -177,22 +399,23 @@ namespace QuanLyDaiLy.ViewModels.DonViTinhViewModels
                     if (result == MessageBoxResult.Yes)
                     {
                         await _iDonViTinhService.DeleteDonViTinh(SelectedDonViTinh.MaDonViTinh);
-                        await LoadData();
+                        await LoadDataAsync();
                         MessageBox.Show("Đã xóa đơn vị tính thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
                     }
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Không thể xóa đơn vị tính: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Lỗi khi xóa quận: {ex.Message}", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
-        public event PropertyChangedEventHandler? PropertyChanged;
-
-        protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+        [RelayCommand]
+        private async Task LoadData()
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            SelectedDonViTinh = null!;
+            await LoadDataAsync();
+            MessageBox.Show("Tải lại danh sách thành công!", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
         }
     }
 }
